@@ -81,8 +81,8 @@ public class TestMultiD {
 	}
 	
 	/**
-	 * This test verifies that if the wrong number of dimensions are specified for the multi dimensional array
-	 * an illegal argument exception is thrown.
+	 * This test verifies that if the wrong number of dimensions are specified for a get on the Multi Dimensional
+	 * Array, an illegal argument exception is thrown.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testGetMisMatchNumberOfDimensions(){
@@ -97,8 +97,8 @@ public class TestMultiD {
 	
 	
 	/**
-	 * This test verifies that if too large of an index is specified on a mutli dimensional array, then an
-	 * illegal argument exception is thrown. 
+	 * This test verifies that if too large of an index is specified on a get on a Mutli Dimensional Array, 
+	 * then an illegal argument exception is thrown. 
 	 */
 	@Test(expected = IndexOutOfBoundsException.class)
 	public void testGetOutOfBoundsIndexInsertion(){
@@ -177,7 +177,7 @@ public class TestMultiD {
 	public void testBigArrayFullyPopulated(){
 		// Given
 		int[] bigDimensions = {28,28,3,10};
-		int[] position2 = new int[bigDimensions.length];
+		int[] position = new int[bigDimensions.length];
 		multiD = new MultiD<Double>(bigDimensions);
 		double element = 0D;
 		
@@ -186,11 +186,11 @@ public class TestMultiD {
 			for(int column = 0; column < bigDimensions[1]; column++){
 				for(int channel = 0; channel < bigDimensions[2]; channel++){
 					for(int image = 0; image < bigDimensions[3]; image++){
-						position2[0] = row;
-						position2[1] = column;
-						position2[2] = channel;
-						position2[3] = image;
-						multiD.put(element, position2);
+						position[0] = row;
+						position[1] = column;
+						position[2] = channel;
+						position[3] = image;
+						multiD.put(element, position);
 						element++;
 					}
 				}
@@ -203,11 +203,11 @@ public class TestMultiD {
 			for(int column = 0; column < bigDimensions[1]; column++){
 				for(int channel = 0; channel < bigDimensions[2]; channel++){
 					for(int image = 0; image < bigDimensions[3]; image++){
-						position2[0] = row;
-						position2[1] = column;
-						position2[2] = channel;
-						position2[3] = image;
-						assertEquals("Value not correctly returned for " + row + column + channel + image, element, multiD.get(position2), 0);
+						position[0] = row;
+						position[1] = column;
+						position[2] = channel;
+						position[3] = image;
+						assertEquals("Value not correctly returned for " + row + column + channel + image, element, multiD.get(position), 0);
 						element++;
 					}
 				}
