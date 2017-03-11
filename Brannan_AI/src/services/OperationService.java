@@ -4,24 +4,24 @@ import fundamentals.MultiD;
 
 /**
  * This class provides the methods necessary for element wise operations. It implements a recursive call to
- * allow every element in a multi dimensional array to be affected, and the operate method is abstract such that
+ * allow every element in a MDA to be affected, and the operate method is abstract such that
  * this framework can have many different applications. There are two public entry points for this class, one
- * allows you to specify two Multi Dimensional Arrays which will result in an elementwise operation between the two.
- * The other allows the specification of a Multi Dimensional Array, and a constant factor, which can be applied
- * to each element of the Multi Dimensional Array with whatever operation is defined.
+ * allows you to specify two MDAs which will result in an elementwise operation between the two.
+ * The other allows the specification of a single MDA, and a constant factor, which can be applied
+ * to each element of the MDA with whichever operation is defined.
  * @author Brannan
  *
  */
 abstract class OperationService {
 	
 	/**
-	 * This public entry point validates the two Multi Dimensional Arrays which are passed to it, and 
+	 * This public entry point validates the two MDAs which are passed to it, and 
 	 * sets up the calls to the recursive function which will carry out the element wise operations.
 	 * @param operand1
 	 * @param operand2
 	 * @return
 	 */
-	public MultiD<Double> operate(MultiD<Double> operand1, MultiD<Double> operand2){
+	public MultiD operate(MultiD operand1, MultiD operand2){
 		if(operand1.getDimensions().length != operand2.getDimensions().length){
 			throw(new IllegalArgumentException("Dimensional Mis-match between summed arrays, they have different lengths"));
 		}
@@ -30,24 +30,25 @@ abstract class OperationService {
 				throw(new IllegalArgumentException("Dimensional Mis-match between summed arrays at dimension " + i));
 			}
 		}
-		MultiD<Double> result = new MultiD<Double>(operand1.getDimensions());
+		MultiD result = new MultiD(operand1.getDimensions());
 		
 		recursiveOperate(result, operand1, operand2, new int[operand1.getDimensions().length], 0); 
 		
 	return result;
 	}
 	
-	public MultiD<Double> operate(MultiD<Double> operand1, Double operand2){
-		MultiD<Double> result = new MultiD<Double>(operand1.getDimensions());
+	public MultiD operate(MultiD operand1, Double operand2){
+		MultiD result = new MultiD(operand1.getDimensions());
 		
 		recursiveOperate(result, operand1, operand2, new int[operand1.getDimensions().length], 0); 
 		
 	return result;
 	}
+	
 
 	/**
 	 * This recursive function ensures that each element in the result is calculated using the same location
-	 * from the two operand Multi Dimensional Arrays.
+	 * from the two operand MDAs.
 	 * @param result
 	 * @param operand1
 	 * @param operand2
@@ -55,7 +56,7 @@ abstract class OperationService {
 	 * @param index
 	 * @return
 	 */
-	private MultiD<Double> recursiveOperate(MultiD<Double> result, MultiD<Double> operand1, MultiD<Double> operand2, int[] position, int index) {
+	private MultiD recursiveOperate(MultiD result, MultiD operand1, MultiD operand2, int[] position, int index) {
 		for(int i = 0; i < result.getDimensions()[index]; i++){
 			position[index] = i;
 			Double element = calculate(position, operand1, operand2);
@@ -71,7 +72,7 @@ abstract class OperationService {
 	
 	/**
 	 * This recursive function ensures that each element in the result is calculated using the same location
-	 * from the operand Multi Dimensional Array, and the constant factor.
+	 * from the operand MDAs, and the constant factor.
 	 * @param result
 	 * @param operand1
 	 * @param operand2
@@ -79,7 +80,7 @@ abstract class OperationService {
 	 * @param index
 	 * @return
 	 */
-	private MultiD<Double> recursiveOperate(MultiD<Double> result, MultiD<Double> operand1, double operand2, int[] position, int index) {
+	private MultiD recursiveOperate(MultiD result, MultiD operand1, double operand2, int[] position, int index) {
 		for(int i = 0; i < result.getDimensions()[index]; i++){
 			position[index] = i;
 			Double element = calculate(position, operand1, operand2);
@@ -98,7 +99,13 @@ abstract class OperationService {
 	 * @param operand2
 	 * @return
 	 */
-	protected abstract Double calculate(int[] position, MultiD<Double> operand1, MultiD<Double> operand2);
+	protected abstract Double calculate(int[] position, MultiD operand1, MultiD operand2);
 	
-	protected abstract Double calculate(int[] position, MultiD<Double> operand1, Double operand2);
+	/**
+	 * This abstract method allows for numerous implementations of the constant operation.
+	 * @param operand1
+	 * @param operand2
+	 * @return
+	 */
+	protected abstract Double calculate(int[] position, MultiD operand1, Double operand2);
 }

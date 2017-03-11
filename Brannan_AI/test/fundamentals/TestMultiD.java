@@ -10,17 +10,16 @@ public class TestMultiD {
 	int[] dimensions = {1,2};
 	
 	
-	MultiD<Double> multiD;
+	MultiD multiD;
 	
 	@Before
 	public void setUp(){
-		multiD = new MultiD<Double>(dimensions);
+		multiD = new MultiD(dimensions);
 	}
 	
 	
 	/**
-	 * This test verifies that the dimensions specified upon constructon of a Multi Dimensional Array are
-	 * maintained.
+	 * This test verifies that the dimensions specified upon constructon of a MDA are maintained.
 	 */
 	@Test
 	public void testConstructMultiD(){
@@ -34,8 +33,7 @@ public class TestMultiD {
 	
 	
 	/**
-	 * This test verifies that if the wrong number of dimensions are specified for a put in a Multi Dimensional 
-	 * Array, an illegal argument exception is thrown.
+	 * This test verifies that if the wrong number of dimensions are specified for a put in an MDA, an illegal argument exception is thrown.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testPutMisMatchNumberOfDimensions(){
@@ -50,8 +48,7 @@ public class TestMultiD {
 	
 	
 	/**
-	 * This test verifies that if too large of an index is specified on a put in a Multi Dimensional Array, 
-	 * then an illegal argument exception is thrown. 
+	 * This test verifies that if too large of an index is specified on a put in a MDA, then an illegal argument exception is thrown. 
 	 */
 	@Test(expected = IndexOutOfBoundsException.class)
 	public void testPutOutOfBoundsIndexInsertion(){
@@ -66,8 +63,7 @@ public class TestMultiD {
 	
 	
 	/**
-	 * This test verifies that if a negative position is given for a put in a Multi Dimensional Array, 
-	 * then an index out of bounds exception is thrown.
+	 * This test verifies that if a negative position is given for a put in a MDA, then an index out of bounds exception is thrown.
 	 */
 	@Test(expected = IndexOutOfBoundsException.class)
 	public void testPutNegativePositionRejected(){
@@ -81,8 +77,7 @@ public class TestMultiD {
 	}
 	
 	/**
-	 * This test verifies that if the wrong number of dimensions are specified for a get on the Multi Dimensional
-	 * Array, an illegal argument exception is thrown.
+	 * This test verifies that if the wrong number of dimensions are specified for a get on the MDA, an illegal argument exception is thrown.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testGetMisMatchNumberOfDimensions(){
@@ -97,7 +92,7 @@ public class TestMultiD {
 	
 	
 	/**
-	 * This test verifies that if too large of an index is specified on a get on a Mutli Dimensional Array, 
+	 * This test verifies that if too large of an index is specified on a get on a MDA, 
 	 * then an illegal argument exception is thrown. 
 	 */
 	@Test(expected = IndexOutOfBoundsException.class)
@@ -113,7 +108,7 @@ public class TestMultiD {
 	
 	
 	/**
-	 * This test verifies that if a negative position is given for a get in a Multi Dimensional Array, 
+	 * This test verifies that if a negative position is given for a get in a MDA, 
 	 * then an index out of bounds exception is thrown.
 	 */
 	@Test(expected = IndexOutOfBoundsException.class)
@@ -129,7 +124,7 @@ public class TestMultiD {
 	
 	
 	/**
-	 * This test verifies that if an element in the multi dimensional array is to be replaced, the new element
+	 * This test verifies that if an element in the MDA is to be replaced, the new element
 	 * persists.
 	 */
 	@Test
@@ -148,12 +143,12 @@ public class TestMultiD {
 	
 	
 	/**
-	 * This test verifies that a small 2x2 array can be fully populated, and have the data retrieved from it.
+	 * This test verifies that a small 2x2 MDA can be fully populated, and have the data retrieved from it.
 	 */
 	@Test
 	public void smallArrayPopulated(){
 		// Given
-		multiD = new MultiD<Double>(2,2);
+		multiD = new MultiD(2,2);
 		
 		// When
 		multiD.put(0D, 0,0);
@@ -170,15 +165,14 @@ public class TestMultiD {
 	
 	
 	/**
-	 * This test verifies that a large multi dimensional array can be fully populated, and still have each unique
-	 * element retrieved.
+	 * This test verifies that a large MDA can be fully populated, and still have each unique element retrieved.
 	 */
 	@Test
 	public void testBigArrayFullyPopulated(){
 		// Given
 		int[] bigDimensions = {28,28,3,10};
 		int[] position = new int[bigDimensions.length];
-		multiD = new MultiD<Double>(bigDimensions);
+		multiD = new MultiD(bigDimensions);
 		double element = 0D;
 		
 		// When

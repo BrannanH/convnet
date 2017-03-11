@@ -1,37 +1,44 @@
 package fundamentals;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 /**
- * This class is the fundamental class used to hold data in a multi dimensional array. It is implemented as a map
- * with a list of integers for the key, and a generic type for the value. 
+ * This class is the fundamental class used to hold data in a Multi Dimensional Array (MDA). It is implemented as an array of doubles
+ * accessed by specifying a position as an integer array.
  * @author Brannan
  *
  * @param <T>
  */
-public class MultiD<T> {
+public class MultiD {
 	
 	private int[] dimensions;
-	private HashMap<List<Integer> , T> elements = new HashMap<>();
+	private double[] elements; 
+	
+	/**
+	 * This holds the number of positions in the array you need to move along, by an increment in each dimension.
+	 */
+	private int[] increments;
 
 	public MultiD(int... dimensions){
 		this.dimensions = dimensions;
+		
+		this.increments = new int[dimensions.length];
+		increments[0] = 1;
+		for(int i = 1; i < increments.length; i++) {
+			increments[i] = increments[i-1]*dimensions[i-1];
+		}
+		this.elements = new double[dimensions[dimensions.length-1]*increments[dimensions.length-1]];
 	}
 	
 	/**
-	 * Used to populate the HashMap
+	 * Used to populate the array
 	 * @param element
 	 * @param position
 	 */
-	public void put(T element, int... position){
+	public void put(double element, int... position){
 		validatePosition(position);
-		this.elements.put(retrieveForPosition(position), element);
+		this.elements[getLocationForPosition(position)] = element;
 	}
 	
 	/**
-	 * getter for the dimensons field
 	 * getter for dimensions field
 	 * @return
 	 */
@@ -45,26 +52,25 @@ public class MultiD<T> {
 	 * @param position
 	 * @return
 	 */
-	public T get(int... position) {
+	public double get(int... position) {
 		validatePosition(position);
-		return elements.get(retrieveForPosition(position));
+		return elements[(getLocationForPosition(position))];
 	}
 	
 	
 	/**
-	 * This method casts the position into a list which the HashMap can use to put and get.
+	 * This method casts the position to the location in the array
 	 * @param position
 	 * @return
 	 */
-	private List<Integer> retrieveForPosition(int[] position){
-		List<Integer> retrieve = new ArrayList<>();
-		for(int i = 0; i < position.length; i++){
-			retrieve.add(position[i]);
+	private int getLocationForPosition(int[] position){
+		int location = 0;
+		for(int i = 0; i < position.length; i++) {
+			location += increments[i]*position[i];
 		}
-		return retrieve;
+		return location;
 	}
-	
-	
+
 	/**
 	 * This method puts barriers on the kind of key which can be put and retrieved from the Multi Dimensional Array.
 	 * They must be of the correct dimensionality, and each dimension of the specified position must be

@@ -9,9 +9,9 @@ import fundamentals.MultiD;
 
 public class TestAdditionService {
 	
-	MultiD<Double> multiD1;
-	MultiD<Double> multiD2;
-	MultiD<Double> result;
+	MultiD multiD1;
+	MultiD multiD2;
+	MultiD result;
 	AdditionService additionService;
 	
 	@Before
@@ -21,19 +21,19 @@ public class TestAdditionService {
 	
 	
 	/**
-	 * This tests a simple 1 element array operation
+	 * This tests a simple 1 element MDA operation
 	 */
 	@Test
 	public void simpleAddition(){
 		// Given
-		multiD1 = new MultiD<>(1);
-		multiD2 = new MultiD<>(1);
+		multiD1 = new MultiD(1);
+		multiD2 = new MultiD(1);
 		
 		multiD1.put(1D,0);
 		multiD2.put(2D,0);
 		
 		// When
-		MultiD<Double> result = additionService.operate(multiD1, multiD2);
+		MultiD result = additionService.operate(multiD1, multiD2);
 		
 		// Then
 		assertEquals("Returned amount should be the sum", 3D, result.get(0), 0);
@@ -41,13 +41,13 @@ public class TestAdditionService {
 	
 	
 	/**
-	 * This tests the element wise opration on a 2x2 array
+	 * This tests the element wise operation on a 2x2 MDA
 	 */
 	@Test
 	public void biggerAddition(){
 		// Given
-		multiD1 = new MultiD<Double>(2,2);
-		multiD2 = new MultiD<Double>(2,2);
+		multiD1 = new MultiD(2,2);
+		multiD2 = new MultiD(2,2);
 		
 		multiD1.put(1D, 0,0);
 		multiD1.put(2D, 0,1);
@@ -71,15 +71,15 @@ public class TestAdditionService {
 	
 	
 	/**
-	 * This tests the element wise operation on a fully populated 28x28x3x10 array 
+	 * This tests the element wise operation on a fully populated 28x28x3x10 MDA 
 	 */
 	@Test
 	public void biggestAddition(){
 		// Given
 		int[] bigDimensions = {28,28,3,10};
 		int[] position = new int[bigDimensions.length];
-		multiD1 = new MultiD<Double>(bigDimensions);
-		multiD2 = new MultiD<Double>(bigDimensions);
+		multiD1 = new MultiD(bigDimensions);
+		multiD2 = new MultiD(bigDimensions);
 		double element = 1;
 		
 		for(int row = 0; row < bigDimensions[0]; row++){
@@ -119,6 +119,7 @@ public class TestAdditionService {
 		}
 	}
 	
+	
 	/**
 	 * This tests the element wise operation on a fully populated 28x28x3x10 array having a constant added
 	 * to it. 
@@ -128,7 +129,7 @@ public class TestAdditionService {
 		// Given
 		int[] bigDimensions = {28,28,3,10};
 		int[] position = new int[bigDimensions.length];
-		multiD1 = new MultiD<Double>(bigDimensions);
+		multiD1 = new MultiD(bigDimensions);
 		double element = 1;
 		
 		for(int row = 0; row < bigDimensions[0]; row++){
