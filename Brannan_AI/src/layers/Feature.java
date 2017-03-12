@@ -4,7 +4,7 @@ import fundamentals.MultiD;
 
 /**
  * This class is used to associate a feature map with an array specifying the dimensions
- * on its input which it will act.
+ * of its input on which it will act.
  * @author Brannan
  *
  */

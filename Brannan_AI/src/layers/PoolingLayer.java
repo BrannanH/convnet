@@ -21,17 +21,29 @@ public abstract class PoolingLayer implements Layer {
 		this.dimensionsService = dimensionsService;
 	}
 
+	
+	/**
+	 * @see{Layer#forward}
+	 */
 	@Override
 	abstract public ForwardOutputTuple forward(MultiD operand, Feature feature);
 
+	
+	/**
+	 * @see{Layer#forwardNoTrain}
+	 */
 	@Override
 	abstract public MultiD forwardNoTrain(MultiD operand, Feature feature);
 
+	
+	/**
+	 * @see{Layer#reverse}
+	 */
 	@Override
 	abstract public ReverseOutputTuple reverse(MultiD dLossByDOut, MultiD dOutByDIn, MultiD dOutByDFeature);
 
 	/**
-	 * see {@link Layer#outputDimensions}
+	 * @see{Layer#outputDimensions}
 	 */
 	@Override
 	public int[] outputDimensions(int[] inputDimensions, Feature feature) {

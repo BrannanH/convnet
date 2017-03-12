@@ -27,7 +27,7 @@ public class TestConvolutionLayer {
 	}
 	
 	@Test
-	public void test() {
+	public void testOddDimensions() {
 		// Given
 		int[] filterDimensions = {5,5};
 		int[] filteringDimensions = {0,1};
@@ -50,7 +50,7 @@ public class TestConvolutionLayer {
 	}
 	
 	@Test
-	public void test2() {
+	public void testEvenDimensions() {
 		// Given
 		int[] filterDimensions = {4,4};
 		int[] filteringDimensions = {0,1};

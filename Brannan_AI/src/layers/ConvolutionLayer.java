@@ -5,6 +5,12 @@ import com.google.inject.Inject;
 import fundamentals.MultiD;
 import services.DimensionVerificationService;
 
+/**
+ * This layer allows for Convolution, or feature detection, the key operation within Convolutional Neural
+ * Networks.
+ * @author Brannan
+ *
+ */
 public class ConvolutionLayer implements Layer {
 
 	private DimensionVerificationService dimensionsService;
@@ -14,24 +20,37 @@ public class ConvolutionLayer implements Layer {
 		this.dimensionsService = dimensionsService;
 	}
 
+	/**
+	 * @see{Layer#forward}
+	 */
 	@Override
 	public ForwardOutputTuple forward(MultiD operand, Feature feature) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	
+	/**
+	 * @see{Layer#forwardNoTrain}
+	 */
 	@Override
 	public MultiD forwardNoTrain(MultiD operand, Feature feature) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * @see{Layer#reverse}
+	 */
 	@Override
 	public ReverseOutputTuple reverse(MultiD dLossByDOut, MultiD dOutByDIn, MultiD dOutByDFeature) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * @see{Layer#outputDimensions}
+	 */
 	@Override
 	public int[] outputDimensions(int[] inputDimensions, Feature feature) {
 		

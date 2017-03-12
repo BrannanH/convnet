@@ -27,7 +27,7 @@ public class TestPoolingLayer {
 	}
 	
 	@Test
-	public void test() {
+	public void testDivisibleDimensions() {
 		// Given
 		int[] poolDimensions = {2,7};
 		int[] poolDirections = {0,1};
@@ -49,7 +49,7 @@ public class TestPoolingLayer {
 	}
 	
 	@Test
-	public void test2() {
+	public void testNonDivisibleDimensions() {
 		// Given
 		int[] poolDimensions = {3,5};
 		int[] poolDirections = {0,2};
