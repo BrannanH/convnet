@@ -348,22 +348,25 @@ public abstract class SeparablePoolingLayer implements Layer {
 		PoolTuple element = result.get(0);
 		result.remove(0);
 		
-		for(int positionInPool = 0; positionInPool < recursiveArguments.poolSize; positionInPool++) {
-
-			legacyPosition.set(recursiveArguments.poolingDimension, startOfPool+positionInPool);
-
-			if(startOfPool+positionInPool == element.origin[recursiveArguments.poolingDimension]){
-
-				if(recursiveArguments.origins.containsKey(legacyPosition)){
-
-					recursiveArguments.origins.put(positionInIntermediary, recursiveArguments.origins.get(legacyPosition));
-				} else {
-
-					recursiveArguments.origins.put(positionInIntermediary, result);
-				}
-			} 
-
-			recursiveArguments.origins.remove(legacyPosition);
+		for(int derivative = 0; derivative < result.size(); derivative++){
+			
+			for(int positionInPool = 0; positionInPool < recursiveArguments.poolSize; positionInPool++) {
+				
+				legacyPosition.set(recursiveArguments.poolingDimension, startOfPool+positionInPool);
+				
+				if(startOfPool+positionInPool == result.get(derivative).origin[recursiveArguments.poolingDimension]){
+					
+					if(recursiveArguments.origins.containsKey(legacyPosition)){
+						
+						recursiveArguments.origins.put(positionInIntermediary, recursiveArguments.origins.get(legacyPosition));
+					} else {
+						
+						recursiveArguments.origins.put(positionInIntermediary, result);
+					}
+				} 
+				
+				recursiveArguments.origins.remove(legacyPosition);
+			}
 		}
 		return recursiveArguments.origins;
 	}
