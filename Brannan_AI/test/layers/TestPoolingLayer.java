@@ -16,7 +16,7 @@ public class TestPoolingLayer {
 	@Mock
 	private DimensionVerificationService dimensionsService;
 	
-	private PoolingLayer poolingLayer;
+	private SeparablePoolingLayer poolingLayer;
 	
 	private int[] inputDimensions = {28,28,10};
 	

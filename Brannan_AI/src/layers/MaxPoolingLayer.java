@@ -1,6 +1,14 @@
 package layers;
 
-import fundamentals.MultiD;
+
+import static java.util.Collections.max;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import com.google.inject.Inject;
+
 import services.DimensionVerificationService;
 
 /**
@@ -8,37 +16,42 @@ import services.DimensionVerificationService;
  * @author Brannan
  *
  */
-public class MaxPoolingLayer extends PoolingLayer {
+public class MaxPoolingLayer extends SeparablePoolingLayer {
 
+	@Inject
 	public MaxPoolingLayer(DimensionVerificationService dimensionsService) {
 		super(dimensionsService);
 	}
+	
 
 	/**
-	 * @see{Layer#forward}
+	 * 
 	 */
 	@Override
-	public ForwardOutputTuple forward(MultiD operand, Feature feature) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	protected List<PoolTuple> selectFromPool(List<PoolTuple> poolList) {
+		
+		PoolTuple max = max(poolList, new Comparator<PoolTuple>() {
 
-	/**
-	 * @see{Layer#forwardNoTrain}
-	 */
-	@Override
-	public MultiD forwardNoTrain(MultiD operand, Feature feature) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/**
-	 * @see{Layer#reverse}
-	 */
-	@Override
-	public ReverseOutputTuple reverse(MultiD dLossByDOut, MultiD dOutByDIn, MultiD dOutByDFeature) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+			@Override
+			public int compare(PoolTuple arg0, PoolTuple arg1) {
+				if(arg0.element < arg1.element) {
+					return -1;
+				} else {
+					return 1;
+					}
+			}
+			
+		});
+		
+		List<PoolTuple> result = new ArrayList<>();
+		result.add(max);
+		
+		PoolTuple derivative = new PoolTuple();
+		derivative.element = 1D;
+		derivative.origin = max.origin;
+		result.add(derivative);
+		
+			return result;
+		}
 
 }
