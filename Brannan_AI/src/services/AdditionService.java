@@ -1,6 +1,8 @@
 package services;
 
-import fundamentals.MultiD;
+import static fundamentals.MDAHelper.get;
+
+import fundamentals.MDA;
 
 /**
  * This class extends the ElementWiseOperationService, and allows it to be used for element wise addition
@@ -11,13 +13,13 @@ import fundamentals.MultiD;
 public class AdditionService extends OperationService{
 
 	@Override
-	protected Double calculate(int[] position, MultiD operand1, MultiD operand2) {
-		return operand1.get(position)+operand2.get(position);
+	protected Double calculate(int[] position, MDA operand1, MDA operand2) {
+		return get(operand1, position)+ get(operand2, position);
 	}
 
 	@Override
-	protected Double calculate(int[] position, MultiD operand1, Double operand2) {
-		return operand1.get(position)+operand2;
+	protected Double calculate(int[] position, MDA operand1, Double operand2) {
+		return get(operand1, position)+operand2;
 	}
 
 }

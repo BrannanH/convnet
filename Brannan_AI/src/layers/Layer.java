@@ -1,6 +1,8 @@
 package layers;
 
-import fundamentals.MultiD;
+import java.util.List;
+
+import fundamentals.MDA;
 
 /**
  * This interface outlines the public methods which are necessary for a Layer in a
@@ -20,7 +22,7 @@ public interface Layer {
 	 * @param activeDimensions
 	 * @return
 	 */
-	public ForwardOutputTuple forward(MultiD operand, Feature feature);
+	public ForwardOutputTuple forward(MDA operand, Feature feature);
 	
 	/**
 	 * This method is used in the forward pass through the Neural Network for testing, and thus
@@ -30,7 +32,7 @@ public interface Layer {
 	 * @param activeDimensions
 	 * @return
 	 */
-	public MultiD forwardNoTrain(MultiD operand, Feature feature);
+	public MDA forwardNoTrain(MDA operand, Feature feature);
 	
 	/**
 	 * This method is used in the reverse pass through the Neural Network
@@ -39,7 +41,7 @@ public interface Layer {
 	 * @param activeDimensions
 	 * @return
 	 */
-	public ReverseOutputTuple reverse(MultiD dLossByDOut, MultiD dOutByDIn, MultiD dOutByDFeature);
+	public ReverseOutputTuple reverse(MDA dLossByDOut, MDA dOutByDIn, MDA dOutByDFeature);
 	
 	
 	/**
@@ -49,6 +51,6 @@ public interface Layer {
 	 * @param feature
 	 * @return
 	 */
-	public int[] outputDimensions(int[] inputDimensions, Feature feature);
+	public List<Integer> outputDimensions(List<Integer> inputDimensions, Feature feature);
 
 }

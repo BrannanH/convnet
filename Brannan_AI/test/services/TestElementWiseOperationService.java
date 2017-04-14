@@ -3,7 +3,8 @@ package services;
 import org.junit.Before;
 import org.junit.Test;
 
-import fundamentals.MultiD;
+import fundamentals.MDA;
+import fundamentals.MDABuilder;
 
 /**
  * This class tests the ElementWiseOperationService by constructing an Addition Service.
@@ -13,9 +14,9 @@ import fundamentals.MultiD;
  */
 public class TestElementWiseOperationService {
 	
-	MultiD multiD1;
-	MultiD multiD2;
-	MultiD result;
+	MDA multiD1;
+	MDA multiD2;
+	MDA result;
 	AdditionService additionService;
 	
 	@Before
@@ -26,8 +27,8 @@ public class TestElementWiseOperationService {
 	@Test(expected = IllegalArgumentException.class)
 	public void testDimensionCheck(){
 		// Given
-		multiD1 = new MultiD(2,2);
-		multiD2 = new MultiD(1,2);
+		multiD1 = new MDABuilder().withDimensions(2,2).build();
+		multiD2 = new MDABuilder().withDimensions(1,2).build();
 		
 		// When
 		additionService.operate(multiD1, multiD2);
@@ -38,8 +39,8 @@ public class TestElementWiseOperationService {
 	@Test(expected = IllegalArgumentException.class)
 	public void testDimensionLengthCheck(){
 		// Given
-		MultiD multiD1 = new MultiD(2,2);
-		MultiD multiD2 = new MultiD(2,2,1);
+		MDA multiD1 = new MDABuilder().withDimensions(2,2).build();
+		MDA multiD2 = new MDABuilder().withDimensions(2,2,1).build();
 		
 		// When
 		additionService.operate(multiD1, multiD2);

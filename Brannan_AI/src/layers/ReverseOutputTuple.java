@@ -1,6 +1,6 @@
 package layers;
 
-import fundamentals.MultiD;
+import fundamentals.MDA;
 
 /**
  * This is the output type for each Layers reverse operation
@@ -10,16 +10,16 @@ import fundamentals.MultiD;
 public class ReverseOutputTuple {
 	
 	// The derivative of the Cost Function with respect to the input
-	private MultiD dCostByDIn;
+	private MDA dCostByDIn;
 	
 	// The derivative of the Cost Function with respec to the feature
-	private MultiD dCostByDFeature;
+	private MDA dCostByDFeature;
 	
 	
 	/**
 	 * @return the dCostByDIn
 	 */
-	public MultiD getdCostByDIn() {
+	public MDA getdCostByDIn() {
 		return dCostByDIn;
 	}
 	
@@ -27,7 +27,7 @@ public class ReverseOutputTuple {
 	/**
 	 * @param dLossByDIn the dLossByDIn to set
 	 */
-	public void setdCostByDIn(MultiD dCostByDIn) {
+	public void setdCostByDIn(MDA dCostByDIn) {
 		this.dCostByDIn = dCostByDIn;
 	}
 	
@@ -35,14 +35,14 @@ public class ReverseOutputTuple {
 	/**
 	 * @return the dLossByDFeature
 	 */
-	public MultiD getdCostByDFeature() {
+	public MDA getdCostByDFeature() {
 		return dCostByDFeature;
 	}
 	
 	/**
 	 * @param dCostByDFeature the dCostByDFeature to set
 	 */
-	public void setdCostByDFeature(MultiD dCostByDFeature) {
+	public void setdCostByDFeature(MDA dCostByDFeature) {
 		this.dCostByDFeature = dCostByDFeature;
 	}
 

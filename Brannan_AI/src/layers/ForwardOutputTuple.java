@@ -1,6 +1,6 @@
 package layers;
 
-import fundamentals.MultiD;
+import fundamentals.MDA;
 
 /**
  * This is the output of each of the layers which deal with an MDA.
@@ -10,19 +10,25 @@ import fundamentals.MultiD;
 public class ForwardOutputTuple {
 	
 	// The output of the forward pass
-	private MultiD output;
+	private MDA output;
 	
 	// The derivative of the output with respect to the input
-	private MultiD dOutByDIn;
+	private MDA dOutByDIn;
 	
 	// The derivative of the output with respect to the feature
-	private MultiD dOutByDFeature;
+	private MDA dOutByDFeature;
 	
+	
+	public ForwardOutputTuple(MDA output, MDA dOutByDIn, MDA dOoutByDFeature){
+		this.output = output;
+		this.dOutByDIn = dOutByDIn;
+		this.dOutByDFeature = dOoutByDFeature;
+	}
 	
 	/**
 	 * @return the output
 	 */
-	public MultiD getOutput() {
+	public MDA getOutput() {
 		return output;
 	}
 	
@@ -30,7 +36,7 @@ public class ForwardOutputTuple {
 	/**
 	 * @param output the output to set
 	 */
-	public void setOutput(MultiD output) {
+	public void setOutput(MDA output) {
 		this.output = output;
 	}
 	
@@ -38,7 +44,7 @@ public class ForwardOutputTuple {
 	/**
 	 * @return the dOutByDIn
 	 */
-	public MultiD getdOutByDIn() {
+	public MDA getdOutByDIn() {
 		return dOutByDIn;
 	}
 	
@@ -46,7 +52,7 @@ public class ForwardOutputTuple {
 	/**
 	 * @param dOutByDIn the dOutByDIn to set
 	 */
-	public void setdOutByDIn(MultiD dOutByDIn) {
+	public void setdOutByDIn(MDA dOutByDIn) {
 		this.dOutByDIn = dOutByDIn;
 	}
 	
@@ -54,7 +60,7 @@ public class ForwardOutputTuple {
 	/**
 	 * @return the dOutByDFeature
 	 */
-	public MultiD getdOutByDFeature() {
+	public MDA getdOutByDFeature() {
 		return dOutByDFeature;
 	}
 	
@@ -62,7 +68,7 @@ public class ForwardOutputTuple {
 	/**
 	 * @param dOutByDFeature the dOutByDFeature to set
 	 */
-	public void setdOutByDFeature(MultiD dOutByDFeature) {
+	public void setdOutByDFeature(MDA dOutByDFeature) {
 		this.dOutByDFeature = dOutByDFeature;
 	}
 

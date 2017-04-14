@@ -1,16 +1,19 @@
 package services;
 
+import static fundamentals.MDAHelper.get;
+import static fundamentals.MDAHelper.put;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import fundamentals.MultiD;
+import fundamentals.MDA;
+import fundamentals.MDABuilder;
 
 public class TestMultiplicationService {
-	MultiD multiD1;
-	MultiD multiD2;
-	MultiD result;
+	MDA multiD1;
+	MDA multiD2;
+	MDA result;
 	MultiplicationService multiplicationService;
 	
 	@Before
@@ -25,17 +28,17 @@ public class TestMultiplicationService {
 	@Test
 	public void simpleMultiplication(){
 		// Given
-		multiD1 = new MultiD(1);
-		multiD2 = new MultiD(1);
+		multiD1 = new MDABuilder().withDimensions(1).build();
+		multiD2 = new MDABuilder().withDimensions(1).build();
 		
-		multiD1.put(1D,0);
-		multiD2.put(2D,0);
+		put(multiD1, 1D,0);
+		put(multiD2, 2D,0);
 		
 		// When
-		MultiD result = multiplicationService.operate(multiD1, multiD2);
+		MDA result = multiplicationService.operate(multiD1, multiD2);
 		
 		// Then
-		assertEquals("Returned amount should be the product", 2D, result.get(0), 0);
+		assertEquals("Returned amount should be the product", 2D, get(result, 0), 0);
 	}
 	
 	
@@ -45,27 +48,27 @@ public class TestMultiplicationService {
 	@Test
 	public void biggerMultiplication(){
 		// Given
-		multiD1 = new MultiD(2,2);
-		multiD2 = new MultiD(2,2);
+		multiD1 = new MDABuilder().withDimensions(2,2).build();
+		multiD2 = new MDABuilder().withDimensions(2,2).build();
 		
-		multiD1.put(1D, 0,0);
-		multiD1.put(2D, 0,1);
-		multiD1.put(3D, 1,0);
-		multiD1.put(4D, 1,1);
+		put(multiD1, 1D, 0,0);
+		put(multiD1, 2D, 0,1);
+		put(multiD1, 3D, 1,0);
+		put(multiD1, 4D, 1,1);
 		
-		multiD2.put(5D, 0,0);
-		multiD2.put(6D, 0,1);
-		multiD2.put(7D, 1,0);
-		multiD2.put(8D, 1,1);
+		put(multiD2, 5D, 0,0);
+		put(multiD2, 6D, 0,1);
+		put(multiD2, 7D, 1,0);
+		put(multiD2, 8D, 1,1);
 		
 		// When
 		result = multiplicationService.operate(multiD1, multiD2);
 		
 		// Then
-		assertEquals("Returned amount should be the sum", 5D, result.get(0,0), 0);
-		assertEquals("Returned amount should be the sum", 12D, result.get(0,1), 0);
-		assertEquals("Returned amount should be the sum", 21D, result.get(1,0), 0);
-		assertEquals("Returned amount should be the sum", 32D, result.get(1,1), 0);
+		assertEquals("Returned amount should be the sum", 5D,  get(result, 0,0), 0);
+		assertEquals("Returned amount should be the sum", 12D, get(result, 0,1), 0);
+		assertEquals("Returned amount should be the sum", 21D, get(result, 1,0), 0);
+		assertEquals("Returned amount should be the sum", 32D, get(result, 1,1), 0);
 	}
 	
 	
@@ -77,8 +80,8 @@ public class TestMultiplicationService {
 		// Given
 		int[] bigDimensions = {28,28,3,10};
 		int[] position = new int[bigDimensions.length];
-		multiD1 = new MultiD(bigDimensions);
-		multiD2 = new MultiD(bigDimensions);
+		multiD1 = new MDABuilder().withDimensions(bigDimensions).build();
+		multiD2 = new MDABuilder().withDimensions(bigDimensions).build();
 		double element = 1;
 		
 		for(int row = 0; row < bigDimensions[0]; row++){
@@ -89,8 +92,8 @@ public class TestMultiplicationService {
 						position[1] = column;
 						position[2] = channel;
 						position[3] = image;
-						multiD1.put(element, position);
-						multiD2.put(2*element, position);
+						put(multiD1, element, position);
+						put(multiD2, 2*element, position);
 						element++;
 					}
 				}
@@ -111,7 +114,7 @@ public class TestMultiplicationService {
 						position[1] = column;
 						position[2] = channel;
 						position[3] = image;
-						assertEquals("Value not correctly returned for " + row + column + channel + image, 2*Math.pow(element, 2), result.get(position), 0);
+						assertEquals("Value not correctly returned for " + row + column + channel + image, 2*Math.pow(element, 2), get(result, position), 0);
 						element++;
 					}
 				}
@@ -128,7 +131,7 @@ public class TestMultiplicationService {
 		// Given
 		int[] bigDimensions = {28,28,3,10};
 		int[] position = new int[bigDimensions.length];
-		multiD1 = new MultiD(bigDimensions);
+		multiD1 = new MDABuilder().withDimensions(bigDimensions).build();
 		double element = 1;
 		
 		for(int row = 0; row < bigDimensions[0]; row++){
@@ -139,7 +142,7 @@ public class TestMultiplicationService {
 						position[1] = column;
 						position[2] = channel;
 						position[3] = image;
-						multiD1.put(element, position);
+						put(multiD1, element, position);
 						element++;
 					}
 				}
@@ -159,7 +162,7 @@ public class TestMultiplicationService {
 	  				position[1] = column;
 	  				position[2] = channel;
 	  				position[3] = image;
-	  				assertEquals("Value not correctly returned for " + row + column + channel + image, element*10, result.get(position), 0);
+	  				assertEquals("Value not correctly returned for " + row + column + channel + image, element*10, get(result, position), 0);
 	  				element++;
 	  			}
 	  		}

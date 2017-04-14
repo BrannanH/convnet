@@ -3,7 +3,9 @@ package services;
 import org.junit.Before;
 import org.junit.Test;
 
-import fundamentals.MultiD;
+import fundamentals.HelperLibrary;
+import fundamentals.MDA;
+import fundamentals.MDABuilder;
 import layers.Feature;
 
 public class TestDimensionVerificationService {
@@ -27,13 +29,13 @@ public class TestDimensionVerificationService {
 	public void testTooManyFilterDimensions() {
 		// Given
 		int[] filterDimensions = {3,3,3};
-		MultiD filter = new MultiD(filterDimensions);
+		MDA filter = new MDABuilder().withDimensions(filterDimensions).build();
 		
 		feature.setActiveDimensions(activeDimensions);
 		feature.setFeatureMap(filter);
 		
 		// When
-		dimensionVerificationService.verify(inputDimensions,feature);
+		dimensionVerificationService.verify(HelperLibrary.arrayAsList(inputDimensions),feature);
 		
 		// Then expect exception
 	}
@@ -45,11 +47,11 @@ public class TestDimensionVerificationService {
 	@Test(expected = IllegalArgumentException.class)
 	public void testFeatureLargerThanImage() {
 		// Given
-		MultiD filter = new MultiD(3,30);
+		MDA filter = new MDABuilder().withDimensions(3,30).build();
 		feature.setFeatureMap(filter);
 		
 		// When
-		dimensionVerificationService.verify(inputDimensions,feature);
+		dimensionVerificationService.verify(HelperLibrary.arrayAsList(inputDimensions),feature);
 		
 		// Then expect exception
 	}

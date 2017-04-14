@@ -1,6 +1,12 @@
 package services;
 
-import fundamentals.MultiD;
+import static fundamentals.MDAHelper.get;
+import static fundamentals.MDAHelper.put;
+
+import java.util.List;
+
+import fundamentals.MDA;
+import fundamentals.MDABuilder;
 
 /**
  * This class is used to extract a subset of an MDA.
@@ -19,7 +25,7 @@ public class ExtractDimensionService {
 	 * @param instancesToExtract
 	 * @return
 	 */
-	public static MultiD subsetOf(MultiD multiD, int dimension, int... instancesToExtract) {
+	public static MDA subsetOf(MDA multiD, int dimension, int... instancesToExtract) {
 		
 		validateDimension(multiD, dimension);
 		
@@ -31,14 +37,14 @@ public class ExtractDimensionService {
 		
 		int[] dimensionsToPersist;
 		if(instancesToExtract.length == 1) {
-			dimensionsToPersist = new int[multiD.getDimensions().length-1];
+			dimensionsToPersist = new int[multiD.getDimensions().size()-1];
 			int count = 0;
 		
-			for(int i = 0; i < multiD.getDimensions().length; i++) {
+			for(int i = 0; i < multiD.getDimensions().size(); i++) {
 			
 				if(i != dimension) {
 				
-					dimensionsToPersist[count] = multiD.getDimensions()[i];
+					dimensionsToPersist[count] = multiD.getDimensions().get(i);
 					count++;
 				
 				}
@@ -47,9 +53,9 @@ public class ExtractDimensionService {
 			
 		} else {
 			
-			dimensionsToPersist = new int[multiD.getDimensions().length];
+			dimensionsToPersist = new int[multiD.getDimensions().size()];
 			
-			for(int i = 0; i < multiD.getDimensions().length; i++) {
+			for(int i = 0; i < multiD.getDimensions().size(); i++) {
 			
 				if(i == dimension) {
 				
@@ -58,14 +64,14 @@ public class ExtractDimensionService {
 				
 				} else {
 					
-					dimensionsToPersist[i] = multiD.getDimensions()[i];
+					dimensionsToPersist[i] = multiD.getDimensions().get(i);
 				}
 			
 			}
 			
 		}
 		
-		MultiD result = new MultiD(constructDimensions(dimension, instancesToExtract, multiD.getDimensions()));
+		MDA result = new MDABuilder().withDimensions(constructDimensions(dimension, instancesToExtract, multiD.getDimensions())).build();
 		
 		for(int instance : instancesToExtract) {
 			
@@ -85,20 +91,20 @@ public class ExtractDimensionService {
 	 * @param originalsDimensions
 	 * @return
 	 */
-	private static int[] constructDimensions(int dimension, int[] instancesToExtract, int[] originalsDimensions) {
+	private static int[] constructDimensions(int dimension, int[] instancesToExtract, List<Integer> originalsDimensions) {
 		
 		int[] dimensionsToPersist;
 		
 		if(instancesToExtract.length == 1) {
 			
-			dimensionsToPersist = new int[originalsDimensions.length-1];
+			dimensionsToPersist = new int[originalsDimensions.size()-1];
 			int count = 0;
 		
-			for(int i = 0; i < originalsDimensions.length; i++) {
+			for(int i = 0; i < originalsDimensions.size(); i++) {
 			
 				if(i != dimension) {
 				
-					dimensionsToPersist[count] = originalsDimensions[i];
+					dimensionsToPersist[count] = originalsDimensions.get(i);
 					count++;
 				
 				}
@@ -107,9 +113,9 @@ public class ExtractDimensionService {
 			
 		} else {
 			
-			dimensionsToPersist = new int[originalsDimensions.length];
+			dimensionsToPersist = new int[originalsDimensions.size()];
 			
-			for(int i = 0; i < originalsDimensions.length; i++) {
+			for(int i = 0; i < originalsDimensions.size(); i++) {
 			
 				if(i == dimension) {
 				
@@ -118,7 +124,7 @@ public class ExtractDimensionService {
 				
 				} else {
 					
-					dimensionsToPersist[i] = originalsDimensions[i];
+					dimensionsToPersist[i] = originalsDimensions.get(i);
 					
 				}
 			
@@ -137,12 +143,12 @@ public class ExtractDimensionService {
 	 * @param instance
 	 * @return
 	 */
-	private static MultiD populate(MultiD result, MultiD multiD, int dimension, int instance) {
+	private static MDA populate(MDA result, MDA multiD, int dimension, int instance) {
 		
-		int[] position = new int[multiD.getDimensions().length];
+		int[] position = new int[multiD.getDimensions().size()];
 		position[dimension] = instance;
 		
-		return recursivePopulate(result, multiD, dimension, instance, position, multiD.getDimensions().length-1);
+		return recursivePopulate(result, multiD, dimension, instance, position, multiD.getDimensions().size()-1);
 		
 	}
 
@@ -164,18 +170,18 @@ public class ExtractDimensionService {
 	 * @param place
 	 * @return
 	 */
-	private static MultiD recursivePopulate(MultiD result, MultiD multiD, int dimension, int instance, int[] position, int place) {
+	private static MDA recursivePopulate(MDA result, MDA multiD, int dimension, int instance, int[] position, int place) {
 		
 		if(place == 0) {
 			
-			for(int j = 0; j < result.getDimensions()[0]; j++) {
+			for(int j = 0; j < result.getDimensions().get(0); j++) {
 				
 				position[place] = j;
-				int[] toPlace = new int[result.getDimensions().length];
+				int[] toPlace = new int[result.getDimensions().size()];
 				
-				if(result.getDimensions().length == multiD.getDimensions().length-1){
+				if(result.getDimensions().size() == multiD.getDimensions().size()-1){
 					
-					for(int i = 0; i < multiD.getDimensions().length-1; i++) {
+					for(int i = 0; i < multiD.getDimensions().size()-1; i++) {
 						
 						if(i < dimension) {
 							
@@ -194,7 +200,7 @@ public class ExtractDimensionService {
 					
 				}
 				
-			result.put(multiD.get(position), toPlace);
+			put(result, get(multiD, position), toPlace);
 			}
 			
 			position[0] = 0;
@@ -206,7 +212,7 @@ public class ExtractDimensionService {
 			
 		} else {
 			
-			for(int i = 0; i < multiD.getDimensions()[place]; i++) {
+			for(int i = 0; i < multiD.getDimensions().get(place); i++) {
 				
 				position[place] = i;
 				recursivePopulate(result, multiD, dimension, instance, position, place-1);
@@ -223,11 +229,11 @@ public class ExtractDimensionService {
 	 * @param multiD
 	 * @param dimension
 	 */
-	private static void validateDimension(MultiD multiD, int dimension) {
+	private static void validateDimension(MDA multiD, int dimension) {
 		
-		if( dimension > multiD.getDimensions().length - 1 || dimension < 0 ) {
+		if( dimension > multiD.getDimensions().size() - 1 || dimension < 0 ) {
 			
-			throw(new IllegalArgumentException("Specified dimension does not exist. Possible dimensions are between 0 and " + (multiD.getDimensions().length-1)));
+			throw(new IllegalArgumentException("Specified dimension does not exist. Possible dimensions are between 0 and " + (multiD.getDimensions().size()-1)));
 			
 		}
 		
@@ -240,11 +246,11 @@ public class ExtractDimensionService {
 	 * @param dimension
 	 * @param instance
 	 */
-	private static void validateInstance(MultiD multiD, int dimension, int instance) {
+	private static void validateInstance(MDA multiD, int dimension, int instance) {
 		
-		if( instance > multiD.getDimensions()[dimension] - 1 || instance < 0 ) {
+		if( instance > multiD.getDimensions().get(dimension) - 1 || instance < 0 ) {
 			
-			throw(new IllegalArgumentException("Specified instance of dimension " + dimension + "does not exist. It exists between 0 and " + (multiD.getDimensions()[dimension]-1)));
+			throw(new IllegalArgumentException("Specified instance of dimension " + dimension + "does not exist. It exists between 0 and " + (multiD.getDimensions().get(dimension)-1)));
 			
 		}
 		

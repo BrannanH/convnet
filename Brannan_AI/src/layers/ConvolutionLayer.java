@@ -1,8 +1,11 @@
 package layers;
 
+import java.util.List;
+
 import com.google.inject.Inject;
 
-import fundamentals.MultiD;
+import fundamentals.HelperLibrary;
+import fundamentals.MDA;
 import services.DimensionVerificationService;
 
 /**
@@ -24,7 +27,7 @@ public class ConvolutionLayer implements Layer {
 	 * @see{Layer#forward}
 	 */
 	@Override
-	public ForwardOutputTuple forward(MultiD operand, Feature feature) {
+	public ForwardOutputTuple forward(MDA operand, Feature feature) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -34,7 +37,7 @@ public class ConvolutionLayer implements Layer {
 	 * @see{Layer#forwardNoTrain}
 	 */
 	@Override
-	public MultiD forwardNoTrain(MultiD operand, Feature feature) {
+	public MDA forwardNoTrain(MDA operand, Feature feature) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -43,7 +46,7 @@ public class ConvolutionLayer implements Layer {
 	 * @see{Layer#reverse}
 	 */
 	@Override
-	public ReverseOutputTuple reverse(MultiD dLossByDOut, MultiD dOutByDIn, MultiD dOutByDFeature) {
+	public ReverseOutputTuple reverse(MDA dLossByDOut, MDA dOutByDIn, MDA dOutByDFeature) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -52,33 +55,33 @@ public class ConvolutionLayer implements Layer {
 	 * @see{Layer#outputDimensions}
 	 */
 	@Override
-	public int[] outputDimensions(int[] inputDimensions, Feature feature) {
+	public List<Integer> outputDimensions(List<Integer> inputDimensions, Feature feature) {
 		
 		dimensionsService.verify(inputDimensions, feature);
 		
-		int[] results = new int[inputDimensions.length];
+		int[] results = new int[inputDimensions.size()];
 		
-		for(int i = 0; i < inputDimensions.length; i++) {
+		for(int i = 0; i < inputDimensions.size(); i++) {
 			
-			results[i] = inputDimensions[i];
+			results[i] = inputDimensions.get(i);
 			
 			for(int dimension : feature.getActiveDimensions()) {
 				
 				if(dimension == i) {
 					
-					if(Math.floorMod(feature.getFeatureMap().getDimensions()[i], 2) == 1) {
+					if(Math.floorMod(feature.getFeatureMap().getDimensions().get(i), 2) == 1) {
 						
-						results[i] -= (feature.getFeatureMap().getDimensions()[i]-1);
+						results[i] -= (feature.getFeatureMap().getDimensions().get(i)-1);
 						
 					} else {
 						
-						results[i] -= (feature.getFeatureMap().getDimensions()[i]);
+						results[i] -= (feature.getFeatureMap().getDimensions().get(i));
 					}
 				}
 			}
 		}
 		
-		return results;
+		return HelperLibrary.arrayAsList(results);
 	}
 
 }

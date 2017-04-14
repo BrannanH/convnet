@@ -1,5 +1,7 @@
 package services;
 
+import java.util.List;
+
 import layers.Feature;
 
 /**
@@ -19,16 +21,16 @@ public class DimensionVerificationService {
 	 * @param feature
 	 * @return
 	 */
-	public boolean verify(int[] inputDimensions, Feature feature) {
+	public boolean verify(List<Integer> inputDimensions, Feature feature) {
 		
-		if(feature.getActiveDimensions().length != feature.getFeatureMap().getDimensions().length) {
+		if(feature.getActiveDimensions().length != feature.getFeatureMap().getDimensions().size()) {
 			
 			throw(new IllegalArgumentException("Mismatch between number of specified dimensions to filter in, and number of dimensions on the filter"));
 		}
 		
 		for(int i = 0; i < feature.getActiveDimensions().length; i++) {
 			
-			if(inputDimensions[i] < feature.getFeatureMap().getDimensions()[i]) {
+			if(inputDimensions.get(i) < feature.getFeatureMap().getDimensions().get(i)) {
 				
 				throw(new IllegalArgumentException("Each filter dimension must be smaller than or equal to the equivalent dimension on the MDA"));			
 			}

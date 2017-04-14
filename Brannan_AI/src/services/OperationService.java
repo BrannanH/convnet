@@ -1,6 +1,9 @@
 package services;
 
-import fundamentals.MultiD;
+import static fundamentals.MDAHelper.put;
+
+import fundamentals.MDA;
+import fundamentals.MDABuilder;
 
 /**
  * This class provides the methods necessary for element wise operations. It implements a recursive call to
@@ -21,26 +24,26 @@ abstract class OperationService {
 	 * @param operand2
 	 * @return
 	 */
-	public MultiD operate(MultiD operand1, MultiD operand2){
-		if(operand1.getDimensions().length != operand2.getDimensions().length){
+	public MDA operate(MDA operand1, MDA operand2){
+		if(operand1.getDimensions().size() != operand2.getDimensions().size()){
 			throw(new IllegalArgumentException("Dimensional Mis-match between summed arrays, they have different lengths"));
 		}
-		for(int i = 0; i < operand1.getDimensions().length; i++){
-			if(operand1.getDimensions()[i] != operand2.getDimensions()[i]){
+		for(int i = 0; i < operand1.getDimensions().size(); i++){
+			if(operand1.getDimensions().get(i) != operand2.getDimensions().get(i)){
 				throw(new IllegalArgumentException("Dimensional Mis-match between summed arrays at dimension " + i));
 			}
 		}
-		MultiD result = new MultiD(operand1.getDimensions());
+		MDA result = new MDABuilder().withDimensions(operand1.getDimensions()).build();
 		
-		recursiveOperate(result, operand1, operand2, new int[operand1.getDimensions().length], 0); 
+		recursiveOperate(result, operand1, operand2, new int[operand1.getDimensions().size()], 0); 
 		
 	return result;
 	}
 	
-	public MultiD operate(MultiD operand1, Double operand2){
-		MultiD result = new MultiD(operand1.getDimensions());
+	public MDA operate(MDA operand1, Double operand2){
+		MDA result = new MDABuilder().withDimensions(operand1.getDimensions()).build();
 		
-		recursiveOperate(result, operand1, operand2, new int[operand1.getDimensions().length], 0); 
+		recursiveOperate(result, operand1, operand2, new int[operand1.getDimensions().size()], 0); 
 		
 	return result;
 	}
@@ -56,12 +59,12 @@ abstract class OperationService {
 	 * @param index
 	 * @return
 	 */
-	private MultiD recursiveOperate(MultiD result, MultiD operand1, MultiD operand2, int[] position, int index) {
-		for(int i = 0; i < result.getDimensions()[index]; i++){
+	private MDA recursiveOperate(MDA result, MDA operand1, MDA operand2, int[] position, int index) {
+		for(int i = 0; i < result.getDimensions().get(index); i++){
 			position[index] = i;
 			Double element = calculate(position, operand1, operand2);
-			result.put(element, position);
-			if(index == result.getDimensions().length-1){
+			put(result, element, position);
+			if(index == result.getDimensions().size()-1){
 				continue;
 			}
 			result = recursiveOperate(result, operand1, operand2, position, index+1);
@@ -80,12 +83,12 @@ abstract class OperationService {
 	 * @param index
 	 * @return
 	 */
-	private MultiD recursiveOperate(MultiD result, MultiD operand1, double operand2, int[] position, int index) {
-		for(int i = 0; i < result.getDimensions()[index]; i++){
+	private MDA recursiveOperate(MDA result, MDA operand1, double operand2, int[] position, int index) {
+		for(int i = 0; i < result.getDimensions().get(index); i++){
 			position[index] = i;
 			Double element = calculate(position, operand1, operand2);
-			result.put(element, position);
-			if(index == result.getDimensions().length-1){
+			put(result, element, position);
+			if(index == result.getDimensions().size()-1){
 				continue;
 			}
 			result = recursiveOperate(result, operand1, operand2, position, index+1);
@@ -99,7 +102,7 @@ abstract class OperationService {
 	 * @param operand2
 	 * @return
 	 */
-	protected abstract Double calculate(int[] position, MultiD operand1, MultiD operand2);
+	protected abstract Double calculate(int[] position, MDA operand1, MDA operand2);
 	
 	/**
 	 * This abstract method allows for numerous implementations of the constant operation.
@@ -107,5 +110,5 @@ abstract class OperationService {
 	 * @param operand2
 	 * @return
 	 */
-	protected abstract Double calculate(int[] position, MultiD operand1, Double operand2);
+	protected abstract Double calculate(int[] position, MDA operand1, Double operand2);
 }
