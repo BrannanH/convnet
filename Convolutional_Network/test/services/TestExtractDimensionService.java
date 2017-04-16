@@ -27,17 +27,18 @@ public class TestExtractDimensionService {
 		// Then expect exception
 	}
 	
-	@Test(expected = IllegalArgumentException.class)
-	public void testDimensionNegative() {
-		// Given
-		int dimension = -1;
-		int[] instance = {1};
-		
-		// When
-		subsetOf(multiD1, dimension, instance);
-		
-		// Then
-	}
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDimensionNegative() {
+        // Given
+        int dimension = -1;
+        int[] instance = { 1 };
+
+        // When
+        subsetOf(multiD1, dimension, instance);
+
+        // Then
+    }
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceTooLarge() {

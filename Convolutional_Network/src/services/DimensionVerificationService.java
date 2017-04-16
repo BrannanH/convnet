@@ -2,8 +2,6 @@ package services;
 
 import java.util.List;
 
-import layers.Feature;
-
 /**
  * This service carries out comparisons between dimensions specified at the input to a layer, the feature map
  * and the feature map's active dimensions. These are needed at construction of the neural net, and every layer
@@ -13,29 +11,34 @@ import layers.Feature;
  */
 public class DimensionVerificationService {
 
-	/**
-	 * This method returns true if neither of its validations throw errors. This checks
-	 * <li> The number of active dimensions equal the number of dimensions specified on the feature map </li>
-	 * <li> The feature map is smaller than the input to the layer which it is to be compared with </li>
-	 * @param inputDimensions
-	 * @param feature
-	 * @return
-	 */
-	public boolean verify(List<Integer> inputDimensions, Feature feature) {
-		
-		if(feature.getActiveDimensions().length != feature.getFeatureMap().getDimensions().size()) {
-			
-			throw(new IllegalArgumentException("Mismatch between number of specified dimensions to filter in, and number of dimensions on the filter"));
-		}
-		
-		for(int i = 0; i < feature.getActiveDimensions().length; i++) {
-			
-			if(inputDimensions.get(i) < feature.getFeatureMap().getDimensions().get(i)) {
-				
-				throw(new IllegalArgumentException("Each filter dimension must be smaller than or equal to the equivalent dimension on the MDA"));			
-			}
-		}
-		return true;
-	}
-	
+    /**
+     * This method returns true if neither of its validations throw errors. This
+     * checks
+     * <li>The number of active dimensions equal the number of dimensions
+     * specified on the feature map</li>
+     * <li>The feature map is smaller than the input to the layer which it is to
+     * be compared with</li>
+     * 
+     * @param inputDimensions
+     * @param feature
+     * @return
+     */
+    public boolean verify(List<Integer> inputDimensions, List<Integer> poolSizes) {
+
+        if (inputDimensions.size() != poolSizes.size()) {
+            throw new IllegalArgumentException("The correct number of dimensions she be specified: Input has "
+                    + inputDimensions.size() + " whereas the filter has " + poolSizes.size());
+        }
+
+        for (int i = 0; i < poolSizes.size(); i++) {
+
+            if (inputDimensions.get(i) < poolSizes.get(i)) {
+
+                throw new IllegalArgumentException(
+                        "Each filter dimension must be smaller than or equal to the equivalent dimension on the MDA");
+            }
+        }
+        return true;
+    }
+
 }
