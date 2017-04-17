@@ -3,8 +3,6 @@ package layers.pooling;
 import static fundamentals.MDAHelper.get;
 import static fundamentals.MDAHelper.put;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Mockito.when;
 
 import java.util.List;
 
@@ -30,7 +28,6 @@ public class TestMeanPoolingLayer {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        when(dimensionVerificationService.verify(anyListOf(Integer.class), anyListOf(Integer.class))).thenReturn(true);
         layer = new PoolingLayer(dimensionVerificationService);
     }
 

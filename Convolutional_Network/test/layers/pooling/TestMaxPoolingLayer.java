@@ -4,9 +4,6 @@ import static fundamentals.HelperLibrary.arrayAsList;
 import static fundamentals.MDAHelper.put;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.when;
 import static testsupport.CompareMDAs.checkExpectation;
 
 import java.util.HashMap;
@@ -16,7 +13,6 @@ import java.util.Map.Entry;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -30,7 +26,7 @@ import services.DimensionVerificationService;
 
 /**
  * This class tests the MaxPoolingLayer
- * @author Brannan
+ * @author Brannan R. Hancock
  *
  */
 public class TestMaxPoolingLayer {
@@ -61,8 +57,6 @@ public class TestMaxPoolingLayer {
 			}
 		}
 		
-		when(dimensionVerificationService.verify((Matchers.anyListOf(Integer.class)), eq(poolingSize))).thenReturn(true);
-		
 		MDA expectedResult = new MDABuilder().withDimensions(2,4).build();
 		put(expectedResult, 4D, 0, 0);
 		put(expectedResult, 5D, 0, 1);
@@ -75,27 +69,35 @@ public class TestMaxPoolingLayer {
 		
 		Map<List<Integer>, Map<List<Integer>, Double>> expectedDerivative = new HashMap<List<Integer>, Map<List<Integer>, Double>>();
 		Map<List<Integer>, Double> temp = new HashMap<>();
+		temp.put(Lists.newArrayList(0, 0), 0D);
 		temp.put(Lists.newArrayList(1, 0), 1D);
 		expectedDerivative.put(Lists.newArrayList(0,0), temp);
 		temp = new HashMap<>();
+		temp.put(Lists.newArrayList(0, 1), 0D);
 		temp.put(Lists.newArrayList(1, 1), 1D);
 		expectedDerivative.put(Lists.newArrayList(0,1), temp);
 		temp = new HashMap<>();
+		temp.put(Lists.newArrayList(0, 2), 0D);
 		temp.put(Lists.newArrayList(1, 2), 1D);
 		expectedDerivative.put(Lists.newArrayList(0,2), temp);
 		temp = new HashMap<>();
+		temp.put(Lists.newArrayList(0, 3), 0D);
 		temp.put(Lists.newArrayList(1, 3), 1D);
 		expectedDerivative.put(Lists.newArrayList(0,3), temp);
 		temp = new HashMap<>();
+		temp.put(Lists.newArrayList(2, 0), 0D);
 		temp.put(Lists.newArrayList(3, 0), 1D);
 		expectedDerivative.put(Lists.newArrayList(1,0), temp);
 		temp = new HashMap<>();
+		temp.put(Lists.newArrayList(2, 1), 0D);
 		temp.put(Lists.newArrayList(3, 1), 1D);
 		expectedDerivative.put(Lists.newArrayList(1,1), temp);
 		temp = new HashMap<>();
+		temp.put(Lists.newArrayList(2, 2), 0D);
 		temp.put(Lists.newArrayList(3, 2), 1D);
 		expectedDerivative.put(Lists.newArrayList(1,2), temp);
 		temp = new HashMap<>();
+		temp.put(Lists.newArrayList(2, 3), 0D);
 		temp.put(Lists.newArrayList(3, 3), 1D);
 		expectedDerivative.put(Lists.newArrayList(1,3), temp);
 		temp = new HashMap<>();
@@ -132,8 +134,6 @@ public class TestMaxPoolingLayer {
 			}
 		}
 		
-		when(dimensionVerificationService.verify(anyListOf(Integer.class), eq(arrayAsList(poolingSize)))).thenReturn(true);
-		
 		MDA expectedResult = new MDABuilder().withDimensions(2,2).build();
 		put(expectedResult, 5D, 0, 0);
 		put(expectedResult, 7D, 0, 1);
@@ -142,15 +142,27 @@ public class TestMaxPoolingLayer {
 		
 		Map<List<Integer>, Map<List<Integer>, Double>> expectedDerivative = new HashMap<List<Integer>, Map<List<Integer>, Double>>();
 		Map<List<Integer>, Double> temp = new HashMap<>();
+		temp.put(Lists.newArrayList(0, 0), 0D);
+		temp.put(Lists.newArrayList(0, 1), 0D);
+		temp.put(Lists.newArrayList(1, 0), 0D);
 		temp.put(Lists.newArrayList(1, 1), 1D);
 		expectedDerivative.put(Lists.newArrayList(0,0), temp);
 		temp = new HashMap<>();
+		temp.put(Lists.newArrayList(0, 2), 0D);
+		temp.put(Lists.newArrayList(0, 3), 0D);
+		temp.put(Lists.newArrayList(1, 2), 0D);
 		temp.put(Lists.newArrayList(1, 3), 1D);
 		expectedDerivative.put(Lists.newArrayList(0,1), temp);
 		temp = new HashMap<>();
+		temp.put(Lists.newArrayList(2, 0), 0D);
+		temp.put(Lists.newArrayList(2, 1), 0D);
+		temp.put(Lists.newArrayList(3, 0), 0D);
 		temp.put(Lists.newArrayList(3, 1), 1D);
 		expectedDerivative.put(Lists.newArrayList(1,0), temp);
 		temp = new HashMap<>();
+		temp.put(Lists.newArrayList(2, 2), 0D);
+		temp.put(Lists.newArrayList(2, 3), 0D);
+		temp.put(Lists.newArrayList(3, 2), 0D);
 		temp.put(Lists.newArrayList(3, 3), 1D);
 		expectedDerivative.put(Lists.newArrayList(1,1), temp);
 		
@@ -180,8 +192,6 @@ public class TestMaxPoolingLayer {
 			}
 		}
 		
-		when(dimensionVerificationService.verify(anyListOf(Integer.class), eq(arrayAsList(poolingSize)))).thenReturn(true);
-		
 		MDA expectedResult = new MDABuilder().withDimensions(2,2,1).build();
 		put(expectedResult, 21D, 0, 0, 0);
 		put(expectedResult, 23D, 0, 1, 0);
@@ -190,15 +200,43 @@ public class TestMaxPoolingLayer {
 		
 		Map<List<Integer>, Map<List<Integer>, Double>> expectedDerivative = new HashMap<List<Integer>, Map<List<Integer>, Double>>();
 		Map<List<Integer>, Double> temp = new HashMap<>();
+		temp.put(Lists.newArrayList(0, 0, 0), 0D);
+		temp.put(Lists.newArrayList(0, 1, 0), 0D);
+		temp.put(Lists.newArrayList(1, 0, 0), 0D);
+		temp.put(Lists.newArrayList(1, 1, 0), 0D);
+		temp.put(Lists.newArrayList(0, 0, 1), 0D);
+		temp.put(Lists.newArrayList(0, 1, 1), 0D);
+		temp.put(Lists.newArrayList(1, 0, 1), 0D);
 		temp.put(Lists.newArrayList(1, 1, 1), 1D);
 		expectedDerivative.put(Lists.newArrayList(0,0,0), temp);
 		temp = new HashMap<>();
+		temp.put(Lists.newArrayList(0, 2, 0), 0D);
+		temp.put(Lists.newArrayList(0, 3, 0), 0D);
+		temp.put(Lists.newArrayList(1, 2, 0), 0D);
+		temp.put(Lists.newArrayList(1, 3, 0), 0D);
+		temp.put(Lists.newArrayList(0, 2, 1), 0D);
+		temp.put(Lists.newArrayList(0, 3, 1), 0D);
+		temp.put(Lists.newArrayList(1, 2, 1), 0D);
 		temp.put(Lists.newArrayList(1, 3, 1), 1D);
 		expectedDerivative.put(Lists.newArrayList(0,1,0), temp);
 		temp = new HashMap<>();
+		temp.put(Lists.newArrayList(2, 0, 0), 0D);
+		temp.put(Lists.newArrayList(2, 1, 0), 0D);
+		temp.put(Lists.newArrayList(3, 0, 0), 0D);
+		temp.put(Lists.newArrayList(3, 1, 0), 0D);
+		temp.put(Lists.newArrayList(2, 0, 1), 0D);
+		temp.put(Lists.newArrayList(2, 1, 1), 0D);
+		temp.put(Lists.newArrayList(3, 0, 1), 0D);
 		temp.put(Lists.newArrayList(3, 1, 1), 1D);
 		expectedDerivative.put(Lists.newArrayList(1,0,0), temp);
 		temp = new HashMap<>();
+		temp.put(Lists.newArrayList(2, 2, 0), 0D);
+		temp.put(Lists.newArrayList(2, 3, 0), 0D);
+		temp.put(Lists.newArrayList(3, 2, 0), 0D);
+		temp.put(Lists.newArrayList(3, 3, 0), 0D);
+		temp.put(Lists.newArrayList(2, 2, 1), 0D);
+		temp.put(Lists.newArrayList(2, 3, 1), 0D);
+		temp.put(Lists.newArrayList(3, 2, 1), 0D);
 		temp.put(Lists.newArrayList(3, 3, 1), 1D);
 		expectedDerivative.put(Lists.newArrayList(1,1,0), temp);
 		
@@ -229,9 +267,6 @@ public class TestMaxPoolingLayer {
             }
         }
 
-        when(dimensionVerificationService.verify(anyListOf(Integer.class), eq(arrayAsList(poolingSize))))
-                .thenReturn(true);
-
         MDA expectedResult = new MDABuilder().withDimensions(2, 4, 1).build();
         put(expectedResult, 20D, 0, 0, 0);
         put(expectedResult, 21D, 0, 1, 0);
@@ -244,30 +279,53 @@ public class TestMaxPoolingLayer {
 
         Map<List<Integer>, Map<List<Integer>, Double>> expectedDerivative = new HashMap<List<Integer>, Map<List<Integer>, Double>>();
         Map<List<Integer>, Double> temp = new HashMap<>();
+        temp.put(Lists.newArrayList(0, 0, 0), 0D);
+        temp.put(Lists.newArrayList(0, 0, 1), 0D);
+        temp.put(Lists.newArrayList(1, 0, 0), 0D);
         temp.put(Lists.newArrayList(1, 0, 1), 1D);
         expectedDerivative.put(Lists.newArrayList(0, 0, 0), temp);
         temp = new HashMap<>();
+        temp.put(Lists.newArrayList(0, 1, 0), 0D);
+        temp.put(Lists.newArrayList(0, 1, 1), 0D);
+        temp.put(Lists.newArrayList(1, 1, 0), 0D);
         temp.put(Lists.newArrayList(1, 1, 1), 1D);
         expectedDerivative.put(Lists.newArrayList(0, 1, 0), temp);
         temp = new HashMap<>();
+        temp.put(Lists.newArrayList(0, 2, 0), 0D);
+        temp.put(Lists.newArrayList(0, 2, 1), 0D);
+        temp.put(Lists.newArrayList(1, 2, 0), 0D);
         temp.put(Lists.newArrayList(1, 2, 1), 1D);
         expectedDerivative.put(Lists.newArrayList(0, 2, 0), temp);
         temp = new HashMap<>();
+        temp.put(Lists.newArrayList(0, 3, 0), 0D);
+        temp.put(Lists.newArrayList(0, 3, 1), 0D);
+        temp.put(Lists.newArrayList(1, 3, 0), 0D);
         temp.put(Lists.newArrayList(1, 3, 1), 1D);
         expectedDerivative.put(Lists.newArrayList(0, 3, 0), temp);
         temp = new HashMap<>();
+        temp.put(Lists.newArrayList(2, 0, 0), 0D);
+        temp.put(Lists.newArrayList(2, 0, 1), 0D);
+        temp.put(Lists.newArrayList(3, 0, 0), 0D);
         temp.put(Lists.newArrayList(3, 0, 1), 1D);
         expectedDerivative.put(Lists.newArrayList(1, 0, 0), temp);
         temp = new HashMap<>();
+        temp.put(Lists.newArrayList(2, 1, 0), 0D);
+        temp.put(Lists.newArrayList(2, 1, 1), 0D);
+        temp.put(Lists.newArrayList(3, 1, 0), 0D);
         temp.put(Lists.newArrayList(3, 1, 1), 1D);
         expectedDerivative.put(Lists.newArrayList(1, 1, 0), temp);
         temp = new HashMap<>();
+        temp.put(Lists.newArrayList(2, 2, 0), 0D);
+        temp.put(Lists.newArrayList(2, 2, 1), 0D);
+        temp.put(Lists.newArrayList(3, 2, 0), 0D);
         temp.put(Lists.newArrayList(3, 2, 1), 1D);
         expectedDerivative.put(Lists.newArrayList(1, 2, 0), temp);
         temp = new HashMap<>();
+        temp.put(Lists.newArrayList(2, 3, 0), 0D);
+        temp.put(Lists.newArrayList(2, 3, 1), 0D);
+        temp.put(Lists.newArrayList(3, 3, 0), 0D);
         temp.put(Lists.newArrayList(3, 3, 1), 1D);
         expectedDerivative.put(Lists.newArrayList(1, 3, 0), temp);
-        temp = new HashMap<>();
 
         // When
         ForwardOutputTuple result = maxPoolingLayer.forward(input, arrayAsList(poolingSize), PoolingType.MAX);

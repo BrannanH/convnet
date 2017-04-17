@@ -4,6 +4,11 @@ import java.util.List;
 import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
+/**
+ * 
+ * @author Brannan R. Hancock
+ *
+ */
 public class MDAHelper {
 
     /**
@@ -23,7 +28,7 @@ public class MDAHelper {
      * @return the element in the Multi Dimensional Array at the specified
      *         position
      */
-    private static double get(MDA mda, List<Integer> position) {
+    public static double get(MDA mda, List<Integer> position) {
         try {
             validatePosition(mda, position);
         } catch (Exception e) {
@@ -51,6 +56,27 @@ public class MDAHelper {
     public static void put(MDA mda, double element, List<Integer> position) {
         validatePosition(mda, position);
         mda.getElements()[getLocationForPosition(mda.getIncrements(), position)] = element;
+    }
+    
+    /**
+     * Defers to the addTo method using a list representation of the supplied position.
+     * @param mda
+     * @param addition
+     * @param position
+     */
+    public static void addTo(MDA mda, double addition, int...position) {
+        addTo(mda, addition, HelperLibrary.arrayAsList(position));
+    }
+
+
+    /**
+     * Works as an accumulator, adding the amount specified in addition to the given position in the specified MDA.
+     * @param mda
+     * @param addition
+     * @param position
+     */
+    public static void addTo(MDA mda, double addition, List<Integer> position) {
+        put(mda, get(mda, position) + addition, position);
     }
 
 

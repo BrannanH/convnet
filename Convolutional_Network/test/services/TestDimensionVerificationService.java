@@ -1,50 +1,189 @@
 package services;
 
-import java.util.List;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
+/**
+ * 
+ * @author Brannan R. Hancock
+ *
+ */
 public class TestDimensionVerificationService {
 	
-	List<Integer> inputDimensions = Lists.newArrayList(28,28,12);
-	int[] activeDimensions = {0,1};
+	private List<Integer> inputDimensions = Lists.newArrayList(28,28,12);
 	
-	DimensionVerificationService dimensionVerificationService = new DimensionVerificationService();
+	private DimensionVerificationService dimensionVerificationService = new DimensionVerificationService();
 	
-	@Before
-	public void setup() {
-	}
-
-
     /**
      * In this test setup the number of active dimensions is less than the
      * number of dimensions of the filter. Thus we expect an error.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testTooManyFilterDimensions() {
         // Given
         List<Integer> poolSizes = Lists.newArrayList(4, 4, 4, 4);
+        boolean caught = false;
+        
         // When
-        dimensionVerificationService.verify(inputDimensions, poolSizes);
-
-        // Then expect exception
+        try {
+            dimensionVerificationService.verify(inputDimensions, poolSizes);
+        } catch ( IllegalArgumentException e ) {
+            // Then
+            caught = true;
+        }
+        assertTrue(caught);
     }
 	
+    
 	/**
-	 * In this test in dimension 1 the filter is bigger than dimension 1 of its operand, thus
+	 * In this test in dimension 2 the filter is bigger than dimension 2 of its operand, thus
 	 * we expect an error.
 	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testFeatureLargerThanImage() {
 		// Given
-		List<Integer> poolSizes = Lists.newArrayList(3, 30);
-		// When
-		dimensionVerificationService.verify(inputDimensions, poolSizes);
+		List<Integer> poolSizes = Lists.newArrayList(28, 28, 13);
+		boolean caught = false;
 		
-		// Then expect exception
+		// When
+		try {
+		    dimensionVerificationService.verify(inputDimensions, poolSizes);
+		} catch ( IllegalArgumentException e ) {
+		    // Then
+		    caught = true;
+		}
+		assertTrue(caught);
 	}
 	
+	
+	/**
+	 * Verifies that an allowable corner case of filter size = input size does not throw
+	 * an error.
+	 */
+	@Test
+	public void testSuccess() {
+	    // Given
+	    List<Integer> poolSizes = Lists.newArrayList(28, 28, 12);
+	    
+	    // When
+	    dimensionVerificationService.verify(inputDimensions, poolSizes);
+	    
+	    // Then pass as no exceptions are thrown.
+	}
+	
+	
+	/**
+	 * Verifies that an error is thrown if dLossByDOut contains inconsistent dimensions.
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidMappingForDLossByDOut() {
+	    // Given
+	    Map<List<Integer>, Map<List<Integer>, Double>> testMap = new HashMap<>();
+	    testMap.put(Lists.newArrayList(0,0), Maps.newHashMap());
+	    testMap.put(Lists.newArrayList(0,0,1), Maps.newHashMap());
+	    
+	    // When
+	    dimensionVerificationService.verifyDerivativeMap(testMap);
+	    
+	    // Then expect exception
+	}
+	
+	
+	/**
+	 * Verifies that an error is thrown if dOutByDIn contains inconsistent dimensions within pools.
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidMappingForDOutByDInWithinGroup() {
+	    // Given
+	    Map<List<Integer>, Map<List<Integer>, Double>> testMap = new HashMap<>();
+	    Map<List<Integer>, Double> subMap1 = Maps.newHashMap();
+	    subMap1.put(Lists.newArrayList(0, 0), 0D);
+	    subMap1.put(Lists.newArrayList(0, 0, 1), 0D);
+	    testMap.put(Lists.newArrayList(0,0), subMap1);
+	    
+	    // When
+        dimensionVerificationService.verifyDerivativeMap(testMap);
+        
+        // Then expect exception
+	}
+	
+	
+	/**
+	 * Verifies than an error is thrown if dOutByDIn contains inconsistent dimensions across pools.
+	 */
+	@Test
+	public void testInvalidMappingForDOutByDInBetweenGroups() {
+	    // Given
+        Map<List<Integer>, Map<List<Integer>, Double>> testMap = new HashMap<>();
+        Map<List<Integer>, Double> subMap1 = Maps.newHashMap();
+        subMap1.put(Lists.newArrayList(0, 0), 0D);
+        subMap1.put(Lists.newArrayList(0, 1), 0D);
+        testMap.put(Lists.newArrayList(0,0), subMap1);
+        
+        Map<List<Integer>, Double> subMap2 = Maps.newHashMap();
+        subMap2.put(Lists.newArrayList(0, 0, 2), 0D);
+        subMap2.put(Lists.newArrayList(0, 0, 3), 0D);
+        testMap.put(Lists.newArrayList(0,1), subMap1);
+        
+        // When
+        dimensionVerificationService.verifyDerivativeMap(testMap);
+        
+        // Then expect exception
+	}
+	
+	/**
+	 * Verifies that inconsistencies between dimensions in the inner and outer map throws an error.
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidBetweenInnerAndOuterDimensions() {
+	 // Given
+        Map<List<Integer>, Map<List<Integer>, Double>> testMap = new HashMap<>();
+        Map<List<Integer>, Double> subMap1 = Maps.newHashMap();
+        subMap1.put(Lists.newArrayList(0, 0), 0D);
+        subMap1.put(Lists.newArrayList(0, 1), 0D);
+        testMap.put(Lists.newArrayList(0, 0, 0), subMap1);
+
+        Map<List<Integer>, Double> subMap2 = Maps.newHashMap();
+        subMap2.put(Lists.newArrayList(0, 2), 0D);
+        subMap2.put(Lists.newArrayList(0, 3), 0D);
+        testMap.put(Lists.newArrayList(0, 0, 1), subMap1);
+
+        // When
+        dimensionVerificationService.verifyDerivativeMap(testMap);
+
+        // Then expect exception
+	}
+	
+	
+	/**
+	 * Verifies that no errors are thrown if all validation criteria are met.
+	 */
+	@Test
+	public void testValidReturnsTrue() {
+	    // Given
+	    Map<List<Integer>, Map<List<Integer>, Double>> testMap = new HashMap<>();
+	    Map<List<Integer>, Double> subMap1 = Maps.newHashMap();
+	    subMap1.put(Lists.newArrayList(0, 0), 0D);
+	    subMap1.put(Lists.newArrayList(0, 1), 0D);
+	    testMap.put(Lists.newArrayList(0,0), subMap1);
+
+	    Map<List<Integer>, Double> subMap2 = Maps.newHashMap();
+	    subMap2.put(Lists.newArrayList(0, 2), 0D);
+	    subMap2.put(Lists.newArrayList(0, 3), 0D);
+	    testMap.put(Lists.newArrayList(0,1), subMap1);
+
+	    // When
+	    boolean result = dimensionVerificationService.verifyDerivativeMap(testMap);
+
+	    // Then
+	    assertTrue(result);
+	}
 }

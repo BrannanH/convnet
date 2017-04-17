@@ -24,23 +24,6 @@
           <target>1.8</target>
         </configuration>
       </plugin>
-      <plugin>
-    	<groupId>org.pitest</groupId>
-    	<artifactId>pitest-maven</artifactId>
-    	<version>1.2.0</version>
-    	<executions>
-    		<execution>
-    			<goals>
-    				<goal>mutationCoverage</goal>
-    			</goals>
-    			<phase>test</phase>
-    		</execution>
-    	</executions>
-    	<configuration>
-    		<coverageThreshold>85</coverageThreshold>
-    		<mutationThreshold>85</mutationThreshold>
-    	</configuration>
- 	</plugin>
  	<plugin>
 		<groupId>org.codehaus.mojo</groupId>
 		<artifactId>findbugs-maven-plugin</artifactId>
@@ -103,6 +86,35 @@
 			</execution>
 		</executions>
 	</plugin>
+	<plugin>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-maven</artifactId>
+        <version>1.2.0</version>
+        <executions>
+            <execution>
+                <goals>
+                    <goal>mutationCoverage</goal>
+                </goals>
+                <phase>test</phase>
+            </execution>
+        </executions>
+        <configuration>
+            <threads>4</threads>
+            <mutators>
+                <mutator>NON_VOID_METHOD_CALLS</mutator>
+                <mutator>CONSTRUCTOR_CALLS</mutator>
+                <mutator>INLINE_CONSTS</mutator>
+                <mutator>REMOVE_CONDITIONALS</mutator>
+                <mutator>EXPERIMENTAL_SWITCH</mutator>
+                <mutator>EXPERIMENTAL_MEMBER_VARIABLE</mutator>
+            </mutators>
+            <coverageThreshold>85</coverageThreshold>
+            <mutationThreshold>85</mutationThreshold>
+            <excludedMethods>
+            <excludedMethod>toString</excludedMethod>
+            </excludedMethods>
+        </configuration>
+    </plugin>
   </plugins>
   </build>
   <dependencies>
@@ -139,23 +151,43 @@
   </dependencies>
   <reporting>
   	<plugins>
-  		<plugin>
-  			<groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>2.17</version>
-			<configuration>
-				<configLocation>configs/checkstyle.xml</configLocation><!-- default -->
-				<violationseverity>info</violationseverity>
-                <includetestsourcedirectory>false</includetestsourcedirectory>
-				<!-- <configLocation>config/maven_checks.xml</configLocation> -->
-				<!-- <configLocation>config/turbine_checks.xml</configLocation> -->
-				<!-- <configLocation>config/avalon_checks.xml</configLocation> -->
-			</configuration>
-  		</plugin>
         <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>findbugs-maven-plugin</artifactId>
             <version>3.0.4</version>
+        </plugin>
+	    <plugin>
+		  <groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-pmd-plugin</artifactId>
+		  <version>3.7</version>
+		  <configuration>
+            <skipEmptyReport>false</skipEmptyReport>
+          </configuration>
+	    </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>2.17</version>
+            <configuration>
+                <configLocation>configs/checkstyle.xml</configLocation><!-- default -->
+                <violationseverity>info</violationseverity>
+                <includetestsourcedirectory>false</includetestsourcedirectory>
+                <!-- <configLocation>config/maven_checks.xml</configLocation> -->
+                <!-- <configLocation>config/turbine_checks.xml</configLocation> -->
+                <!-- <configLocation>config/avalon_checks.xml</configLocation> -->
+            </configuration>
+        </plugin>
+        <plugin>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-maven</artifactId>
+            <version>1.2.0</version>
+            <reportSets>
+                <reportSet>
+                    <reports>
+                        <report>report</report>
+                    </reports>
+                </reportSet>
+            </reportSets>
         </plugin>
   	</plugins>
   </reporting>

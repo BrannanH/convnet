@@ -5,49 +5,40 @@ import fundamentals.MDA;
 /**
  * This is the output type for each Layers reverse operation
  * 
- * @author Brannan
+ * @author Brannan R. Hancock
  *
  */
 public class ReverseOutputTuple {
 
     // The derivative of the Cost Function with respect to the input
-    private MDA dCostByDIn;
+    private final MDA dLossByDIn;
 
     // The derivative of the Cost Function with respect to the feature
-    private MDA dCostByDFeature;
+    private final MDA dLossByDFeature;
 
-
+    
     /**
-     * @return the dCostByDIn
+     * 
+     * @param dLossByDIn
+     * @param dLossByDFeature
      */
-    public MDA getdCostByDIn() {
-        return dCostByDIn;
+    public ReverseOutputTuple(MDA dLossByDIn, MDA dLossByDFeature) {
+        this.dLossByDFeature = dLossByDFeature;
+        this.dLossByDIn = dLossByDIn;
     }
 
-
     /**
-     * @param dLossByDIn
-     *            the dLossByDIn to set
+     * @return the dLossByDIn
      */
-    public void setdCostByDIn(MDA dCostByDIn) {
-        this.dCostByDIn = dCostByDIn;
+    public MDA getdLossByDIn() {
+        return dLossByDIn;
     }
 
 
     /**
      * @return the dLossByDFeature
      */
-    public MDA getdCostByDFeature() {
-        return dCostByDFeature;
+    public MDA getDLossByDFeature() {
+        return dLossByDFeature;
     }
-
-
-    /**
-     * @param dCostByDFeature
-     *            the dCostByDFeature to set
-     */
-    public void setdCostByDFeature(MDA dCostByDFeature) {
-        this.dCostByDFeature = dCostByDFeature;
-    }
-
 }

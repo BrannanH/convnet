@@ -8,7 +8,7 @@ import fundamentals.MDA;
 /**
  * This is the output of each of the layers which deal with an MDA.
  * 
- * @author Brannan
+ * @author Brannan R. Hancock
  *
  */
 public class ForwardOutputTuple {
@@ -16,15 +16,19 @@ public class ForwardOutputTuple {
     // The output of the forward pass
     private MDA output;
 
-    // The derivative of the output with respect to the input
-    private Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn;
+    /**
+     * The derivative of the output with respect to the input
+     * <a,b> { [<c,d> e], [<f,g> h] }
+     * represents dOut_a,b/dIn_c,d = e, dOut_a,b/dIn_f,g = h
+     */
+    private final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn;
 
     // The derivative of the output with respect to the feature
-    private MDA dOutByDFeature;
+    private final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDFeature;
 
 
     public ForwardOutputTuple(MDA output, Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn,
-            MDA dOoutByDFeature) {
+            Map<List<Integer>, Map<List<Integer>, Double>> dOoutByDFeature) {
         this.output = output;
         this.dOutByDIn = dOutByDIn;
         this.dOutByDFeature = dOoutByDFeature;
@@ -40,15 +44,6 @@ public class ForwardOutputTuple {
 
 
     /**
-     * @param output
-     *            the output to set
-     */
-    public void setOutput(MDA output) {
-        this.output = output;
-    }
-
-
-    /**
      * @return the dOutByDIn
      */
     public Map<List<Integer>, Map<List<Integer>, Double>> getdOutByDIn() {
@@ -57,28 +52,9 @@ public class ForwardOutputTuple {
 
 
     /**
-     * @param dOutByDIn
-     *            the dOutByDIn to set
-     */
-    public void setdOutByDIn(Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn) {
-        this.dOutByDIn = dOutByDIn;
-    }
-
-
-    /**
      * @return the dOutByDFeature
      */
-    public MDA getdOutByDFeature() {
+    public Map<List<Integer>, Map<List<Integer>, Double>> getdOutByDFeature() {
         return dOutByDFeature;
     }
-
-
-    /**
-     * @param dOutByDFeature
-     *            the dOutByDFeature to set
-     */
-    public void setdOutByDFeature(MDA dOutByDFeature) {
-        this.dOutByDFeature = dOutByDFeature;
-    }
-
 }

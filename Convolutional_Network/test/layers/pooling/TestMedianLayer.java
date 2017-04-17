@@ -2,9 +2,7 @@ package layers.pooling;
 
 import static fundamentals.MDAHelper.put;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static testsupport.CompareMDAs.checkExpectation;
 
 import java.util.List;
@@ -38,7 +36,6 @@ public class TestMedianLayer {
 
     @Before
     public void setup() {
-        when(dimensionsVerificationService.verify(anyListOf(Integer.class), anyListOf(Integer.class))).thenReturn(true);
         layer = new PoolingLayer(dimensionsVerificationService);
     }
 
