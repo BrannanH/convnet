@@ -29,7 +29,11 @@ public class ExtractMnistService {
 		int numColumns = dataInputStream.readInt();
 		byte[] data = new byte[numImages*numRows*numColumns];
 		
-		dataInputStream.read(data, 0, numImages*numRows*numColumns);
+		int flags = dataInputStream.read(data, 0, numImages*numRows*numColumns);
+		if(flags != 0) {
+		    dataInputStream.close();
+		    throw new IOException();
+		}
 		dataInputStream.close();
 		
 		MDA imageStore = new MDABuilder().withDimensions(numRows, numColumns, wantedImageIndices.length).build(); 

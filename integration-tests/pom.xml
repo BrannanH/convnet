@@ -143,7 +143,7 @@
             <artifactId>maven-checkstyle-plugin</artifactId>
             <version>2.17</version>
             <configuration>
-                <configLocation>configs/checkstyle.xml</configLocation><!-- default -->
+                <configLocation>../configs/checkstyle.xml</configLocation><!-- default -->
                 <violationseverity>info</violationseverity>
                 <includetestsourcedirectory>false</includetestsourcedirectory>
                 <!-- <configLocation>config/maven_checks.xml</configLocation> -->

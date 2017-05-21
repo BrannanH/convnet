@@ -29,6 +29,6 @@ public class FileTuple {
      * @return the labels
      */
     public double[] getLabels() {
-        return labels;
+        return labels.clone();
     }
 }

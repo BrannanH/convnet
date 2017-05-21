@@ -30,7 +30,7 @@
 			<xmloutput>true</xmloutput>
 			<threshold>Exp</threshold>
 			<effort>Max</effort>
-			<includefilterfile>configs/findbugs.xml</includefilterfile>
+			<includefilterfile>../configs/findbugs.xml</includefilterfile>
 		</configuration>
 		<executions>
 			<execution>
