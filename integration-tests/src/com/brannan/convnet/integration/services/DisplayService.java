@@ -26,7 +26,7 @@ public class DisplayService {
 			if(imageStore.getDimensions().size() != 2 && imageStore.getDimensions().size() != 3) {
 				throw(new IllegalArgumentException("Either a 2D or 3D MDA must be passed to display"));
 			}
-			if(imageStore.getDimensions().size() == 3 && !imageStore.getDimensions().get(2).equals(3)) {
+			if(imageStore.getDimensions().size() == 3 && !(imageStore.getDimensions().get(2) == 3)) {
 				throw(new IllegalArgumentException("A 3D MDA passed to display must only have 3 colour channels"));
 			}
 		}
