@@ -11,8 +11,8 @@
     <name>Parent</name>
 
     <modules>
-        <module>convnet</module>
-        <module>integration-test</module>
+        <module>network</module>
+        <module>integration-tests</module>
     </modules>
 
     <build>
