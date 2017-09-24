@@ -1,6 +1,5 @@
 package com.brannan.convnet.network.layers.pooling;
 
-import static com.brannan.convnet.network.fundamentals.MDAService.get;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
@@ -31,7 +30,7 @@ public class TestMeanPoolingLayer {
     public void testSmallPool() {
         // Given;
         final int[] inputDimensions = { 4, 4 };
-        final MDABuilder operandBuilder = new MDABuilder().withDimensions(inputDimensions);
+        final MDABuilder operandBuilder = new MDABuilder(inputDimensions);
         double element = 1D;
 
         for (int j = 0; j < inputDimensions[1]; j++) {
@@ -40,10 +39,11 @@ public class TestMeanPoolingLayer {
                 element++;
             }
         }
+        final MDA operand = operandBuilder.build();
 
         final int[] poolingSize = {2, 1};
 
-        final MDABuilder expectedOutputBuilder = new MDABuilder().withDimensions(2, 4);
+        final MDABuilder expectedOutputBuilder = new MDABuilder(2, 4);
         expectedOutputBuilder.withDataPoint(3, 0, 0);
         expectedOutputBuilder.withDataPoint(4, 0, 1);
         expectedOutputBuilder.withDataPoint(5, 0, 2);
@@ -52,14 +52,15 @@ public class TestMeanPoolingLayer {
         expectedOutputBuilder.withDataPoint(12, 1, 1);
         expectedOutputBuilder.withDataPoint(13, 1, 2);
         expectedOutputBuilder.withDataPoint(14, 1, 3);
+        final MDA expectedOutput = expectedOutputBuilder.build();
 
         // When
-        final MDA output = layer.forward(operandBuilder.build(), poolingSize, PoolingType.MEAN).getOutput();
+        final MDA output = layer.forward(operand, poolingSize, PoolingType.MEAN).getOutput();
 
         // Then
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 4; j++) {
-                assertEquals("", get(expectedOutputBuilder.build(), i, j), get(output, i, j), 0);
+                assertEquals("", expectedOutput.get(i, j), output.get(i, j), 0);
             }
         }
     }

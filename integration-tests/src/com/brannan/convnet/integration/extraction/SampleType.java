@@ -3,19 +3,18 @@ package com.brannan.convnet.integration.extraction;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-import com.brannan.convnet.network.fundamentals.HelperLibrary.IntBiFunction;
 
 public enum SampleType {
     CONSECUTIVE((numberOfImagesWanted, numberOfImagesInSet) -> IntStream.rangeClosed(0, numberOfImagesWanted)
-            .filter(k -> k < numberOfImagesInSet).toArray()),
+            .limit(numberOfImagesInSet).toArray()),
 
     RANDOM((numberOfImagesWanted, numberOfImagesInSet) -> IntStream
             .generate(() -> new Random().nextInt(numberOfImagesInSet)).limit(numberOfImagesWanted).toArray());
 
-    private final IntBiFunction<int[]> generator;
+    private final ToIntArrayBiFunction generator;
 
 
-    SampleType(final IntBiFunction<int[]> generator) {
+    SampleType(final ToIntArrayBiFunction generator) {
         this.generator = generator;
     }
 
@@ -23,7 +22,7 @@ public enum SampleType {
     /**
      * @return the generator
      */
-    public IntBiFunction<int[]> getGenerator() {
+    public ToIntArrayBiFunction getGenerator() {
         return generator;
     }
 }

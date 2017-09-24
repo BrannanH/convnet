@@ -1,13 +1,15 @@
 package com.brannan.convnet.network.fundamentals;
 
-import static com.brannan.convnet.network.fundamentals.HelperLibrary.arrayAsList;
 import static com.brannan.convnet.network.fundamentals.HelperLibrary.arrayEquality;
-import static com.brannan.convnet.network.fundamentals.MDAService.get;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import com.google.common.collect.Lists;
 
 public class TestMDABuilder {
 
@@ -22,17 +24,14 @@ public class TestMDABuilder {
     public void testBuild() {
         // Given
         final int[] inputDimensions = { 2, 3, 4 };
-        final int[] expectedIncrements = { 1, 2, 6 };
 
-        final MDABuilder builder = new MDABuilder();
+        final MDABuilder builder = new MDABuilder(inputDimensions);
 
         // When
-        final MDA mDA = builder.withDimensions(inputDimensions).build();
+        final MDA mDA = builder.build();
 
         // Then
         assertTrue("Dimensions should be as expected", arrayEquality(inputDimensions, mDA.getDimensions()));
-        assertEquals("Increments should be as expected", arrayAsList(expectedIncrements),
-                arrayAsList(mDA.getIncrements()));
     }
 
 
@@ -44,7 +43,7 @@ public class TestMDABuilder {
     public void testPutMisMatchNumberOfDimensions() {
         // Given
         final int[] badDimensions = { 1, 2, 3 };
-        final MDABuilder mda = new MDABuilder().withDimensions(dimensions);
+        final MDABuilder mda = new MDABuilder(dimensions);
 
         // When
         mda.withDataPoint(3D, badDimensions);
@@ -61,7 +60,7 @@ public class TestMDABuilder {
     public void testPutOutOfBoundsIndexInsertion() {
         // Given
         final int[] badDimensions = { 1, 1 };
-        final MDABuilder mda = new MDABuilder().withDimensions(dimensions);
+        final MDABuilder mda = new MDABuilder(dimensions);
 
         // When
         mda.withDataPoint(3D, badDimensions);
@@ -74,11 +73,11 @@ public class TestMDABuilder {
      * This test verifies that if a negative position is given for a put in a
      * MDA, then an index out of bounds exception is thrown.
      */
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testPutNegativePositionRejected() {
         // Given
         final int[] badDimensions = { -1, 1 };
-        final MDABuilder mda = new MDABuilder().withDimensions(dimensions);
+        final MDABuilder mda = new MDABuilder(dimensions);
 
         // When
         mda.withDataPoint(3D, badDimensions);
@@ -97,13 +96,14 @@ public class TestMDABuilder {
         final int[] position = { 0, 0 };
         final double wrongElement = 1D;
         final double correctElement = 2D;
-        final MDABuilder mda = new MDABuilder().withDimensions(dimensions);
+        final MDABuilder mdaBuilder = new MDABuilder(dimensions);
 
         // When
-        mda.withDataPoint(wrongElement, position);
-        mda.withDataPoint(correctElement, position);
+        mdaBuilder.withDataPoint(wrongElement, position);
+        mdaBuilder.withDataPoint(correctElement, position);
+        final MDA mda = mdaBuilder.build();
 
-        assertEquals("The second specified element should be returned", correctElement, MDAService.get(mda.build(), position), 0);
+        assertEquals("The second specified element should be returned", correctElement, mda.get(position), 0);
     }
 
 
@@ -114,7 +114,7 @@ public class TestMDABuilder {
     @Test
     public void smallArrayPopulated() {
         // Given
-        final MDABuilder mdaBuilder = new MDABuilder().withDimensions(2, 2);
+        final MDABuilder mdaBuilder = new MDABuilder(2, 2);
 
         // When
         mdaBuilder.withDataPoint(0D, 0, 0);
@@ -124,10 +124,10 @@ public class TestMDABuilder {
         final MDA mda = mdaBuilder.build();
 
         // Then
-        assertEquals("Position 1", 0D, get(mda, 0, 0), 0);
-        assertEquals("Position 2", 1D, get(mda, 0, 1), 0);
-        assertEquals("Position 3", 2D, get(mda, 1, 0), 0);
-        assertEquals("Position 4", 3D, get(mda, 1, 1), 0);
+        assertEquals("Position 1", 0D, mda.get(0, 0), 0);
+        assertEquals("Position 2", 1D, mda.get(0, 1), 0);
+        assertEquals("Position 3", 2D, mda.get(1, 0), 0);
+        assertEquals("Position 4", 3D, mda.get(1, 1), 0);
     }
 
 
@@ -140,7 +140,7 @@ public class TestMDABuilder {
         // Given
         final int[] bigDimensions = { 28, 28, 3, 10 };
         final int[] position = new int[bigDimensions.length];
-        final MDABuilder mdaBuilder = new MDABuilder().withDimensions(bigDimensions);
+        final MDABuilder mdaBuilder = new MDABuilder(bigDimensions);
         double element = 0D;
 
         // When
@@ -172,11 +172,43 @@ public class TestMDABuilder {
                         position[2] = channel;
                         position[3] = image;
                         assertEquals("Value not correctly returned for " + row + column + channel + image, element,
-                                get(mda, position), 0);
+                                mda.get(position), 0);
                         element++;
                     }
                 }
             }
         }
+    }
+
+
+    @Test
+    public void testBuildPerservesData() {
+        // Given
+        final double input = 5;
+        final MDABuilder builder = new MDABuilder(2);
+
+        builder.withDataPoint(input, 0);
+        final MDA mda = builder.build();
+
+        // When
+        final double result = mda.get(0);
+        assertEquals("result should be equal to input", input, result, 0);
+    }
+
+    @Test
+    public void testAddToAccumulates() {
+        // Given
+        final List<Integer> position = Lists.newArrayList(0);
+        final double input = 5;
+        final double addition = 6;
+        final MDABuilder builder = new MDABuilder(2);
+
+        builder.withDataPoint(input, 0);
+        builder.withAmountAddedToDataPoint(addition, 0);
+        final MDA mda = builder.build();
+
+        // When
+        final double result = mda.get(position);
+        assertEquals("result should be equal to input plus addition", input+addition, result, 0);
     }
 }

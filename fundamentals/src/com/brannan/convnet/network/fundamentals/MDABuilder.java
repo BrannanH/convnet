@@ -2,17 +2,16 @@ package com.brannan.convnet.network.fundamentals;
 
 public class MDABuilder {
 
-    private int[] dimensions;
-    private int[] increments;
-    private double[] elements;
-
+    private final int[] increments;
+    private final int[] dimensions;
+    private final double[] elements;
+    private final MDAService mdaService = new MDAService();
 
     /**
      * @return
      */
     public final MDA build() {
-        final MDA mda = new MDA(dimensions, elements, increments);
-        return mda;
+        return new MDA(dimensions, increments, elements, mdaService);
     }
 
 
@@ -20,7 +19,7 @@ public class MDABuilder {
      * @param dimensions
      * @return
      */
-    public MDABuilder withDimensions(final int... dimensions) {
+    public MDABuilder(final int... dimensions) {
         this.dimensions = dimensions;
 
         this.increments = new int[dimensions.length];
@@ -29,19 +28,18 @@ public class MDABuilder {
             increments[i] = increments[i - 1] * dimensions[i - 1];
         }
         this.elements = new double[dimensions[dimensions.length - 1] * increments[dimensions.length - 1]];
-        return this;
     }
 
 
     public MDABuilder withDataPoint(final double element, final int... position) {
-        MDAService.validatePosition(dimensions, position);
-        elements[MDAService.getLocationForPosition(increments, position)] = element;
+        mdaService.validatePosition(dimensions, position);
+        elements[mdaService.getLocationForPosition(increments, position)] = element;
         return this;
     }
 
-    public MDABuilder withAmountAddedToDataPoint(final double addition, final int[] position) {
-        MDAService.validatePosition(dimensions, position);
-        elements[MDAService.getLocationForPosition(increments, position)] += addition;
+    public MDABuilder withAmountAddedToDataPoint(final double addition, final int... position) {
+        mdaService.validatePosition(dimensions, position);
+        elements[mdaService.getLocationForPosition(increments, position)] += addition;
         return this;
     }
 }

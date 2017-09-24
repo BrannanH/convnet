@@ -1,6 +1,7 @@
 package com.brannan.convnet.network.fundamentals;
 
-import static com.brannan.convnet.network.fundamentals.MDAService.get;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +15,7 @@ public class TestMDAService {
 
     @Before
     public void setUp() {
-        mda = new MDABuilder().withDimensions(dimensions).build();
+        mda = new MDABuilder(dimensions).build();
     }
 
 
@@ -22,15 +23,20 @@ public class TestMDAService {
      * This test verifies that if the wrong number of dimensions are specified
      * for a get on the MDA, an illegal argument exception is thrown.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testGetMisMatchNumberOfDimensions() {
         // Given
         final int[] badDimensions = { 1, 2, 3 };
 
         // When
-        get(mda, badDimensions);
+        try {
+            mda.get(badDimensions);
+            // Then
+            fail();
+        } catch (final IllegalArgumentException e) {
+            assertEquals("Error message should be as expected", "The given Multi Dimensional Array has [2] dimensions, however [3] were specified, these must match.", e.getMessage());
+        }
 
-        // Then
     }
 
 
@@ -44,7 +50,7 @@ public class TestMDAService {
         final int[] badDimensions = { 1, 1 };
 
         // When
-        get(mda, badDimensions);
+        mda.get(badDimensions);
 
         // Then
     }
@@ -54,17 +60,18 @@ public class TestMDAService {
      * This test verifies that if a negative position is given for a get in a
      * MDA, then an index out of bounds exception is thrown.
      */
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void testGetNegativePositionRejected() {
         // Given
         final int[] badDimensions = { -1, 1 };
 
         // When
-        get(mda, badDimensions);
-
-        // Then
+        try {
+            mda.get(badDimensions);
+            // Then
+            fail();
+        } catch (final IllegalArgumentException e) {
+            assertEquals("Error message should be as expected", "Position[-1] was [-1], however it must be positive.", e.getMessage());
+        }
     }
-
-
-
 }

@@ -29,6 +29,7 @@ public class HelperLibrary {
         return true;
     }
 
+
     /**
      * @param t
      * @return
@@ -40,10 +41,6 @@ public class HelperLibrary {
         return r;
     }
 
-    @FunctionalInterface
-    public interface IntBiFunction<T> {
-        T apply(int i, int j);
-    }
 
     public static int[] listAsArray(final List<Integer> position) {
         return position.stream().mapToInt(Integer::intValue).toArray();

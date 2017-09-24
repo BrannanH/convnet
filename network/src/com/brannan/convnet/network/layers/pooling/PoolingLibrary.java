@@ -11,7 +11,7 @@ import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
 
 /**
- * 
+ *
  * @author Brannan R. Hancock
  *
  */
@@ -35,7 +35,7 @@ public class PoolingLibrary {
      * Function to compute Median Pooling.
      */
     private static final ToDoubleFunction<Set<PoolTuple>> MEDIAN_POOL = p -> {
-        double[] sortedValues = p.stream().mapToDouble(a -> a.getElement()).sorted().toArray();
+        final double[] sortedValues = p.stream().mapToDouble(a -> a.getElement()).sorted().toArray();
         return sortedValues[sortedValues.length % 2 == 0 ? sortedValues.length / 2 - 1
                 : Math.floorDiv(sortedValues.length, 2)];
     };
@@ -44,18 +44,18 @@ public class PoolingLibrary {
      * Function to compute the derivatives from Max Pooling.
      */
     private static final Function<Set<PoolTuple>, Set<PoolTuple>> MAX_DERIVATIVE = p -> {
-        Set<PoolTuple> results = new HashSet<>();
-        double max = MAX_POOL.applyAsDouble(p);
-        Map<Boolean, List<PoolTuple>> maxAndNotMax = p.stream()
+        final Set<PoolTuple> results = new HashSet<>();
+        final double max = MAX_POOL.applyAsDouble(p);
+        final Map<Boolean, List<PoolTuple>> maxAndNotMax = p.stream()
                 .collect(Collectors.groupingBy(a -> Math.abs(a.getElement() - max) < EPSILON));
-        PoolTuple maxy = new PoolTuple(1D, maxAndNotMax.get(true).get(0).getOrigin());
+        final PoolTuple maxy = new PoolTuple(1D, maxAndNotMax.get(true).get(0).getOrigin());
         results.add(maxy);
         for (int i = 1; i < maxAndNotMax.get(true).size(); i++) {
-            PoolTuple nonMax = new PoolTuple(0D, maxAndNotMax.get(true).get(i).getOrigin());
+            final PoolTuple nonMax = new PoolTuple(0D, maxAndNotMax.get(true).get(i).getOrigin());
             results.add(nonMax);
         }
         for (int i = 0; i < maxAndNotMax.get(false).size(); i++) {
-            PoolTuple nonMax = new PoolTuple(0D, maxAndNotMax.get(false).get(i).getOrigin());
+            final PoolTuple nonMax = new PoolTuple(0D, maxAndNotMax.get(false).get(i).getOrigin());
             results.add(nonMax);
         }
         return results;
@@ -65,10 +65,10 @@ public class PoolingLibrary {
      * Function to compute the derivatives from Mean Pooling.
      */
     private static final Function<Set<PoolTuple>, Set<PoolTuple>> MEAN_DERIVATIVE = p -> {
-        double derivative = p.size();
-        Set<PoolTuple> result = new HashSet<>();
+        final double derivative = p.size();
+        final Set<PoolTuple> result = new HashSet<>();
         p.stream().forEach(a -> {
-            PoolTuple forward = new PoolTuple(1D / derivative, a.getOrigin());
+            final PoolTuple forward = new PoolTuple(1D / derivative, a.getOrigin());
             result.add(forward);
         });
         return result;

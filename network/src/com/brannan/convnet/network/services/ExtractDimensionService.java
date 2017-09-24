@@ -1,7 +1,5 @@
 package com.brannan.convnet.network.services;
 
-import static com.brannan.convnet.network.fundamentals.MDAService.get;
-
 import com.brannan.convnet.network.fundamentals.MDA;
 import com.brannan.convnet.network.fundamentals.MDABuilder;
 
@@ -12,6 +10,7 @@ import com.brannan.convnet.network.fundamentals.MDABuilder;
  *
  */
 public class ExtractDimensionService {
+
 
     /**
      * This method allows the specification of a dimension, and values of that
@@ -38,7 +37,7 @@ public class ExtractDimensionService {
         }
 
         final int[] dimensions = constructDimensions(dimension, instancesToExtract, multiD.getDimensions());
-        MDABuilder result = new MDABuilder().withDimensions(dimensions);
+        MDABuilder result = new MDABuilder(dimensions);
 
         for (final int instance : instancesToExtract) {
 
@@ -173,7 +172,7 @@ public class ExtractDimensionService {
 
                 }
 
-                resultBuilder.withDataPoint(get(multiD, position), toPlace);
+                resultBuilder.withDataPoint(multiD.get(position), toPlace);
             }
             position[0] = 0;
             return resultBuilder;

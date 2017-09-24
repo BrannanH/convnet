@@ -20,7 +20,6 @@ import java.util.stream.IntStream;
 import com.brannan.convnet.network.fundamentals.HelperLibrary;
 import com.brannan.convnet.network.fundamentals.MDA;
 import com.brannan.convnet.network.fundamentals.MDABuilder;
-import com.brannan.convnet.network.fundamentals.MDAService;
 import com.brannan.convnet.network.layers.ForwardOutputTuple;
 import com.brannan.convnet.network.layers.ReverseOutputTuple;
 import com.brannan.convnet.network.layers.pooling.PoolingLibrary.PoolingType;
@@ -91,13 +90,13 @@ public class PoolingLayer {
         dimensionsService.verifyDerivativeMap(dOutByDIn);
 
         // create dLossByDIn at the right size
-        final MDABuilder dLossByDInBuilder = new MDABuilder().withDimensions(originalInputSize);
+        final MDABuilder dLossByDInBuilder = new MDABuilder(originalInputSize);
 
         // for each location in dOutByDIn's keyset get dLossByDOut(location).
         // Multiply each double in the Value Map of dOutByDIn by it, and add
         // that to its location in dLossByDIn;
         for (final Entry<List<Integer>, Map<List<Integer>, Double>> entry : dOutByDIn.entrySet()) {
-            final double coefficient = MDAService.get(dLossByDOut, entry.getKey());
+            final double coefficient = dLossByDOut.get(entry.getKey());
             for (final Entry<List<Integer>, Double> subEntry : entry.getValue().entrySet()) {
                 dLossByDInBuilder.withAmountAddedToDataPoint(coefficient * subEntry.getValue(), HelperLibrary.listAsArray(subEntry.getKey()));
             }
@@ -160,7 +159,7 @@ public class PoolingLayer {
                 newPools = build(newPools, operand, position, place - 1);
             } else {
                 final Set<PoolTuple> pool = new HashSet<>();
-                final PoolTuple element = new PoolTuple(MDAService.get(operand, position), position.clone());
+                final PoolTuple element = new PoolTuple(operand.get(position), position.clone());
                 pool.add(element);
                 newPools.put(arrayAsList(position), pool);
             }
@@ -284,7 +283,7 @@ public class PoolingLayer {
     private MDA computeOutput(final int[] outputDimensions,
             final Map<List<Integer>, Set<PoolTuple>> pools, final PoolingType poolingType) {
 
-        final MDABuilder outputBuilder = new MDABuilder().withDimensions(outputDimensions);
+        final MDABuilder outputBuilder = new MDABuilder(outputDimensions);
 
         pools.entrySet().stream()
                 .forEach(e -> outputBuilder.withDataPoint(poolingType.getPoolingMethod().applyAsDouble(e.getValue()), HelperLibrary.listAsArray(e.getKey())));

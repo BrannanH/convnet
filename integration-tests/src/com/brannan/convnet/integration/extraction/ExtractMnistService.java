@@ -16,7 +16,7 @@ public class ExtractMnistService {
 
     public FileTuple extractImages(final ImageSet imageSet, final int numberOfImages, final SampleType sampleType) throws IOException {
 
-        final int[] wantedImageIndices = sampleType.getGenerator().apply(numberOfImages, imageSet.getImagesInSet());
+        final int[] wantedImageIndices = sampleType.getGenerator().applyAsArray(numberOfImages, imageSet.getImagesInSet());
 
         DataInputStream dataInputStream = new DataInputStream(new FileInputStream(imageSet.getImageLocation()));
 
@@ -34,7 +34,7 @@ public class ExtractMnistService {
         }
         dataInputStream.close();
 
-        final MDABuilder imageStoreBuilder = new MDABuilder().withDimensions(numRows, numColumns, wantedImageIndices.length);
+        final MDABuilder imageStoreBuilder = new MDABuilder(numRows, numColumns, wantedImageIndices.length);
         int count = 0;
         for (int image = 0; image < wantedImageIndices.length; image++) {
             final int start = wantedImageIndices[image] * numRows * numColumns;

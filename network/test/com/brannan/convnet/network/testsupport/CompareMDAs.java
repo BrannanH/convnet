@@ -1,14 +1,14 @@
 package com.brannan.convnet.network.testsupport;
 
-import static com.brannan.convnet.network.fundamentals.HelperLibrary.arrayAsList;
-import static com.brannan.convnet.network.fundamentals.MDAService.get;
 import static org.junit.Assert.assertEquals;
+
+import java.util.Arrays;
 
 import com.brannan.convnet.network.fundamentals.MDA;
 
 public class CompareMDAs {
-	
-    public static void checkExpectation(MDA expectedOutput, MDA forward) {
+
+    public static void checkExpectation(final MDA expectedOutput, final MDA forward) {
         assertEquals("Number of dimensions is correct", expectedOutput.getDimensions().length,
                 forward.getDimensions().length);
         for (int i = 0; i < expectedOutput.getDimensions().length; i++) {
@@ -19,16 +19,16 @@ public class CompareMDAs {
                 forward.getDimensions().length - 1);
     }
 
-	private static void checkAllElements(MDA expectedOutput, MDA forward, int[] position, int place) {
+	private static void checkAllElements(final MDA expectedOutput, final MDA forward, final int[] position, final int place) {
 		for(int i = 0; i < expectedOutput.getDimensions()[place]; i++) {
 			position[place] = i;
 			if(place != 0) {
 				checkAllElements(expectedOutput, forward, position, place-1);
 			} else {
-				assertEquals("Each element should be correct. Asserting on: " + arrayAsList(position).toString(), get(expectedOutput, position), get(forward, position), 0);
+				assertEquals("Each element should be correct. Asserting on: " + Arrays.asList(position).toString(), expectedOutput.get(position), forward.get(position), 0);
 			}
 		}
-		
+
 	}
 
 }

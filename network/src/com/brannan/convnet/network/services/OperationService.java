@@ -6,7 +6,6 @@ import java.util.function.ToDoubleFunction;
 
 import com.brannan.convnet.network.fundamentals.MDA;
 import com.brannan.convnet.network.fundamentals.MDABuilder;
-import com.brannan.convnet.network.fundamentals.MDAService;
 
 /**
  * This class provides the methods necessary for element wise operations. It
@@ -22,6 +21,7 @@ import com.brannan.convnet.network.fundamentals.MDAService;
  *
  */
 public class OperationService {
+
 
     /**
      * This public entry point validates the two MDAs which are passed to it,
@@ -40,11 +40,11 @@ public class OperationService {
             }
         }
 
-        final MDABuilder resultBuilder = new MDABuilder().withDimensions(operand1.getDimensions());
+        final MDABuilder resultBuilder = new MDABuilder(operand1.getDimensions());
 
-        final ToDoubleFunction<int[]> double1 = (final int[] position) -> MDAService.get(operand1, position);
+        final ToDoubleFunction<int[]> double1 = (final int[] position) -> operand1.get(position);
 
-        final ToDoubleFunction<int[]> double2 = (final int[] position) -> MDAService.get(operand2, position);
+        final ToDoubleFunction<int[]> double2 = (final int[] position) -> operand2.get(position);
 
         final ToDoubleFunction<int[]> finalOperation = (final int[] position) -> operation.applyAsDouble(double1.applyAsDouble(position), double2.applyAsDouble(position));
 
@@ -55,9 +55,9 @@ public class OperationService {
 
 
     public MDA operate(final MDA operand1, final double operand2, final DoubleBinaryOperator operation) {
-        final MDABuilder resultBuilder = new MDABuilder().withDimensions(operand1.getDimensions());
+        final MDABuilder resultBuilder = new MDABuilder(operand1.getDimensions());
 
-        final ToDoubleFunction<int[]> double1 = (final int[] position) -> MDAService.get(operand1, position);
+        final ToDoubleFunction<int[]> double1 = (final int[] position) -> operand1.get(position);
 
         final DoubleSupplier double2 = () -> operand2;
 

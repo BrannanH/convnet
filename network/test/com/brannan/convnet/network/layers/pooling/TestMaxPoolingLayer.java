@@ -46,7 +46,7 @@ public class TestMaxPoolingLayer {
 		final int[] poolingSize = {2,1};
 
 		double element = 0;
-		final MDABuilder inputBuilder = new MDABuilder().withDimensions(inputDimensions);
+		final MDABuilder inputBuilder = new MDABuilder(inputDimensions);
 		for(int i = 0; i < inputDimensions[0]; i++) {
 			for(int j = 0; j < inputDimensions[1]; j++) {
 			    inputBuilder.withDataPoint(element, i, j);
@@ -54,7 +54,7 @@ public class TestMaxPoolingLayer {
 			}
 		}
 
-		final MDABuilder expectedResult = new MDABuilder().withDimensions(2,4);
+		final MDABuilder expectedResult = new MDABuilder(2,4);
 		expectedResult.withDataPoint(4D, 0, 0);
 		expectedResult.withDataPoint(5D, 0, 1);
 		expectedResult.withDataPoint(6D, 0, 2);
@@ -123,7 +123,7 @@ public class TestMaxPoolingLayer {
 		final int[] inputDimensions = {4,4};
 		final int[] poolingSize = {2,2};
 		double element = 0;
-		final MDABuilder inputBuilder = new MDABuilder().withDimensions(inputDimensions);
+		final MDABuilder inputBuilder = new MDABuilder(inputDimensions);
 		for(int i = 0; i < inputDimensions[0]; i++) {
 			for(int j = 0; j < inputDimensions[1]; j++) {
 				inputBuilder.withDataPoint(element, i, j);
@@ -131,7 +131,7 @@ public class TestMaxPoolingLayer {
 			}
 		}
 
-		final MDABuilder expectedResult = new MDABuilder().withDimensions(2,2);
+		final MDABuilder expectedResult = new MDABuilder(2,2);
 		expectedResult.withDataPoint(5D, 0, 0);
 		expectedResult.withDataPoint(7D, 0, 1);
 		expectedResult.withDataPoint(13D, 1, 0);
@@ -179,7 +179,7 @@ public class TestMaxPoolingLayer {
 		final int[] inputDimensions = {4,4,2};
 		final int[] poolingSize = {2,2,2};
 		double element = 0;
-		final MDABuilder inputBuilder = new MDABuilder().withDimensions(inputDimensions);
+		final MDABuilder inputBuilder = new MDABuilder(inputDimensions);
 		for(int k = 0; k < inputDimensions[2]; k++) {
 			for(int i = 0; i < inputDimensions[0]; i++) {
 				for(int j = 0; j < inputDimensions[1]; j++) {
@@ -189,7 +189,7 @@ public class TestMaxPoolingLayer {
 			}
 		}
 
-		final MDABuilder expectedResultBuilder = new MDABuilder().withDimensions(2,2,1);
+		final MDABuilder expectedResultBuilder = new MDABuilder(2,2,1);
 		expectedResultBuilder.withDataPoint(21D, 0, 0, 0);
 		expectedResultBuilder.withDataPoint(23D, 0, 1, 0);
 		expectedResultBuilder.withDataPoint(29D, 1, 0, 0);
@@ -254,7 +254,7 @@ public class TestMaxPoolingLayer {
         final int[] inputDimensions = { 4, 4, 2 };
         final int[] poolingSize = { 2, 1, 2 };
         double element = 0;
-        final MDABuilder inputBuilder = new MDABuilder().withDimensions(inputDimensions);
+        final MDABuilder inputBuilder = new MDABuilder(inputDimensions);
         for (int k = 0; k < inputDimensions[2]; k++) {
             for (int i = 0; i < inputDimensions[0]; i++) {
                 for (int j = 0; j < inputDimensions[1]; j++) {
@@ -264,7 +264,7 @@ public class TestMaxPoolingLayer {
             }
         }
 
-        final MDABuilder expectedResultBuilder = new MDABuilder().withDimensions(2, 4, 1);
+        final MDABuilder expectedResultBuilder = new MDABuilder(2, 4, 1);
         expectedResultBuilder.withDataPoint(20D, 0, 0, 0);
         expectedResultBuilder.withDataPoint(21D, 0, 1, 0);
         expectedResultBuilder.withDataPoint(22D, 0, 2, 0);

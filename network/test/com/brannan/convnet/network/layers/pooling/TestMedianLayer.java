@@ -45,7 +45,7 @@ public class TestMedianLayer {
     public void testSimplePool() {
         // Given
         final int[] inputDimensions = { 1, 6 };
-        final MDABuilder inputBuilder = new MDABuilder().withDimensions(inputDimensions);
+        final MDABuilder inputBuilder = new MDABuilder(inputDimensions);
         inputBuilder.withDataPoint(1, 0, 0);
         inputBuilder.withDataPoint(2, 0, 1);
         inputBuilder.withDataPoint(3, 0, 2);
@@ -55,7 +55,7 @@ public class TestMedianLayer {
 
         final int[] poolSizes = {1, 3};
 
-        final MDABuilder expectedOutputBuilder = new MDABuilder().withDimensions(1, 2);
+        final MDABuilder expectedOutputBuilder = new MDABuilder(1, 2);
         expectedOutputBuilder.withDataPoint(2, 0, 0);
         expectedOutputBuilder.withDataPoint(5, 0, 1);
 
@@ -76,7 +76,7 @@ public class TestMedianLayer {
 
         final int[] poolSizes = {3, 3};
 
-        final MDABuilder expectedOutputBuilder = new MDABuilder().withDimensions(2, 3);
+        final MDABuilder expectedOutputBuilder = new MDABuilder(2, 3);
         expectedOutputBuilder.withDataPoint(8, 0, 0);
         expectedOutputBuilder.withDataPoint(26, 0, 1);
         expectedOutputBuilder.withDataPoint(44, 0, 2);
@@ -101,7 +101,7 @@ public class TestMedianLayer {
 
         final int[] poolSizes = {3, 3, 2};
 
-        final MDABuilder expectedOutputBuilder = new MDABuilder().withDimensions(2, 2, 1);
+        final MDABuilder expectedOutputBuilder = new MDABuilder(2, 2, 1);
         expectedOutputBuilder.withDataPoint(15D, 0, 0, 0);
         expectedOutputBuilder.withDataPoint(18D, 1, 0, 0);
         expectedOutputBuilder.withDataPoint(33D, 0, 1, 0);
@@ -118,7 +118,7 @@ public class TestMedianLayer {
 
     private MDA populateMultiD(final int[] inputDimensions) {
         final int[] position = new int[inputDimensions.length];
-        return populate(new MDABuilder().withDimensions(inputDimensions), position, inputDimensions.length - 1, inputDimensions).build();
+        return populate(new MDABuilder(inputDimensions), position, inputDimensions.length - 1, inputDimensions).build();
     }
 
 

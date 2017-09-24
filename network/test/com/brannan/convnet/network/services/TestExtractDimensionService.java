@@ -1,6 +1,5 @@
 package com.brannan.convnet.network.services;
 
-import static com.brannan.convnet.network.fundamentals.MDAService.get;
 import static com.brannan.convnet.network.services.ExtractDimensionService.subsetOf;
 import static org.junit.Assert.assertEquals;
 
@@ -12,7 +11,7 @@ import com.brannan.convnet.network.fundamentals.MDABuilder;
 public class TestExtractDimensionService {
 
 	int[] dimensions = {2,3,4, 5, 9};
-	MDABuilder multiD1Builder = new MDABuilder().withDimensions(dimensions);
+	MDABuilder multiD1Builder = new MDABuilder(dimensions);
 	final MDA multiD1 = multiD1Builder.build();
 
 	@Test(expected = IllegalArgumentException.class)
@@ -23,7 +22,7 @@ public class TestExtractDimensionService {
 		final MDA multiD1 = multiD1Builder.build();
 
 		// When
-		subsetOf(multiD1, dimension, instance);
+		ExtractDimensionService.subsetOf(multiD1, dimension, instance);
 
 		// Then expect exception
 	}
@@ -109,7 +108,7 @@ public class TestExtractDimensionService {
 			for(int j = 0; j < dimensions[1]; j++) {
 				for(int l = 0; l < dimensions[3]; l++) {
 					for(int m = 0; m < dimensions[3]; m++) {
-						assertEquals("Data should be transferred " + i + " " + j, get(multiD1, i, j, instance, l, m), get(result, i, j, l, m), 0);
+						assertEquals("Data should be transferred " + i + " " + j, multiD1.get(i, j, instance, l, m), result.get(i, j, l, m), 0);
 					}
 				}
 			}
@@ -163,7 +162,7 @@ public class TestExtractDimensionService {
 				for(int j = 0; j < dimensions[1]; j++) {
 					for(int l = 0; l < dimensions[3]; l++) {
 						for(int m = 0; m < dimensions[3]; m++) {
-							assertEquals("Data should be transferred " + i + " " + j, get(multiD1, i, j, instance, l, m), get(result, i, j, instance, l, m), 0);
+							assertEquals("Data should be transferred " + i + " " + j, multiD1.get(i, j, instance, l, m), result.get(i, j, instance, l, m), 0);
 						}
 					}
 				}

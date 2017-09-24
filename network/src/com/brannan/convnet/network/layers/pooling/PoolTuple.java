@@ -4,7 +4,7 @@ import static com.brannan.convnet.network.fundamentals.HelperLibrary.arrayAsList
 
 /**
  * A class to associate a value with its origin in the un-pooled MDA.
- * 
+ *
  * @author Brannan R. Hancock
  *
  */

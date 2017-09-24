@@ -42,7 +42,12 @@
     </dependency>
     <dependency>
     	<groupId>com.brannan.convnet</groupId>
-    	<artifactId>network</artifactId>
+    	<artifactId>network_api</artifactId>
+    	<version>1.0</version>
+    </dependency>
+    <dependency>
+    	<groupId>com.brannan.convnet</groupId>
+    	<artifactId>fundamentals</artifactId>
     	<version>1.0</version>
     </dependency>
   </dependencies>

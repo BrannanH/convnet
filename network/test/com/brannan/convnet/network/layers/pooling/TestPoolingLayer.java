@@ -45,7 +45,7 @@ public class TestPoolingLayer {
         // Given
         final int[] outputDimensions = {2,2};
         final int[] forwardInputDimensions = {4,4};
-        final MDA dLossByDOut = new MDABuilder().withDimensions(outputDimensions).build();
+        final MDA dLossByDOut = new MDABuilder(outputDimensions).build();
 
         final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn = new HashMap<>();
 
@@ -66,7 +66,7 @@ public class TestPoolingLayer {
         // Given
         final int[] forwardOutputDimensions = {2, 2};
         final int[] forwardInputDimensions = {4, 4};
-        final MDABuilder dLossByDOutBuilder = new MDABuilder().withDimensions(forwardOutputDimensions);
+        final MDABuilder dLossByDOutBuilder = new MDABuilder(forwardOutputDimensions);
         dLossByDOutBuilder.withDataPoint(1D, 0, 0);
         dLossByDOutBuilder.withDataPoint(1D, 0, 1);
         dLossByDOutBuilder.withDataPoint(1D, 1, 0);
@@ -114,7 +114,7 @@ public class TestPoolingLayer {
         subMap.put(originalPosition, 1D);
         dOutByDIn.put(Lists.newArrayList(1, 1), subMap);
 
-        final MDABuilder expectedOutputBuilder = new MDABuilder().withDimensions(forwardInputDimensions);
+        final MDABuilder expectedOutputBuilder = new MDABuilder(forwardInputDimensions);
         expectedOutputBuilder.withDataPoint(1D, 1, 1);
         expectedOutputBuilder.withDataPoint(1D, 3, 1);
         expectedOutputBuilder.withDataPoint(1D, 1, 3);
@@ -138,7 +138,7 @@ public class TestPoolingLayer {
         final double derivative = 50D;
         final double coefficient1 = 0.3D;
         final double coefficient2 = 0.7D;
-        final MDABuilder dLossByDOutBuilder = new MDABuilder().withDimensions(1,1);
+        final MDABuilder dLossByDOutBuilder = new MDABuilder(1,1);
         dLossByDOutBuilder.withDataPoint(derivative, 0, 0);
         final int[] forwardInputDimensions = {1,2};
 
@@ -151,7 +151,7 @@ public class TestPoolingLayer {
         subEntry.put(inputDimension, coefficient2);
         dOutByDIn.put(outputDimension, subEntry);
 
-        final MDABuilder expectedOutputBuilder = new MDABuilder().withDimensions(1,2);
+        final MDABuilder expectedOutputBuilder = new MDABuilder(1,2);
         expectedOutputBuilder.withDataPoint(derivative*coefficient1, 0,0);
         expectedOutputBuilder.withDataPoint(derivative*coefficient2, 0,1);
 

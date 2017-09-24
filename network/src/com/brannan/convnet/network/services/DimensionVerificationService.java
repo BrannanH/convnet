@@ -22,7 +22,7 @@ public class DimensionVerificationService {
      * specified on the feature map</li>
      * <li>The feature map is smaller than the input to the layer which it is to
      * be compared with</li>
-     * 
+     *
      * @param inputDimensions
      * @param feature
      * @return
@@ -46,27 +46,27 @@ public class DimensionVerificationService {
 
 
     /**
-     * Verifies that all references in the build up derivatives mapping are dimensionally consistent. 
+     * Verifies that all references in the build up derivatives mapping are dimensionally consistent.
      * @param testMap
      * @return
      */
     public boolean verifyDerivativeMap(final Map<List<Integer>, Map<List<Integer>, Double>> testMap) {
-        int outerMaxLength = testMap.keySet().stream().collect(Collectors.maxBy(Comparator.comparingInt(List::size))).get()
+        final int outerMaxLength = testMap.keySet().stream().collect(Collectors.maxBy(Comparator.comparingInt(List::size))).get()
                 .size();
         Optional<List<Integer>> invalid = testMap.keySet().stream().filter(l -> l.size() != outerMaxLength).findAny();
         if (invalid.isPresent()) {
             throw new IllegalArgumentException("The dimensions specified for dOutByDIn should have consistent length.");
         }
 
-        int innerMaxLength = testMap.values().stream().flatMap((Map<List<Integer>, Double> k) -> k.keySet().stream())
+        final int innerMaxLength = testMap.values().stream().flatMap((final Map<List<Integer>, Double> k) -> k.keySet().stream())
                 .collect(Collectors.maxBy(Comparator.comparingInt(List::size))).get().size();
-        invalid = testMap.values().stream().flatMap((Map<List<Integer>, Double> k) -> k.keySet().stream())
+        invalid = testMap.values().stream().flatMap((final Map<List<Integer>, Double> k) -> k.keySet().stream())
                 .filter(l -> l.size() != innerMaxLength).findAny();
         if (invalid.isPresent()) {
             throw new IllegalArgumentException(
                     "The dimensions specified for dLossByDOut should have consistent length.");
         }
-        
+
         if (outerMaxLength != innerMaxLength) {
             throw new IllegalArgumentException(
                     "The number of dimensions in the derivative mappings should be the same.");

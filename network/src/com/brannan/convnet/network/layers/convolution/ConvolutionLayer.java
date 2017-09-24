@@ -11,7 +11,7 @@ import com.brannan.convnet.network.layers.convolution.ConvolutionLibrary.Padding
 import com.brannan.convnet.network.services.DimensionVerificationService;
 
 /**
- * 
+ *
  * @author Brannan R. Hancock
  *
  */
@@ -21,7 +21,7 @@ public class ConvolutionLayer {
 
     public ConvolutionLayer(final DimensionVerificationService dimensionVerificationService) {
         this.dimensionVerificationService = dimensionVerificationService;
-    } 
+    }
 
     public ForwardOutputTuple forward(final MDA operand, final MDA feature, final PaddingType paddingType) {
         // TODO Auto-generated method stub
@@ -30,7 +30,7 @@ public class ConvolutionLayer {
 
     public MDA forwardNoTrain(final MDA operand, final MDA feature, final PaddingType paddingType) {
         dimensionVerificationService.verifyLeftBiggerThanRight(operand.getDimensions(), feature.getDimensions());
-        final MDA output = new MDABuilder().withDimensions(outputDimensions(operand.getDimensions(), feature.getDimensions(), paddingType)).build();
+        final MDA output = new MDABuilder(outputDimensions(operand.getDimensions(), feature.getDimensions(), paddingType)).build();
         return output;
     }
 
