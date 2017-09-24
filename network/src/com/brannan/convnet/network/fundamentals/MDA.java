@@ -13,7 +13,7 @@ public class MDA {
     MDA(final int[] dimensions, final double[] elements, final int[] increments) {
         this.dimensions = dimensions;
         this.elements = elements;
-        this.increments = increments; 
+        this.increments = increments;
     }
 
     /**
@@ -25,6 +25,7 @@ public class MDA {
 
 
     /**
+     * To be used only by {@link MDAService}
      * @return the elements
      */
     double[] getElements() {
@@ -33,6 +34,7 @@ public class MDA {
 
 
     /**
+     * To be used only by {@link MDAService}
      * @return the increments
      */
     int[] getIncrements() {

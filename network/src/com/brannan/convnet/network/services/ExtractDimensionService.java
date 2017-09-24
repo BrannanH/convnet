@@ -1,14 +1,13 @@
 package com.brannan.convnet.network.services;
 
-import static com.brannan.convnet.network.fundamentals.MDAHelper.get;
-import static com.brannan.convnet.network.fundamentals.MDAHelper.put;
+import static com.brannan.convnet.network.fundamentals.MDAService.get;
 
 import com.brannan.convnet.network.fundamentals.MDA;
 import com.brannan.convnet.network.fundamentals.MDABuilder;
 
 /**
  * This class is used to extract a subset of an MDA.
- * 
+ *
  * @author Brannan
  *
  */
@@ -22,7 +21,7 @@ public class ExtractDimensionService {
      * however if multiple instances are chosen to be extracted, the dimension
      * specified in the returned MDA will have length equal to the number of
      * instances specified.
-     * 
+     *
      * @param multiD
      * @param dimension
      * @param instancesToExtract
@@ -32,27 +31,27 @@ public class ExtractDimensionService {
 
         validateDimension(multiD, dimension);
 
-        for (int instance : instancesToExtract) {
+        for (final int instance : instancesToExtract) {
 
             validateInstance(multiD, dimension, instance);
 
         }
 
-        MDA result = new MDABuilder()
-                .withDimensions(constructDimensions(dimension, instancesToExtract, multiD.getDimensions())).build();
+        final int[] dimensions = constructDimensions(dimension, instancesToExtract, multiD.getDimensions());
+        MDABuilder result = new MDABuilder().withDimensions(dimensions);
 
-        for (int instance : instancesToExtract) {
+        for (final int instance : instancesToExtract) {
 
-            result = populate(result, multiD, dimension, instance);
+            result = populate(result, multiD, dimension, instance, dimensions);
         }
-        return result;
+        return result.build();
     }
 
 
     /**
      * This method constructs the integer array to specify the dimensions for
      * the returned MDA.
-     * 
+     *
      * @param dimension
      * @param instancesToExtract
      * @param originalsDimensions
@@ -105,19 +104,19 @@ public class ExtractDimensionService {
     /**
      * This method sets up the call to the recursive operation used to copy
      * between the two MDAs.
-     * 
+     *
      * @param result
      * @param multiD
      * @param dimension
      * @param instance
      * @return
      */
-    private static MDA populate(final MDA result, final MDA multiD, final int dimension, final int instance) {
+    private static MDABuilder populate(final MDABuilder resultBuilder, final MDA multiD, final int dimension, final int instance, final int[] dimensions) {
 
-        int[] position = new int[multiD.getDimensions().length];
+        final int[] position = new int[multiD.getDimensions().length];
         position[dimension] = instance;
 
-        return recursivePopulate(result, multiD, dimension, instance, position, multiD.getDimensions().length - 1);
+        return recursivePopulate(resultBuilder, multiD, dimension, instance, position, multiD.getDimensions().length - 1, dimensions);
 
     }
 
@@ -134,8 +133,8 @@ public class ExtractDimensionService {
      * location of an element in the original MDA which needs to be copied to
      * the extracted MDA. This builds up the toPlace array, specifying where in
      * the extraction MDA this element will be placed.
-     * 
-     * @param result
+     *
+     * @param resultBuilder
      * @param multiD
      * @param dimension
      * @param instance
@@ -143,17 +142,17 @@ public class ExtractDimensionService {
      * @param place
      * @return
      */
-    private static MDA recursivePopulate(final MDA result, final MDA multiD, final int dimension, final int instance,
-            final int[] position, final int place) {
+    private static MDABuilder recursivePopulate(final MDABuilder resultBuilder, final MDA multiD, final int dimension, final int instance,
+            final int[] position, final int place, final int[] dimensions) {
 
         if (place == 0) {
 
-            for (int j = 0; j < result.getDimensions()[0]; j++) {
+            for (int j = 0; j < dimensions[0]; j++) {
 
                 position[place] = j;
-                int[] toPlace = new int[result.getDimensions().length];
+                int[] toPlace = new int[dimensions.length];
 
-                if (result.getDimensions().length == multiD.getDimensions().length - 1) {
+                if (dimensions.length == multiD.getDimensions().length - 1) {
 
                     for (int i = 0; i < multiD.getDimensions().length - 1; i++) {
 
@@ -174,28 +173,28 @@ public class ExtractDimensionService {
 
                 }
 
-                put(result, get(multiD, position), toPlace);
+                resultBuilder.withDataPoint(get(multiD, position), toPlace);
             }
             position[0] = 0;
-            return result;
+            return resultBuilder;
         } else if (place == dimension) {
 
-            recursivePopulate(result, multiD, dimension, instance, position, place - 1);
+            recursivePopulate(resultBuilder, multiD, dimension, instance, position, place - 1, dimensions);
         } else {
 
             for (int i = 0; i < multiD.getDimensions()[place]; i++) {
 
                 position[place] = i;
-                recursivePopulate(result, multiD, dimension, instance, position, place - 1);
+                recursivePopulate(resultBuilder, multiD, dimension, instance, position, place - 1, dimensions);
             }
         }
-        return result;
+        return resultBuilder;
     }
 
 
     /**
      * validates the Dimension argument passed to this service
-     * 
+     *
      * @param multiD
      * @param dimension
      */
@@ -212,7 +211,7 @@ public class ExtractDimensionService {
 
     /**
      * validates each element in the instances argument passed to the service.
-     * 
+     *
      * @param multiD
      * @param dimension
      * @param instance

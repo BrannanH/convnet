@@ -5,7 +5,7 @@ import com.brannan.convnet.network.fundamentals.MDA;
 /**
  * This file tuple is made as the return type of the extract. It simply bundles
  * the MDAs and arrays together.
- * 
+ *
  * @author Brannan
  *
  */

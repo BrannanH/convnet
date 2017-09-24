@@ -14,7 +14,7 @@ public enum SampleType {
 
     private final IntBiFunction<int[]> generator;
 
- 
+
     SampleType(final IntBiFunction<int[]> generator) {
         this.generator = generator;
     }

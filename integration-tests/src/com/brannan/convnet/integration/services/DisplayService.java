@@ -1,6 +1,6 @@
 package com.brannan.convnet.integration.services;
 
-import static com.brannan.convnet.network.fundamentals.MDAHelper.get;
+import static com.brannan.convnet.network.fundamentals.MDAService.get;
 
 import java.awt.image.BufferedImage;
 

@@ -17,9 +17,10 @@ import java.util.function.IntConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.brannan.convnet.network.fundamentals.HelperLibrary;
 import com.brannan.convnet.network.fundamentals.MDA;
 import com.brannan.convnet.network.fundamentals.MDABuilder;
-import com.brannan.convnet.network.fundamentals.MDAHelper;
+import com.brannan.convnet.network.fundamentals.MDAService;
 import com.brannan.convnet.network.layers.ForwardOutputTuple;
 import com.brannan.convnet.network.layers.ReverseOutputTuple;
 import com.brannan.convnet.network.layers.pooling.PoolingLibrary.PoolingType;
@@ -27,7 +28,7 @@ import com.brannan.convnet.network.services.DimensionVerificationService;
 import com.google.inject.Inject;
 
 /**
- * 
+ *
  * @author Brannan R. Hancock
  *
  */
@@ -59,7 +60,7 @@ public class PoolingLayer {
         return result;
     }
 
- 
+
     /**
      * Used for testing the network rather than training it.
      * Compute the forward pass without computing any derivatives.
@@ -74,8 +75,8 @@ public class PoolingLayer {
 
         return computeOutput(outputDimensions(operand.getDimensions(), poolSizes), pools, poolingType);
     }
-    
-    
+
+
     /**
      * Compute dLossByDIn from dLossByDOut and dOutByDIn
      * @param dLossByDOut
@@ -90,24 +91,24 @@ public class PoolingLayer {
         dimensionsService.verifyDerivativeMap(dOutByDIn);
 
         // create dLossByDIn at the right size
-        final MDA dLossByDIn = new MDABuilder().withDimensions(originalInputSize).build();
+        final MDABuilder dLossByDInBuilder = new MDABuilder().withDimensions(originalInputSize);
 
         // for each location in dOutByDIn's keyset get dLossByDOut(location).
         // Multiply each double in the Value Map of dOutByDIn by it, and add
         // that to its location in dLossByDIn;
         for (final Entry<List<Integer>, Map<List<Integer>, Double>> entry : dOutByDIn.entrySet()) {
-            final double coefficient = MDAHelper.get(dLossByDOut, entry.getKey());
+            final double coefficient = MDAService.get(dLossByDOut, entry.getKey());
             for (final Entry<List<Integer>, Double> subEntry : entry.getValue().entrySet()) {
-                MDAHelper.addTo(dLossByDIn, coefficient * subEntry.getValue(), subEntry.getKey());
+                dLossByDInBuilder.withAmountAddedToDataPoint(coefficient * subEntry.getValue(), HelperLibrary.listAsArray(subEntry.getKey()));
             }
         }
-        return new ReverseOutputTuple(dLossByDIn);
+        return new ReverseOutputTuple(dLossByDInBuilder.build());
     };
 
 
     /**
      * Compute the output dimensions from the input dimensions and the pooling sizes
-     * 
+     *
      * @param inputDimensions
      * @param poolSizes
      * @return
@@ -117,7 +118,7 @@ public class PoolingLayer {
         dimensionsService.verifyLeftBiggerThanRight(inputDimensions, poolSizes);
 
         final int[] results = new int[inputDimensions.length];
-        
+
         for (int i = 0; i < inputDimensions.length; i++) {
             results[i] = floorDiv(inputDimensions[i], poolSizes[i]);
         }
@@ -125,7 +126,7 @@ public class PoolingLayer {
         return results;
     }
 
-    
+
     /**
      * Creates a pool of 1 for each element in the input MDA.
      * @param operand
@@ -159,15 +160,15 @@ public class PoolingLayer {
                 newPools = build(newPools, operand, position, place - 1);
             } else {
                 final Set<PoolTuple> pool = new HashSet<>();
-                final PoolTuple element = new PoolTuple(MDAHelper.get(operand, position), position.clone());
+                final PoolTuple element = new PoolTuple(MDAService.get(operand, position), position.clone());
                 pool.add(element);
                 newPools.put(arrayAsList(position), pool);
             }
         }
         return newPools;
     }
-    
-    
+
+
     /**
      * Compute the poolings from the initial operand, and pooling sizes.
      * @param operand
@@ -200,8 +201,8 @@ public class PoolingLayer {
         }
         return poolsToReturn;
     }
-    
-    
+
+
     /**
      * A Consumer to map all elements which will be pooled together, to their new grouping.
      * @param poolSizes
@@ -229,8 +230,8 @@ public class PoolingLayer {
             intermediateMapping2.clear();
         };
     }
-    
-    
+
+
     /**
      * Maps each position to its correct pooling.
      * @param poolSizes
@@ -283,12 +284,12 @@ public class PoolingLayer {
     private MDA computeOutput(final int[] outputDimensions,
             final Map<List<Integer>, Set<PoolTuple>> pools, final PoolingType poolingType) {
 
-        final MDA output = new MDABuilder().withDimensions(outputDimensions).build();
+        final MDABuilder outputBuilder = new MDABuilder().withDimensions(outputDimensions);
 
         pools.entrySet().stream()
-                .forEach(e -> MDAHelper.put(output, poolingType.getPoolingMethod().applyAsDouble(e.getValue()), e.getKey()));
+                .forEach(e -> outputBuilder.withDataPoint(poolingType.getPoolingMethod().applyAsDouble(e.getValue()), HelperLibrary.listAsArray(e.getKey())));
 
-        return output;
+        return outputBuilder.build();
     }
 
 
@@ -301,7 +302,7 @@ public class PoolingLayer {
     private Map<List<Integer>, Map<List<Integer>, Double>> computeDOutByDIn(final Map<List<Integer>, Set<PoolTuple>> pools,
             final PoolingType poolingType) {
         final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn = new HashMap<>();
-        
+
         for (final Entry<List<Integer>, Set<PoolTuple>> entry : pools.entrySet()) {
             final Map<List<Integer>, Double> mapping = new HashMap<>();
             final Set<PoolTuple> results = poolingType.getDerivativeMethod().apply(entry.getValue());

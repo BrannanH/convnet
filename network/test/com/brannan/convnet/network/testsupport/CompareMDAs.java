@@ -1,7 +1,7 @@
 package com.brannan.convnet.network.testsupport;
 
 import static com.brannan.convnet.network.fundamentals.HelperLibrary.arrayAsList;
-import static com.brannan.convnet.network.fundamentals.MDAHelper.get;
+import static com.brannan.convnet.network.fundamentals.MDAService.get;
 import static org.junit.Assert.assertEquals;
 
 import com.brannan.convnet.network.fundamentals.MDA;

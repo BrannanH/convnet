@@ -1,17 +1,14 @@
 package com.brannan.convnet.integration.extraction;
 
-import static com.brannan.convnet.network.fundamentals.MDAHelper.put;
-
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import com.brannan.convnet.network.fundamentals.MDA;
-import com.brannan.convnet.network.fundamentals.MDABuilder; 
+import com.brannan.convnet.network.fundamentals.MDABuilder;
 
 /**
  * This class exists to extract the data from the MNIST database.
- * 
+ *
  * @author Brannan
  *
  */
@@ -37,14 +34,14 @@ public class ExtractMnistService {
         }
         dataInputStream.close();
 
-        final MDA imageStore = new MDABuilder().withDimensions(numRows, numColumns, wantedImageIndices.length).build();
+        final MDABuilder imageStoreBuilder = new MDABuilder().withDimensions(numRows, numColumns, wantedImageIndices.length);
         int count = 0;
         for (int image = 0; image < wantedImageIndices.length; image++) {
             final int start = wantedImageIndices[image] * numRows * numColumns;
             count = start;
             for (int row = 0; row < numRows; row++) {
                 for (int column = 0; column < numColumns; column++) {
-                    put(imageStore, (double) ((data[count]) & 0xff) / 255, row, column, image);
+                    imageStoreBuilder.withDataPoint((double) ((data[count]) & 0xff) / 255, row, column, image);
                     count++;
                 }
             }
@@ -65,6 +62,6 @@ public class ExtractMnistService {
             labelStore[i] = (data[wantedImageIndices[i]]) & 0xff;
         }
 
-        return new FileTuple(imageStore, labelStore);
+        return new FileTuple(imageStoreBuilder.build(), labelStore);
     }
 }

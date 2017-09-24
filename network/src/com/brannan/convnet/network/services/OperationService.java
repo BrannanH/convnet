@@ -1,14 +1,12 @@
 package com.brannan.convnet.network.services;
 
-import static com.brannan.convnet.network.fundamentals.MDAHelper.put;
-
 import java.util.function.DoubleBinaryOperator;
 import java.util.function.DoubleSupplier;
 import java.util.function.ToDoubleFunction;
 
 import com.brannan.convnet.network.fundamentals.MDA;
 import com.brannan.convnet.network.fundamentals.MDABuilder;
-import com.brannan.convnet.network.fundamentals.MDAHelper;
+import com.brannan.convnet.network.fundamentals.MDAService;
 
 /**
  * This class provides the methods necessary for element wise operations. It
@@ -19,7 +17,7 @@ import com.brannan.convnet.network.fundamentals.MDAHelper;
  * between the two. The other allows the specification of a single MDA, and a
  * constant factor, which can be applied to each element of the MDA with
  * whichever operation is defined.
- * 
+ *
  * @author Brannan
  *
  */
@@ -29,44 +27,44 @@ public class OperationService {
      * This public entry point validates the two MDAs which are passed to it,
      * and sets up the calls to the recursive function which will carry out the
      * element wise operations.
-     * 
+     *
      * @param operand1
      * @param operand2
      * @return
      */
     public MDA operate(final MDA operand1, final MDA operand2, final DoubleBinaryOperator operation) {
-        
+
         for (int i = 0; i < operand1.getDimensions().length; i++) {
             if (operand1.getDimensions()[i] != operand2.getDimensions()[i]) {
                 throw new IllegalArgumentException("Dimensional Mis-match between arrays");
             }
-        } 
-        
-        final MDA result = new MDABuilder().withDimensions(operand1.getDimensions()).build();
-        
-        final ToDoubleFunction<int[]> double1 = (final int[] position) -> MDAHelper.get(operand1, position);
-        
-        final ToDoubleFunction<int[]> double2 = (final int[] position) -> MDAHelper.get(operand2, position);
-        
+        }
+
+        final MDABuilder resultBuilder = new MDABuilder().withDimensions(operand1.getDimensions());
+
+        final ToDoubleFunction<int[]> double1 = (final int[] position) -> MDAService.get(operand1, position);
+
+        final ToDoubleFunction<int[]> double2 = (final int[] position) -> MDAService.get(operand2, position);
+
         final ToDoubleFunction<int[]> finalOperation = (final int[] position) -> operation.applyAsDouble(double1.applyAsDouble(position), double2.applyAsDouble(position));
 
-        recursiveOperate(result, new int[operand1.getDimensions().length], finalOperation, 0);
+        recursiveOperate(resultBuilder, new int[operand1.getDimensions().length], finalOperation, 0, operand1.getDimensions());
 
-        return result;
+        return resultBuilder.build();
     }
 
 
     public MDA operate(final MDA operand1, final double operand2, final DoubleBinaryOperator operation) {
-        final MDA result = new MDABuilder().withDimensions(operand1.getDimensions()).build();
-        
-        final ToDoubleFunction<int[]> double1 = (final int[] position) -> MDAHelper.get(operand1, position);
-        
+        final MDABuilder resultBuilder = new MDABuilder().withDimensions(operand1.getDimensions());
+
+        final ToDoubleFunction<int[]> double1 = (final int[] position) -> MDAService.get(operand1, position);
+
         final DoubleSupplier double2 = () -> operand2;
 
         final ToDoubleFunction<int[]> finalFunction = (final int[] position) -> operation.applyAsDouble(double1.applyAsDouble(position), double2.getAsDouble());
-        recursiveOperate(result, new int[operand1.getDimensions().length], finalFunction, 0);
+        recursiveOperate(resultBuilder, new int[operand1.getDimensions().length], finalFunction, 0, operand1.getDimensions());
 
-        return result;
+        return resultBuilder.build();
     }
 
 
@@ -74,24 +72,23 @@ public class OperationService {
      * This recursive function ensures that each element in the result is
      * calculated using the same location from the operand MDAs, and the
      * constant factor.
-     * 
-     * @param result
+     *
+     * @param resultBuilder
      * @param operand1
      * @param operand2
      * @param position
      * @param index
      * @return
      */
-    private MDA recursiveOperate(final MDA result, final int[] position, final ToDoubleFunction<int[]> operation, final int index) {
-        MDA intermediateResult = result;
-        for (int i = 0; i < result.getDimensions()[index]; i++) {
+    private MDABuilder recursiveOperate(final MDABuilder resultBuilder, final int[] position, final ToDoubleFunction<int[]> operation, final int index, final int[] dimensions) {
+        for (int i = 0; i < dimensions[index]; i++) {
             position[index] = i;
-            if (index == result.getDimensions().length - 1) {
-                put(intermediateResult, operation.applyAsDouble(position), position);
+            if (index == dimensions.length - 1) {
+                resultBuilder.withDataPoint(operation.applyAsDouble(position), position);
                 continue;
             }
-            intermediateResult = recursiveOperate(intermediateResult, position, operation, index + 1);
+            recursiveOperate(resultBuilder, position, operation, index + 1, dimensions);
         }
-        return intermediateResult;
+        return resultBuilder;
     }
 }

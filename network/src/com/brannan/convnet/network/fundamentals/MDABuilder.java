@@ -11,7 +11,8 @@ public class MDABuilder {
      * @return
      */
     public final MDA build() {
-        return new MDA(dimensions, elements, increments);
+        final MDA mda = new MDA(dimensions, elements, increments);
+        return mda;
     }
 
 
@@ -28,6 +29,19 @@ public class MDABuilder {
             increments[i] = increments[i - 1] * dimensions[i - 1];
         }
         this.elements = new double[dimensions[dimensions.length - 1] * increments[dimensions.length - 1]];
+        return this;
+    }
+
+
+    public MDABuilder withDataPoint(final double element, final int... position) {
+        MDAService.validatePosition(dimensions, position);
+        elements[MDAService.getLocationForPosition(increments, position)] = element;
+        return this;
+    }
+
+    public MDABuilder withAmountAddedToDataPoint(final double addition, final int[] position) {
+        MDAService.validatePosition(dimensions, position);
+        elements[MDAService.getLocationForPosition(increments, position)] += addition;
         return this;
     }
 }

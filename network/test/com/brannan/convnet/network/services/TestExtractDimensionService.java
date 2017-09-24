@@ -1,7 +1,6 @@
 package com.brannan.convnet.network.services;
 
-import static com.brannan.convnet.network.fundamentals.MDAHelper.get;
-import static com.brannan.convnet.network.fundamentals.MDAHelper.put;
+import static com.brannan.convnet.network.fundamentals.MDAService.get;
 import static com.brannan.convnet.network.services.ExtractDimensionService.subsetOf;
 import static org.junit.Assert.assertEquals;
 
@@ -11,97 +10,100 @@ import com.brannan.convnet.network.fundamentals.MDA;
 import com.brannan.convnet.network.fundamentals.MDABuilder;
 
 public class TestExtractDimensionService {
-	
+
 	int[] dimensions = {2,3,4, 5, 9};
-	MDA multiD1 = new MDABuilder().withDimensions(dimensions).build();
+	MDABuilder multiD1Builder = new MDABuilder().withDimensions(dimensions);
+	final MDA multiD1 = multiD1Builder.build();
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testDimensionTooLarge() {
 		// Given
-		int dimension = 5;
-		int[] instance = {1};
-		
+		final int dimension = 5;
+		final int[] instance = {1};
+		final MDA multiD1 = multiD1Builder.build();
+
 		// When
 		subsetOf(multiD1, dimension, instance);
-		
+
 		// Then expect exception
 	}
-	
+
 
     @Test(expected = IllegalArgumentException.class)
     public void testDimensionNegative() {
         // Given
-        int dimension = -1;
-        int[] instance = { 1 };
+        final int dimension = -1;
+        final int[] instance = { 1 };
+
 
         // When
         subsetOf(multiD1, dimension, instance);
 
         // Then
     }
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceTooLarge() {
 		// Given
-		int dimension = 2;
-		int[] instance = {4};
-		
+		final int dimension = 2;
+		final int[] instance = {4};
+
 		// When
 		subsetOf(multiD1, dimension, instance);
-		
+
 		// Then
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceNegative() {
 		// Given
-		int dimension = 2;
-		int[] instance = {-1};
-		
+		final int dimension = 2;
+		final int[] instance = {-1};
+
 		// When
 		subsetOf(multiD1, dimension, instance);
-		
+
 		// Then
 	}
-	
+
 	@Test
 	public void checkRightDimensionalitySingleInstance() {
 		// Given
-		int dimension = 2;
-		int instance = 0;
-		
+		final int dimension = 2;
+		final int instance = 0;
+
 		// When
-		MDA result = subsetOf(multiD1, dimension, instance);
-		
+		final MDA result = subsetOf(multiD1, dimension, instance);
+
 		// Then
 		assertEquals("There should be one fewer dimensions in the result than the original operand", multiD1.getDimensions().length - 1, result.getDimensions().length);
 		assertEquals("Dimension 0's size should be the same", multiD1.getDimensions()[0], result.getDimensions()[0]);
 		assertEquals("Dimension 1's size should be the same", multiD1.getDimensions()[0], result.getDimensions()[0]);
 	}
-	
+
 	@Test
 	public void checkDataExtractsSingleInstance() {
 		// Given
-		int dimension = 2;
-		int instance = 0;
+		final int dimension = 2;
+		final int instance = 0;
 		double element = 0D;
-		
+
 		for(int i = 0; i < dimensions[0]; i++) {
 			for(int j = 0; j < dimensions[1]; j++) {
 				for(int k = 0; k < dimensions[2]; k++) {
 					for(int l = 0; l < dimensions[3]; l++) {
 						for(int m = 0; m < dimensions[3]; m++) {
-							put(multiD1, element, i, j, k, 0 ,0);
+							multiD1Builder.withDataPoint(element, i, j, k, 0 ,0);
 							element++;
 						}
 					}
 				}
 			}
 		}
-				
+
 		// When
-		MDA result = subsetOf(multiD1, dimension, instance);
-		
+		final MDA result = subsetOf(multiD1, dimension, instance);
+
 		// Then
 		for(int i = 0; i < dimensions[0]; i++) {
 			for(int j = 0; j < dimensions[1]; j++) {
@@ -113,16 +115,16 @@ public class TestExtractDimensionService {
 			}
 		}
 	}
-	
+
 	@Test
 	public void checkRightDimensionalityMultipleInstance() {
 		// Given
-		int dimension = 2;
-		int[] instances = {0, 1};
-				
+		final int dimension = 2;
+		final int[] instances = {0, 1};
+
 		// When
-		MDA result = subsetOf(multiD1, dimension, instances);
-				
+		final MDA result = subsetOf(multiD1, dimension, instances);
+
 		// Then
 		assertEquals("Dimensions should be the same", multiD1.getDimensions().length, result.getDimensions().length);
 		assertEquals("Dimension 0's size should be the same", multiD1.getDimensions()[0], result.getDimensions()[0]);
@@ -131,32 +133,32 @@ public class TestExtractDimensionService {
 		assertEquals("Dimension 3's size should be the same", multiD1.getDimensions()[3], result.getDimensions()[3]);
 		assertEquals("Dimension 4's size should be the same", multiD1.getDimensions()[4], result.getDimensions()[4]);
 	}
-	
+
 	@Test
 	public void checkDataExtractsMultipleInstance() {
 		// Given
-		int dimension = 2;
-		int[] instances = {0,1};
+		final int dimension = 2;
+		final int[] instances = {0,1};
 		double element = 0D;
-		
+
 		for(int i = 0; i < dimensions[0]; i++) {
 			for(int j = 0; j < dimensions[1]; j++) {
 				for(int k = 0; k < dimensions[2]; k++) {
 					for(int l = 0; l < dimensions[3]; l++) {
 						for(int m = 0; m < dimensions[3]; m++) {
-							put(multiD1, element, i, j, k, 0 ,0);
+							multiD1Builder.withDataPoint(element, i, j, k, 0 ,0);
 							element++;
 						}
 					}
 				}
 			}
 		}
-				
+
 		// When
-		MDA result = subsetOf(multiD1, dimension, instances);
-		
+		final MDA result = subsetOf(multiD1Builder.build(), dimension, instances);
+
 		// Then
-		for(int instance:instances) {
+		for(final int instance:instances) {
 			for(int i = 0; i < dimensions[0]; i++) {
 				for(int j = 0; j < dimensions[1]; j++) {
 					for(int l = 0; l < dimensions[3]; l++) {

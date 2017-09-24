@@ -1,7 +1,6 @@
 package com.brannan.convnet.network.layers.pooling;
 
-import static com.brannan.convnet.network.fundamentals.MDAHelper.get;
-import static com.brannan.convnet.network.fundamentals.MDAHelper.put;
+import static com.brannan.convnet.network.fundamentals.MDAService.get;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
@@ -31,36 +30,36 @@ public class TestMeanPoolingLayer {
     @Test
     public void testSmallPool() {
         // Given;
-        int[] inputDimensions = { 4, 4 };
-        MDA operand = new MDABuilder().withDimensions(inputDimensions).build();
+        final int[] inputDimensions = { 4, 4 };
+        final MDABuilder operandBuilder = new MDABuilder().withDimensions(inputDimensions);
         double element = 1D;
 
         for (int j = 0; j < inputDimensions[1]; j++) {
             for (int i = 0; i < inputDimensions[1]; i++) {
-                put(operand, element, j, i);
+                operandBuilder.withDataPoint(element, j, i);
                 element++;
             }
         }
 
-        int[] poolingSize = {2, 1};
+        final int[] poolingSize = {2, 1};
 
-        MDA expectedOutput = new MDABuilder().withDimensions(2, 4).build();
-        put(expectedOutput, 3, 0, 0);
-        put(expectedOutput, 4, 0, 1);
-        put(expectedOutput, 5, 0, 2);
-        put(expectedOutput, 6, 0, 3);
-        put(expectedOutput, 11, 1, 0);
-        put(expectedOutput, 12, 1, 1);
-        put(expectedOutput, 13, 1, 2);
-        put(expectedOutput, 14, 1, 3);
+        final MDABuilder expectedOutputBuilder = new MDABuilder().withDimensions(2, 4);
+        expectedOutputBuilder.withDataPoint(3, 0, 0);
+        expectedOutputBuilder.withDataPoint(4, 0, 1);
+        expectedOutputBuilder.withDataPoint(5, 0, 2);
+        expectedOutputBuilder.withDataPoint(6, 0, 3);
+        expectedOutputBuilder.withDataPoint(11, 1, 0);
+        expectedOutputBuilder.withDataPoint(12, 1, 1);
+        expectedOutputBuilder.withDataPoint(13, 1, 2);
+        expectedOutputBuilder.withDataPoint(14, 1, 3);
 
         // When
-        MDA output = layer.forward(operand, poolingSize, PoolingType.MEAN).getOutput();
+        final MDA output = layer.forward(operandBuilder.build(), poolingSize, PoolingType.MEAN).getOutput();
 
         // Then
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 4; j++) {
-                assertEquals("", get(expectedOutput, i, j), get(output, i, j), 0);
+                assertEquals("", get(expectedOutputBuilder.build(), i, j), get(output, i, j), 0);
             }
         }
     }

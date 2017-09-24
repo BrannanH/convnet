@@ -17,7 +17,7 @@ public class HelperLibrary {
      * @return
      */
     public static List<Integer> arrayAsList(final int[] t) {
-        return stream(t).boxed().collect(toList()); 
+        return stream(t).boxed().collect(toList());
     }
 
     public static boolean arrayEquality(final int[] array1, final int[] array2) {
@@ -35,13 +35,17 @@ public class HelperLibrary {
      */
     public static <T> List<T> cloneList(final List<T> t) {
         final List<T> r = new ArrayList<>();
-        
+
         r.addAll(t);
         return r;
     }
-    
+
     @FunctionalInterface
     public interface IntBiFunction<T> {
         T apply(int i, int j);
+    }
+
+    public static int[] listAsArray(final List<Integer> position) {
+        return position.stream().mapToInt(Integer::intValue).toArray();
     }
 }
