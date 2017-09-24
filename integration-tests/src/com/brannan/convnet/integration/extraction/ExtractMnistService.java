@@ -7,7 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import com.brannan.convnet.network.fundamentals.MDA;
-import com.brannan.convnet.network.fundamentals.MDABuilder;
+import com.brannan.convnet.network.fundamentals.MDABuilder; 
 
 /**
  * This class exists to extract the data from the MNIST database.
@@ -19,15 +19,15 @@ public class ExtractMnistService {
 
     public FileTuple extractImages(final ImageSet imageSet, final int numberOfImages, final SampleType sampleType) throws IOException {
 
-        int[] wantedImageIndices = sampleType.getGenerator().apply(numberOfImages, imageSet.getImagesInSet());
+        final int[] wantedImageIndices = sampleType.getGenerator().apply(numberOfImages, imageSet.getImagesInSet());
 
         DataInputStream dataInputStream = new DataInputStream(new FileInputStream(imageSet.getImageLocation()));
 
         dataInputStream.readInt(); // clears the magic number
 
-        int numImages = dataInputStream.readInt();
-        int numRows = dataInputStream.readInt();
-        int numColumns = dataInputStream.readInt();
+        final int numImages = dataInputStream.readInt();
+        final int numRows = dataInputStream.readInt();
+        final int numColumns = dataInputStream.readInt();
         byte[] data = new byte[numImages * numRows * numColumns];
 
         int flags = dataInputStream.read(data, 0, numImages * numRows * numColumns);
@@ -37,10 +37,10 @@ public class ExtractMnistService {
         }
         dataInputStream.close();
 
-        MDA imageStore = new MDABuilder().withDimensions(numRows, numColumns, wantedImageIndices.length).build();
+        final MDA imageStore = new MDABuilder().withDimensions(numRows, numColumns, wantedImageIndices.length).build();
         int count = 0;
         for (int image = 0; image < wantedImageIndices.length; image++) {
-            int start = wantedImageIndices[image] * numRows * numColumns;
+            final int start = wantedImageIndices[image] * numRows * numColumns;
             count = start;
             for (int row = 0; row < numRows; row++) {
                 for (int column = 0; column < numColumns; column++) {
@@ -52,7 +52,7 @@ public class ExtractMnistService {
 
         dataInputStream = new DataInputStream(new FileInputStream(imageSet.getLabelLocation()));
         dataInputStream.readInt();
-        int numLabels = dataInputStream.readInt();
+        final int numLabels = dataInputStream.readInt();
         data = new byte[numLabels];
         flags = dataInputStream.read(data, 0, numLabels);
         if (flags != 0) {
@@ -60,7 +60,7 @@ public class ExtractMnistService {
             throw new IOException();
         }
         dataInputStream.close();
-        double[] labelStore = new double[wantedImageIndices.length];
+        final double[] labelStore = new double[wantedImageIndices.length];
         for (int i = 0; i < labelStore.length; i++) {
             labelStore[i] = (data[wantedImageIndices[i]]) & 0xff;
         }

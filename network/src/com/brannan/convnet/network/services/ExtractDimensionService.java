@@ -3,8 +3,6 @@ package com.brannan.convnet.network.services;
 import static com.brannan.convnet.network.fundamentals.MDAHelper.get;
 import static com.brannan.convnet.network.fundamentals.MDAHelper.put;
 
-import java.util.List;
-
 import com.brannan.convnet.network.fundamentals.MDA;
 import com.brannan.convnet.network.fundamentals.MDABuilder;
 
@@ -61,20 +59,20 @@ public class ExtractDimensionService {
      * @return
      */
     private static int[] constructDimensions(final int dimension, final int[] instancesToExtract,
-            final List<Integer> originalsDimensions) {
+            final int[] originalsDimensions) {
 
         int[] dimensionsToPersist;
 
         if (instancesToExtract.length == 1) {
 
-            dimensionsToPersist = new int[originalsDimensions.size() - 1];
+            dimensionsToPersist = new int[originalsDimensions.length - 1];
             int count = 0;
 
-            for (int i = 0; i < originalsDimensions.size(); i++) {
+            for (int i = 0; i < originalsDimensions.length; i++) {
 
                 if (i != dimension) {
 
-                    dimensionsToPersist[count] = originalsDimensions.get(i);
+                    dimensionsToPersist[count] = originalsDimensions[i];
                     count++;
 
                 }
@@ -83,9 +81,9 @@ public class ExtractDimensionService {
 
         } else {
 
-            dimensionsToPersist = new int[originalsDimensions.size()];
+            dimensionsToPersist = new int[originalsDimensions.length];
 
-            for (int i = 0; i < originalsDimensions.size(); i++) {
+            for (int i = 0; i < originalsDimensions.length; i++) {
 
                 if (i == dimension) {
 
@@ -93,7 +91,7 @@ public class ExtractDimensionService {
 
                 } else {
 
-                    dimensionsToPersist[i] = originalsDimensions.get(i);
+                    dimensionsToPersist[i] = originalsDimensions[i];
 
                 }
 
@@ -116,10 +114,10 @@ public class ExtractDimensionService {
      */
     private static MDA populate(final MDA result, final MDA multiD, final int dimension, final int instance) {
 
-        int[] position = new int[multiD.getDimensions().size()];
+        int[] position = new int[multiD.getDimensions().length];
         position[dimension] = instance;
 
-        return recursivePopulate(result, multiD, dimension, instance, position, multiD.getDimensions().size() - 1);
+        return recursivePopulate(result, multiD, dimension, instance, position, multiD.getDimensions().length - 1);
 
     }
 
@@ -150,14 +148,14 @@ public class ExtractDimensionService {
 
         if (place == 0) {
 
-            for (int j = 0; j < result.getDimensions().get(0); j++) {
+            for (int j = 0; j < result.getDimensions()[0]; j++) {
 
                 position[place] = j;
-                int[] toPlace = new int[result.getDimensions().size()];
+                int[] toPlace = new int[result.getDimensions().length];
 
-                if (result.getDimensions().size() == multiD.getDimensions().size() - 1) {
+                if (result.getDimensions().length == multiD.getDimensions().length - 1) {
 
-                    for (int i = 0; i < multiD.getDimensions().size() - 1; i++) {
+                    for (int i = 0; i < multiD.getDimensions().length - 1; i++) {
 
                         if (i < dimension) {
 
@@ -185,7 +183,7 @@ public class ExtractDimensionService {
             recursivePopulate(result, multiD, dimension, instance, position, place - 1);
         } else {
 
-            for (int i = 0; i < multiD.getDimensions().get(place); i++) {
+            for (int i = 0; i < multiD.getDimensions()[place]; i++) {
 
                 position[place] = i;
                 recursivePopulate(result, multiD, dimension, instance, position, place - 1);
@@ -203,11 +201,11 @@ public class ExtractDimensionService {
      */
     private static void validateDimension(final MDA multiD, final int dimension) {
 
-        if (dimension > multiD.getDimensions().size() - 1 || dimension < 0) {
+        if (dimension > multiD.getDimensions().length - 1 || dimension < 0) {
 
             throw new IllegalArgumentException(
                     "Specified dimension does not exist. Possible dimensions are between 0 and "
-                            + (multiD.getDimensions().size() - 1));
+                            + (multiD.getDimensions().length - 1));
         }
     }
 
@@ -221,10 +219,10 @@ public class ExtractDimensionService {
      */
     private static void validateInstance(final MDA multiD, final int dimension, final int instance) {
 
-        if (instance > multiD.getDimensions().get(dimension) - 1 || instance < 0) {
+        if (instance > multiD.getDimensions()[dimension] - 1 || instance < 0) {
 
             throw new IllegalArgumentException("Specified instance of dimension " + dimension
-                    + "does not exist. It exists between 0 and " + (multiD.getDimensions().get(dimension) - 1));
+                    + "does not exist. It exists between 0 and " + (multiD.getDimensions()[dimension] - 1));
         }
     }
 }

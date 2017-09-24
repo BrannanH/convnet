@@ -1,6 +1,5 @@
 package com.brannan.convnet.network.layers.pooling;
 
-import static com.brannan.convnet.network.fundamentals.HelperLibrary.arrayAsList;
 import static com.brannan.convnet.network.fundamentals.MDAHelper.put;
 import static com.brannan.convnet.network.testsupport.CompareMDAs.checkExpectation;
 import static org.junit.Assert.assertEquals;
@@ -19,7 +18,6 @@ import org.mockito.MockitoAnnotations;
 import com.brannan.convnet.network.fundamentals.MDA;
 import com.brannan.convnet.network.fundamentals.MDABuilder;
 import com.brannan.convnet.network.layers.ForwardOutputTuple;
-import com.brannan.convnet.network.layers.pooling.PoolingLayer;
 import com.brannan.convnet.network.layers.pooling.PoolingLibrary.PoolingType;
 import com.brannan.convnet.network.services.DimensionVerificationService;
 import com.google.common.collect.Lists;
@@ -46,7 +44,7 @@ public class TestMaxPoolingLayer {
 	public void TestSmallPool() {
 		// Given
 		int[] inputDimensions = {4,4};
-		List<Integer> poolingSize = Lists.newArrayList(2,1);
+		int[] poolingSize = {2,1};
 		
 		double element = 0;
 		MDA input = new MDABuilder().withDimensions(inputDimensions).build();
@@ -167,7 +165,7 @@ public class TestMaxPoolingLayer {
 		expectedDerivative.put(Lists.newArrayList(1,1), temp);
 		
 		// When
-		ForwardOutputTuple output = maxPoolingLayer.forward(input, arrayAsList(poolingSize), PoolingType.MAX);
+		ForwardOutputTuple output = maxPoolingLayer.forward(input, poolingSize, PoolingType.MAX);
 		MDA result = output.getOutput();
 		Map<List<Integer>, Map<List<Integer>, Double>> derivative = output.getdOutByDIn();
 		
@@ -241,7 +239,7 @@ public class TestMaxPoolingLayer {
 		expectedDerivative.put(Lists.newArrayList(1,1,0), temp);
 		
 		// When
-		ForwardOutputTuple result = maxPoolingLayer.forward(input, arrayAsList(poolingSize), PoolingType.MAX);
+		ForwardOutputTuple result = maxPoolingLayer.forward(input, poolingSize, PoolingType.MAX);
 		MDA output = result.getOutput();
 		Map<List<Integer>, Map<List<Integer>, Double>> derivative = result.getdOutByDIn();
 		
@@ -328,7 +326,7 @@ public class TestMaxPoolingLayer {
         expectedDerivative.put(Lists.newArrayList(1, 3, 0), temp);
 
         // When
-        ForwardOutputTuple result = maxPoolingLayer.forward(input, arrayAsList(poolingSize), PoolingType.MAX);
+        ForwardOutputTuple result = maxPoolingLayer.forward(input, poolingSize, PoolingType.MAX);
         MDA output = result.getOutput();
         Map<List<Integer>, Map<List<Integer>, Double>> derivative = result.getdOutByDIn();
 

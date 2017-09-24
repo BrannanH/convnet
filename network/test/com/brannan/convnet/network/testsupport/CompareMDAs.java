@@ -9,18 +9,18 @@ import com.brannan.convnet.network.fundamentals.MDA;
 public class CompareMDAs {
 	
     public static void checkExpectation(MDA expectedOutput, MDA forward) {
-        assertEquals("Number of dimensions is correct", expectedOutput.getDimensions().size(),
-                forward.getDimensions().size());
-        for (int i = 0; i < expectedOutput.getDimensions().size(); i++) {
-            assertEquals("Each dimension should be correct. Asserting on: " + i, expectedOutput.getDimensions().get(i),
-                    forward.getDimensions().get(i));
+        assertEquals("Number of dimensions is correct", expectedOutput.getDimensions().length,
+                forward.getDimensions().length);
+        for (int i = 0; i < expectedOutput.getDimensions().length; i++) {
+            assertEquals("Each dimension should be correct. Asserting on: " + i, expectedOutput.getDimensions()[i],
+                    forward.getDimensions()[i]);
         }
-        checkAllElements(expectedOutput, forward, new int[forward.getDimensions().size()],
-                forward.getDimensions().size() - 1);
+        checkAllElements(expectedOutput, forward, new int[forward.getDimensions().length],
+                forward.getDimensions().length - 1);
     }
 
 	private static void checkAllElements(MDA expectedOutput, MDA forward, int[] position, int place) {
-		for(int i = 0; i < expectedOutput.getDimensions().get(place); i++) {
+		for(int i = 0; i < expectedOutput.getDimensions()[place]; i++) {
 			position[place] = i;
 			if(place != 0) {
 				checkAllElements(expectedOutput, forward, position, place-1);

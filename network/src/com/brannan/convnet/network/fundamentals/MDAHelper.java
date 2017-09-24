@@ -102,8 +102,8 @@ public class MDAHelper {
      */
     private static void validatePosition(final MDA mda, final List<Integer> position) {
 
-        if (position.size() != mda.getDimensions().size()) {
-            throw new IllegalArgumentException("The given Multi Dimensional Array has [" + mda.getDimensions().size()
+        if (position.size() != mda.getDimensions().length) {
+            throw new IllegalArgumentException("The given Multi Dimensional Array has [" + mda.getDimensions().length
                     + "] dimensions, however [" + position.size() + "] were specified, these must match.");
         }
 
@@ -113,11 +113,11 @@ public class MDAHelper {
                     + position.get(firstError.getAsInt()) + "], however it must be positive.");
         }
 
-        firstError = IntStream.range(0, position.size()).filter(w -> position.get(w) >= mda.getDimensions().get(w))
+        firstError = IntStream.range(0, position.size()).filter(w -> position.get(w) >= mda.getDimensions()[w])
                 .findFirst();
         if (firstError.isPresent()) {
             throw new IndexOutOfBoundsException("Dimension[" + firstError.getAsInt() + "] has size ["
-                    + mda.getDimensions().get(firstError.getAsInt()) + "], [" + position.get(firstError.getAsInt())
+                    + mda.getDimensions()[firstError.getAsInt()] + "], [" + position.get(firstError.getAsInt())
                     + "] was specified.");
         }
     }

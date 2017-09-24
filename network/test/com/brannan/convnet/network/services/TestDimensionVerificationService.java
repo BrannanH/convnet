@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.brannan.convnet.network.services.DimensionVerificationService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -19,7 +18,7 @@ import com.google.common.collect.Maps;
  */
 public class TestDimensionVerificationService {
 	
-	private List<Integer> inputDimensions = Lists.newArrayList(28,28,12);
+	private int[] inputDimensions = {28,28,12};
 	
 	private DimensionVerificationService dimensionVerificationService = new DimensionVerificationService();
 	
@@ -30,7 +29,7 @@ public class TestDimensionVerificationService {
     @Test
     public void testTooManyFilterDimensions() {
         // Given
-        List<Integer> poolSizes = Lists.newArrayList(4, 4, 4, 4);
+        int[] poolSizes = {4, 4, 4, 4};
         boolean caught = false;
         
         // When
@@ -51,7 +50,7 @@ public class TestDimensionVerificationService {
 	@Test
 	public void testFeatureLargerThanImage() {
 		// Given
-		List<Integer> poolSizes = Lists.newArrayList(28, 28, 13);
+		int[] poolSizes = {28, 28, 13};
 		boolean caught = false;
 		
 		// When
@@ -72,7 +71,7 @@ public class TestDimensionVerificationService {
 	@Test
 	public void testSuccess() {
 	    // Given
-	    List<Integer> poolSizes = Lists.newArrayList(28, 28, 12);
+	    int[] poolSizes = {28, 28, 12};
 	    
 	    // When
 	    dimensionVerificationService.verifyLeftBiggerThanRight(inputDimensions, poolSizes);

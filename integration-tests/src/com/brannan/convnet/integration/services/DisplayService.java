@@ -32,10 +32,10 @@ public class DisplayService {
     public static void display(final MDA... imageStores) {
 
         for (MDA imageStore : imageStores) {
-            if (imageStore.getDimensions().size() != TWO && imageStore.getDimensions().size() != THREE) {
+            if (imageStore.getDimensions().length != TWO && imageStore.getDimensions().length != THREE) {
                 throw new IllegalArgumentException("Either a 2D or 3D MDA must be passed to display");
             }
-            if (imageStore.getDimensions().size() == THREE && !(imageStore.getDimensions().get(TWO) == THREE)) {
+            if (imageStore.getDimensions().length == THREE && !(imageStore.getDimensions()[TWO] == THREE)) {
                 throw new IllegalArgumentException("A 3D MDA passed to display must only have 3 colour channels");
             }
         }
@@ -44,8 +44,8 @@ public class DisplayService {
 
         for (int i = 0; i < imageStores.length; i++) {
             MDA imageStore = imageStores[i];
-            int numRows = imageStore.getDimensions().get(0);
-            int numColumns = imageStore.getDimensions().get(1);
+            int numRows = imageStore.getDimensions()[0];
+            int numColumns = imageStore.getDimensions()[1];
             images[i] = new BufferedImage(numRows, numColumns, BufferedImage.TYPE_3BYTE_BGR);
 
             for (int row = 0; row < numRows; row++) {
@@ -55,7 +55,7 @@ public class DisplayService {
                     int green;
                     int blue;
 
-                    if (imageStore.getDimensions().size() == TWO) {
+                    if (imageStore.getDimensions().length == TWO) {
 
                         double doublevalue = get(imageStore, row, column);
                         red = (int) (doublevalue * BYTE_MAX);

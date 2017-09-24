@@ -74,9 +74,9 @@ public class TestExtractDimensionService {
 		MDA result = subsetOf(multiD1, dimension, instance);
 		
 		// Then
-		assertEquals("There should be one fewer dimensions in the result than the original operand", multiD1.getDimensions().size() - 1, result.getDimensions().size());
-		assertEquals("Dimension 0's size should be the same", multiD1.getDimensions().get(0), result.getDimensions().get(0));
-		assertEquals("Dimension 1's size should be the same", multiD1.getDimensions().get(0), result.getDimensions().get(0));
+		assertEquals("There should be one fewer dimensions in the result than the original operand", multiD1.getDimensions().length - 1, result.getDimensions().length);
+		assertEquals("Dimension 0's size should be the same", multiD1.getDimensions()[0], result.getDimensions()[0]);
+		assertEquals("Dimension 1's size should be the same", multiD1.getDimensions()[0], result.getDimensions()[0]);
 	}
 	
 	@Test
@@ -124,12 +124,12 @@ public class TestExtractDimensionService {
 		MDA result = subsetOf(multiD1, dimension, instances);
 				
 		// Then
-		assertEquals("Dimensions should be the same", multiD1.getDimensions().size(), result.getDimensions().size());
-		assertEquals("Dimension 0's size should be the same", multiD1.getDimensions().get(0), result.getDimensions().get(0));
-		assertEquals("Dimension 1's size should be the same", multiD1.getDimensions().get(1), result.getDimensions().get(1));
-		assertEquals("Dimension 2's size should be the length of the instances provided", (Integer) instances.length, result.getDimensions().get(dimension));
-		assertEquals("Dimension 3's size should be the same", multiD1.getDimensions().get(3), result.getDimensions().get(3));
-		assertEquals("Dimension 4's size should be the same", multiD1.getDimensions().get(4), result.getDimensions().get(4));
+		assertEquals("Dimensions should be the same", multiD1.getDimensions().length, result.getDimensions().length);
+		assertEquals("Dimension 0's size should be the same", multiD1.getDimensions()[0], result.getDimensions()[0]);
+		assertEquals("Dimension 1's size should be the same", multiD1.getDimensions()[1], result.getDimensions()[1]);
+		assertEquals("Dimension 2's size should be the length of the instances provided", instances.length, result.getDimensions()[dimension]);
+		assertEquals("Dimension 3's size should be the same", multiD1.getDimensions()[3], result.getDimensions()[3]);
+		assertEquals("Dimension 4's size should be the same", multiD1.getDimensions()[4], result.getDimensions()[4]);
 	}
 	
 	@Test

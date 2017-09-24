@@ -21,7 +21,7 @@ public class ConvolutionLayer {
 
     public ConvolutionLayer(final DimensionVerificationService dimensionVerificationService) {
         this.dimensionVerificationService = dimensionVerificationService;
-    }
+    } 
 
     public ForwardOutputTuple forward(final MDA operand, final MDA feature, final PaddingType paddingType) {
         // TODO Auto-generated method stub
@@ -30,7 +30,7 @@ public class ConvolutionLayer {
 
     public MDA forwardNoTrain(final MDA operand, final MDA feature, final PaddingType paddingType) {
         dimensionVerificationService.verifyLeftBiggerThanRight(operand.getDimensions(), feature.getDimensions());
-        MDA output = new MDABuilder().withDimensions(outputDimensions(operand.getDimensions(), feature.getDimensions(), paddingType)).build();
+        final MDA output = new MDABuilder().withDimensions(outputDimensions(operand.getDimensions(), feature.getDimensions(), paddingType)).build();
         return output;
     }
 
@@ -40,7 +40,7 @@ public class ConvolutionLayer {
         return null;
     }
 
-    public List<Integer> outputDimensions(final List<Integer> inputDimensions, final List<Integer> filterDimensions, final PaddingType paddingType) {
+    public int[] outputDimensions(final int[] inputDimensions, final int[] filterDimensions, final PaddingType paddingType) {
         return paddingType.getOutputDimensionsFunction().apply(inputDimensions, filterDimensions);
     }
 

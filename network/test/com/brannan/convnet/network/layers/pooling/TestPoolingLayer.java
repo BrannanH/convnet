@@ -1,6 +1,6 @@
 package com.brannan.convnet.network.layers.pooling;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 
 import java.util.HashMap;
@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.brannan.convnet.network.fundamentals.HelperLibrary;
 import com.brannan.convnet.network.fundamentals.MDA;
 import com.brannan.convnet.network.fundamentals.MDABuilder;
 import com.brannan.convnet.network.fundamentals.MDAHelper;
@@ -43,8 +44,8 @@ public class TestPoolingLayer {
     @Test
     public void testReverseOutputSize() {
         // Given
-        List<Integer> outputDimensions = Lists.newArrayList(2,2);
-        List<Integer> forwardInputDimensions = Lists.newArrayList(4,4);
+        int[] outputDimensions = {2,2};
+        int[] forwardInputDimensions = {4,4};
         MDA dLossByDOut = new MDABuilder().withDimensions(outputDimensions).build();
 
         Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn = new HashMap<>();
@@ -54,7 +55,7 @@ public class TestPoolingLayer {
 
         // Then
         verify(dimensionVerificationService).verifyDerivativeMap(dOutByDIn);
-        assertEquals(output.getDimensions(), forwardInputDimensions);
+        assertTrue(HelperLibrary.arrayEquality(output.getDimensions(), forwardInputDimensions));
     }
 
 
@@ -64,8 +65,8 @@ public class TestPoolingLayer {
     @Test
     public void testReverseOutputForMaxPoolingLayer() {
         // Given
-        List<Integer> forwardOutputDimensions = Lists.newArrayList(2, 2);
-        List<Integer> forwardInputDimensions = Lists.newArrayList(4, 4);
+        int[] forwardOutputDimensions = {2, 2};
+        int[] forwardInputDimensions = {4, 4};
         MDA dLossByDOut = new MDABuilder().withDimensions(forwardOutputDimensions).build();
         MDAHelper.put(dLossByDOut, 1D, 0, 0);
         MDAHelper.put(dLossByDOut, 1D, 0, 1);
@@ -140,7 +141,7 @@ public class TestPoolingLayer {
         double coefficient2 = 0.7D;
         MDA dLossByDOut = new MDABuilder().withDimensions(1,1).build();
         MDAHelper.put(dLossByDOut, derivative, 0, 0);
-        List<Integer> forwardInputDimensions = Lists.newArrayList(1,2);
+        int[] forwardInputDimensions = {1,2};
         
         Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn = new HashMap<>();
         List<Integer> outputDimension = Lists.newArrayList(0,0);

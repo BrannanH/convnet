@@ -1,8 +1,7 @@
 package com.brannan.convnet.network.layers.convolution;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.List;
+import static com.brannan.convnet.network.fundamentals.HelperLibrary.arrayEquality;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,10 +11,8 @@ import org.mockito.MockitoAnnotations;
 
 import com.brannan.convnet.network.fundamentals.MDA;
 import com.brannan.convnet.network.fundamentals.MDABuilder;
-import com.brannan.convnet.network.layers.convolution.ConvolutionLayer;
 import com.brannan.convnet.network.layers.convolution.ConvolutionLibrary.PaddingType;
 import com.brannan.convnet.network.services.DimensionVerificationService;
-import com.google.common.collect.Lists;
 
 /**
  * 
@@ -39,9 +36,9 @@ public class TestConvolutionLayer {
     @Test
     public void test() {
         // Given
-        List<Integer> operandDimensions = Lists.newArrayList(1, 5);
-        List<Integer> filterDimensions = Lists.newArrayList(1, 3);
-        List<Integer> expectedOutputDimensions = Lists.newArrayList(1, 3);
+        int[] operandDimensions = {1, 5};
+        int[] filterDimensions = {1, 3};
+        int[] expectedOutputDimensions = {1, 3};
         
         MDA operand = new MDABuilder().withDimensions(operandDimensions).build();
         MDA feature = new MDABuilder().withDimensions(filterDimensions).build();
@@ -52,6 +49,6 @@ public class TestConvolutionLayer {
         
         // Then
         Mockito.verify(dimensionVerificationService).verifyLeftBiggerThanRight(operandDimensions, filterDimensions);
-        assertEquals("Output Dimensions should be as expected", expectedOutputDimensions, output.getDimensions());
+        assertTrue("Output Dimensions should be as expected", arrayEquality(expectedOutputDimensions, output.getDimensions()));
     }
 }

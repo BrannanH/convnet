@@ -4,8 +4,6 @@ import static com.brannan.convnet.network.fundamentals.MDAHelper.get;
 import static com.brannan.convnet.network.fundamentals.MDAHelper.put;
 import static org.junit.Assert.assertEquals;
 
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -13,10 +11,8 @@ import org.mockito.MockitoAnnotations;
 
 import com.brannan.convnet.network.fundamentals.MDA;
 import com.brannan.convnet.network.fundamentals.MDABuilder;
-import com.brannan.convnet.network.layers.pooling.PoolingLayer;
 import com.brannan.convnet.network.layers.pooling.PoolingLibrary.PoolingType;
 import com.brannan.convnet.network.services.DimensionVerificationService;
-import com.google.common.collect.Lists;
 
 public class TestMeanPoolingLayer {
 
@@ -46,7 +42,7 @@ public class TestMeanPoolingLayer {
             }
         }
 
-        List<Integer> poolingSize = Lists.newArrayList(2, 1);
+        int[] poolingSize = {2, 1};
 
         MDA expectedOutput = new MDABuilder().withDimensions(2, 4).build();
         put(expectedOutput, 3, 0, 0);

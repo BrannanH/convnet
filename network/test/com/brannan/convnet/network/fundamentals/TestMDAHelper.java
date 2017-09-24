@@ -1,9 +1,10 @@
 package com.brannan.convnet.network.fundamentals;
 
-import static com.brannan.convnet.network.fundamentals.HelperLibrary.arrayAsList;
+import static com.brannan.convnet.network.fundamentals.HelperLibrary.arrayEquality;
 import static com.brannan.convnet.network.fundamentals.MDAHelper.get;
 import static com.brannan.convnet.network.fundamentals.MDAHelper.put;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +33,7 @@ public class TestMDAHelper {
         // When
 
         // Then
-        assertEquals("Dimensions should match those entered", arrayAsList(dimensions), mda.getDimensions());
+        assertTrue("Dimensions should match those entered", arrayEquality(dimensions, mda.getDimensions()));
     }
 
 

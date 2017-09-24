@@ -1,65 +1,41 @@
 package com.brannan.convnet.network.fundamentals;
 
-import java.util.List;
-
 /**
  * @author Brannan
  *
  */
 public class MDA {
 
-    private List<Integer> dimensions;
-    private double[] elements;
-    private int[] increments;
+    private final int[] dimensions;
+    private final double[] elements;
+    private final int[] increments;
 
+    MDA(final int[] dimensions, final double[] elements, final int[] increments) {
+        this.dimensions = dimensions;
+        this.elements = elements;
+        this.increments = increments; 
+    }
 
     /**
      * @return the dimensions
      */
-    public final List<Integer> getDimensions() {
-        return dimensions;
-    }
-
-
-    /**
-     * @param dimensions
-     *            the dimensions to set
-     */
-    final void setDimensions(final List<Integer> dimensions) {
-        this.dimensions = dimensions;
+    public int[] getDimensions() {
+        return dimensions.clone();
     }
 
 
     /**
      * @return the elements
      */
-    final double[] getElements() {
+    double[] getElements() {
         return elements;
-    }
-
-
-    /**
-     * @param elements
-     *            the elements to set
-     */
-    final void setElements(final double[] elements) {
-        this.elements = elements;
     }
 
 
     /**
      * @return the increments
      */
-    final int[] getIncrements() {
+    int[] getIncrements() {
         return increments;
-    }
-
-
-    /**
-     * @param increments
-     *            the increments to set
-     */
-    final void setIncrements(final int[] increments) {
-        this.increments = increments;
     }
 }

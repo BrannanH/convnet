@@ -50,18 +50,16 @@ public class PoolingLayer {
      * @param poolingType
      * @return
      */
-    public ForwardOutputTuple forward(final MDA operand, final List<Integer> poolSizes, final PoolingType poolingType) {
-        Map<List<Integer>, Set<PoolTuple>> pools = createInitialPooling(operand);
+    public ForwardOutputTuple forward(final MDA operand, final int[] poolSizes, final PoolingType poolingType) {
+        final Map<List<Integer>, Set<PoolTuple>> pools = createPools(operand, poolSizes);
 
-        pools = createPools(pools, poolSizes);
-
-        MDA forward = computeOutput(outputDimensions(operand.getDimensions(), poolSizes), pools, poolingType);
-        Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn = computeDOutByDIn(pools, poolingType);
-        ForwardOutputTuple result = new ForwardOutputTuple(forward, dOutByDIn, null);
+        final MDA forward = computeOutput(outputDimensions(operand.getDimensions(), poolSizes), pools, poolingType);
+        final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn = computeDOutByDIn(pools, poolingType);
+        final ForwardOutputTuple result = new ForwardOutputTuple(forward, dOutByDIn, null);
         return result;
     }
 
-
+ 
     /**
      * Used for testing the network rather than training it.
      * Compute the forward pass without computing any derivatives.
@@ -70,11 +68,9 @@ public class PoolingLayer {
      * @param poolingType
      * @return
      */
-    public MDA forwardNoTrain(final MDA operand, final List<Integer> poolSizes, final PoolingType poolingType) {
+    public MDA forwardNoTrain(final MDA operand, final int[] poolSizes, final PoolingType poolingType) {
 
-        Map<List<Integer>, Set<PoolTuple>> pools = createInitialPooling(operand);
-
-        pools = createPools(pools, poolSizes);
+        final Map<List<Integer>, Set<PoolTuple>> pools = createPools(operand, poolSizes);
 
         return computeOutput(outputDimensions(operand.getDimensions(), poolSizes), pools, poolingType);
     }
@@ -88,20 +84,20 @@ public class PoolingLayer {
      * @return
      */
     public ReverseOutputTuple reverse(final MDA dLossByDOut, final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn,
-            final List<Integer> originalInputSize) {
+            final int[] originalInputSize) {
 
         // verify the dimensions in the derivative map are consistent
         dimensionsService.verifyDerivativeMap(dOutByDIn);
 
         // create dLossByDIn at the right size
-        MDA dLossByDIn = new MDABuilder().withDimensions(originalInputSize).build();
+        final MDA dLossByDIn = new MDABuilder().withDimensions(originalInputSize).build();
 
         // for each location in dOutByDIn's keyset get dLossByDOut(location).
         // Multiply each double in the Value Map of dOutByDIn by it, and add
         // that to its location in dLossByDIn;
-        for (Entry<List<Integer>, Map<List<Integer>, Double>> entry : dOutByDIn.entrySet()) {
-            double coefficient = MDAHelper.get(dLossByDOut, entry.getKey());
-            for (Entry<List<Integer>, Double> subEntry : entry.getValue().entrySet()) {
+        for (final Entry<List<Integer>, Map<List<Integer>, Double>> entry : dOutByDIn.entrySet()) {
+            final double coefficient = MDAHelper.get(dLossByDOut, entry.getKey());
+            for (final Entry<List<Integer>, Double> subEntry : entry.getValue().entrySet()) {
                 MDAHelper.addTo(dLossByDIn, coefficient * subEntry.getValue(), subEntry.getKey());
             }
         }
@@ -116,14 +112,15 @@ public class PoolingLayer {
      * @param poolSizes
      * @return
      */
-    public List<Integer> outputDimensions(final List<Integer> inputDimensions, final List<Integer> poolSizes) {
+    public int[] outputDimensions(final int[] inputDimensions, final int[] poolSizes) {
 
         dimensionsService.verifyLeftBiggerThanRight(inputDimensions, poolSizes);
 
-        List<Integer> results = new ArrayList<>();
-
-        IntStream.range(0, inputDimensions.size()).map(i -> floorDiv(inputDimensions.get(i), poolSizes.get(i)))
-                .forEachOrdered(j -> results.add(j));
+        final int[] results = new int[inputDimensions.length];
+        
+        for (int i = 0; i < inputDimensions.length; i++) {
+            results[i] = floorDiv(inputDimensions[i], poolSizes[i]);
+        }
 
         return results;
     }
@@ -136,9 +133,9 @@ public class PoolingLayer {
      */
     private Map<List<Integer>, Set<PoolTuple>> createInitialPooling(final MDA operand) {
         Map<List<Integer>, Set<PoolTuple>> pools = new HashMap<>();
-        int[] position = new int[operand.getDimensions().size()];
+        final int[] position = new int[operand.getDimensions().length];
 
-        pools = build(pools, operand, position, operand.getDimensions().size() - 1);
+        pools = build(pools, operand, position, operand.getDimensions().length - 1);
 
         return pools;
     }
@@ -156,13 +153,13 @@ public class PoolingLayer {
             final int[] position, final int place) {
         Map<List<Integer>, Set<PoolTuple>> newPools = new HashMap<>();
         newPools.putAll(pools);
-        for (int i = 0; i < operand.getDimensions().get(place); i++) {
+        for (int i = 0; i < operand.getDimensions()[place]; i++) {
             position[place] = i;
             if (place != 0) {
                 newPools = build(newPools, operand, position, place - 1);
             } else {
-                Set<PoolTuple> pool = new HashSet<>();
-                PoolTuple element = new PoolTuple(MDAHelper.get(operand, position), position.clone());
+                final Set<PoolTuple> pool = new HashSet<>();
+                final PoolTuple element = new PoolTuple(MDAHelper.get(operand, position), position.clone());
                 pool.add(element);
                 newPools.put(arrayAsList(position), pool);
             }
@@ -172,31 +169,32 @@ public class PoolingLayer {
     
     
     /**
-     * Compute the poolings from the initial 1-1 mapping, and pooling sizes.
-     * @param pools
+     * Compute the poolings from the initial operand, and pooling sizes.
+     * @param operand
      * @param poolSizes
      * @return
      */
-    private Map<List<Integer>, Set<PoolTuple>> createPools(final Map<List<Integer>, Set<PoolTuple>> pools,
-            final List<Integer> poolSizes) {
+    private Map<List<Integer>, Set<PoolTuple>> createPools(final MDA operand,
+            final int[] poolSizes) {
 
+        final Map<List<Integer>, Set<PoolTuple>> pools = createInitialPooling(operand);
         // intermediateMapping = new HashMap<>();
-        Map<List<Integer>, List<List<Integer>>> intermediateMapping2 = new HashMap<>();
+        final Map<List<Integer>, List<List<Integer>>> intermediateMapping2 = new HashMap<>();
 
-        Map<List<Integer>, List<List<Integer>>> intermediateMapping = pools.keySet().stream()
+        final Map<List<Integer>, List<List<Integer>>> intermediateMapping = pools.keySet().stream()
                 .collect(Collectors.groupingBy(w -> {
-                    List<Integer> clone = cloneList(w);
-                    clone.set(0, floorDiv(w.get(0), poolSizes.get(0)));
+                    final List<Integer> clone = cloneList(w);
+                    clone.set(0, floorDiv(w.get(0), poolSizes[0]));
                     return clone;
                 }));
 
-        IntStream.range(1, poolSizes.size()).filter(i -> poolSizes.get(i) != 1)
+        IntStream.range(1, poolSizes.length).filter(i -> poolSizes[i] != 1)
                 .forEach(computeIntermediateMapping(poolSizes, intermediateMapping, intermediateMapping2));
 
-        Map<List<Integer>, Set<PoolTuple>> poolsToReturn = new HashMap<>();
-        for (Entry<List<Integer>, List<List<Integer>>> entry : intermediateMapping.entrySet()) {
+        final Map<List<Integer>, Set<PoolTuple>> poolsToReturn = new HashMap<>();
+        for (final Entry<List<Integer>, List<List<Integer>>> entry : intermediateMapping.entrySet()) {
             poolsToReturn.put(entry.getKey(), new HashSet<PoolTuple>());
-            for (List<Integer> location : entry.getValue()) {
+            for (final List<Integer> location : entry.getValue()) {
                 poolsToReturn.get(entry.getKey()).addAll(pools.get(location));
             }
         }
@@ -211,20 +209,20 @@ public class PoolingLayer {
      * @param intermediateMapping2
      * @return
      */
-    private IntConsumer computeIntermediateMapping(final List<Integer> poolSizes,
+    private IntConsumer computeIntermediateMapping(final int[] poolSizes,
             final Map<List<Integer>, List<List<Integer>>> intermediateMapping,
             final Map<List<Integer>, List<List<Integer>>> intermediateMapping2) {
 
         return i -> {
 
-            Map<List<Integer>, List<List<Integer>>> result = intermediateMapping.keySet().stream()
+            final Map<List<Integer>, List<List<Integer>>> result = intermediateMapping.keySet().stream()
                     .collect(Collectors.groupingBy(collectByMappingToQuotient(poolSizes, i)));
 
             result.entrySet().stream().forEach(updateMappings(intermediateMapping, intermediateMapping2));
 
             intermediateMapping.clear();
 
-            for (Entry<List<Integer>, List<List<Integer>>> entry : intermediateMapping2.entrySet()) {
+            for (final Entry<List<Integer>, List<List<Integer>>> entry : intermediateMapping2.entrySet()) {
 
                 intermediateMapping.put(entry.getKey(), entry.getValue());
             }
@@ -239,11 +237,11 @@ public class PoolingLayer {
      * @param i
      * @return
      */
-    private Function<? super List<Integer>, ? extends List<Integer>> collectByMappingToQuotient(final List<Integer> poolSizes,
+    private Function<? super List<Integer>, ? extends List<Integer>> collectByMappingToQuotient(final int[] poolSizes,
             final int i) {
         return w -> {
-            List<Integer> clone = cloneList(w);
-            clone.set(i, floorDiv(w.get(i), poolSizes.get(i)));
+            final List<Integer> clone = cloneList(w);
+            clone.set(i, floorDiv(w.get(i), poolSizes[i]));
             return clone;
         };
     }
@@ -266,7 +264,7 @@ public class PoolingLayer {
                 intermediateMapping2.put(entry.getKey(), new ArrayList<List<Integer>>());
             }
 
-            for (List<Integer> location : entry.getValue()) {
+            for (final List<Integer> location : entry.getValue()) {
 
                 intermediateMapping2.get(entry.getKey()).addAll(intermediateMapping.get(location));
             }
@@ -282,10 +280,10 @@ public class PoolingLayer {
      * @param poolingType
      * @return
      */
-    private MDA computeOutput(final List<Integer> outputDimensions,
+    private MDA computeOutput(final int[] outputDimensions,
             final Map<List<Integer>, Set<PoolTuple>> pools, final PoolingType poolingType) {
 
-        MDA output = new MDABuilder().withDimensions(outputDimensions).build();
+        final MDA output = new MDABuilder().withDimensions(outputDimensions).build();
 
         pools.entrySet().stream()
                 .forEach(e -> MDAHelper.put(output, poolingType.getPoolingMethod().applyAsDouble(e.getValue()), e.getKey()));
@@ -302,12 +300,12 @@ public class PoolingLayer {
      */
     private Map<List<Integer>, Map<List<Integer>, Double>> computeDOutByDIn(final Map<List<Integer>, Set<PoolTuple>> pools,
             final PoolingType poolingType) {
-        Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn = new HashMap<>();
+        final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn = new HashMap<>();
         
-        for (Entry<List<Integer>, Set<PoolTuple>> entry : pools.entrySet()) {
-            Map<List<Integer>, Double> mapping = new HashMap<>();
-            Set<PoolTuple> results = poolingType.getDerivativeMethod().apply(entry.getValue());
-            for (PoolTuple pool : results) {
+        for (final Entry<List<Integer>, Set<PoolTuple>> entry : pools.entrySet()) {
+            final Map<List<Integer>, Double> mapping = new HashMap<>();
+            final Set<PoolTuple> results = poolingType.getDerivativeMethod().apply(entry.getValue());
+            for (final PoolTuple pool : results) {
                 mapping.put(arrayAsList(pool.getOrigin()), pool.getElement());
             }
             dOutByDIn.put(entry.getKey(), mapping);

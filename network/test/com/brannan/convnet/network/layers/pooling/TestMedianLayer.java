@@ -5,19 +5,15 @@ import static com.brannan.convnet.network.testsupport.CompareMDAs.checkExpectati
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import com.brannan.convnet.network.fundamentals.MDA;
 import com.brannan.convnet.network.fundamentals.MDABuilder;
 import com.brannan.convnet.network.layers.ForwardOutputTuple;
-import com.brannan.convnet.network.layers.pooling.PoolingLayer;
 import com.brannan.convnet.network.layers.pooling.PoolingLibrary.PoolingType;
 import com.brannan.convnet.network.services.DimensionVerificationService;
 import com.brannan.convnet.network.testsupport.CompareMDAs;
-import com.google.common.collect.Lists;
 
 /**
  * Test class for the Median Test Layer
@@ -58,7 +54,7 @@ public class TestMedianLayer {
         put(input, 5, 0, 4);
         put(input, 6, 0, 5);
 
-        List<Integer> poolSizes = Lists.newArrayList(1, 3);
+        int[] poolSizes = {1, 3};
 
         MDA expectedOutput = new MDABuilder().withDimensions(1, 2).build();
         put(expectedOutput, 2, 0, 0);
@@ -79,7 +75,7 @@ public class TestMedianLayer {
         int[] inputDimensions = { 6, 9 };
         MDA input = populateMultiD(inputDimensions);
 
-        List<Integer> poolSizes = Lists.newArrayList(3, 3);
+        int[] poolSizes = {3, 3};
 
         MDA expectedOutput = new MDABuilder().withDimensions(2, 3).build();
         put(expectedOutput, 8, 0, 0);
@@ -104,7 +100,7 @@ public class TestMedianLayer {
         int[] inputDimensions = { 6, 6, 2 };
         MDA input = populateMultiD(inputDimensions);
 
-        List<Integer> poolSizes = Lists.newArrayList(3, 3, 2);
+        int[] poolSizes = {3, 3, 2};
 
         MDA expectedOutput = new MDABuilder().withDimensions(2, 2, 1).build();
         put(expectedOutput, 15D, 0, 0, 0);
@@ -129,7 +125,7 @@ public class TestMedianLayer {
 
     private MDA populate(MDA mda, int[] position, int place) {
 
-        for (int i = 0; i < mda.getDimensions().get(place); i++) {
+        for (int i = 0; i < mda.getDimensions()[place]; i++) {
             position[place] = i;
             if (place == 0) {
                 put(mda, count, position);

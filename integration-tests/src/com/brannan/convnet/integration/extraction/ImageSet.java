@@ -29,7 +29,7 @@ public enum ImageSet {
      */
     public String getImageLocation() {
         return imageLocation;
-    }
+    } 
 
 
     /**

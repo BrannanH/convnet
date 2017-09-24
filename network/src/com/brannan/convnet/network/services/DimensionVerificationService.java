@@ -27,16 +27,16 @@ public class DimensionVerificationService {
      * @param feature
      * @return
      */
-    public void verifyLeftBiggerThanRight(final List<Integer> inputDimensions, final List<Integer> featureDimensions) {
+    public void verifyLeftBiggerThanRight(final int[] inputDimensions, final int[] featureDimensions) {
 
-        if (inputDimensions.size() != featureDimensions.size()) {
+        if (inputDimensions.length != featureDimensions.length) {
             throw new IllegalArgumentException("The correct number of dimensions she be specified: Input has "
-                    + inputDimensions.size() + " whereas the filter has " + featureDimensions.size());
+                    + inputDimensions.length + " whereas the filter has " + featureDimensions.length);
         }
 
-        for (int i = 0; i < featureDimensions.size(); i++) {
+        for (int i = 0; i < featureDimensions.length; i++) {
 
-            if (inputDimensions.get(i) < featureDimensions.get(i)) {
+            if (inputDimensions[i] < featureDimensions[i]) {
 
                 throw new IllegalArgumentException(
                         "Each filter dimension must be smaller than or equal to the equivalent dimension on the MDA");
