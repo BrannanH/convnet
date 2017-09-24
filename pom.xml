@@ -13,6 +13,7 @@
     <modules>
         <module>network</module>
         <module>integration-tests</module>
+        <module>network_api</module>
     </modules>
 
     <build>
