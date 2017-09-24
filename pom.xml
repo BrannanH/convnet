@@ -11,6 +11,7 @@
     <name>Parent</name>
 
     <modules>
+        <module>fundamentals</module>
         <module>network</module>
         <module>integration-tests</module>
         <module>network_api</module>
