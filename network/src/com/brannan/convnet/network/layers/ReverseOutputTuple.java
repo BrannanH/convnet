@@ -14,7 +14,7 @@ public class ReverseOutputTuple {
     private final MDA dLossByDIn;
 
     // The derivative of the Cost Function with respect to the feature
-    private final MDA dLossByDFeature;
+//    private final Optional<MDA> dLossByDFeature;
 
     
     /**
@@ -22,8 +22,9 @@ public class ReverseOutputTuple {
      * @param dLossByDIn
      * @param dLossByDFeature
      */
-    public ReverseOutputTuple(final MDA dLossByDIn, final MDA dLossByDFeature) {
-        this.dLossByDFeature = dLossByDFeature;
+    public ReverseOutputTuple(final MDA dLossByDIn) {
+//        public ReverseOutputTuple(final MDA dLossByDIn, final Optional<MDA> dLossByDFeature) {
+//        this.dLossByDFeature = dLossByDFeature;
         this.dLossByDIn = dLossByDIn;
     }
 
@@ -35,10 +36,10 @@ public class ReverseOutputTuple {
     }
 
 
-    /**
-     * @return the dLossByDFeature
-     */
-    public MDA getDLossByDFeature() {
-        return dLossByDFeature;
-    }
+//    /**
+//     * @return the dLossByDFeature
+//     */
+//    public Optional<MDA> getDLossByDFeature() {
+//        return dLossByDFeature;
+//    }
 }

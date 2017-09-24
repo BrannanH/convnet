@@ -21,6 +21,7 @@ import com.brannan.convnet.network.fundamentals.MDA;
 import com.brannan.convnet.network.fundamentals.MDABuilder;
 import com.brannan.convnet.network.fundamentals.MDAHelper;
 import com.brannan.convnet.network.layers.ForwardOutputTuple;
+import com.brannan.convnet.network.layers.ReverseOutputTuple;
 import com.brannan.convnet.network.layers.pooling.PoolingLibrary.PoolingType;
 import com.brannan.convnet.network.services.DimensionVerificationService;
 import com.google.inject.Inject;
@@ -86,7 +87,7 @@ public class PoolingLayer {
      * @param originalInputSize
      * @return
      */
-    public MDA reverse(final MDA dLossByDOut, final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn,
+    public ReverseOutputTuple reverse(final MDA dLossByDOut, final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn,
             final List<Integer> originalInputSize) {
 
         // verify the dimensions in the derivative map are consistent
@@ -104,7 +105,7 @@ public class PoolingLayer {
                 MDAHelper.addTo(dLossByDIn, coefficient * subEntry.getValue(), subEntry.getKey());
             }
         }
-        return dLossByDIn;
+        return new ReverseOutputTuple(dLossByDIn);
     };
 
 
@@ -287,7 +288,7 @@ public class PoolingLayer {
         MDA output = new MDABuilder().withDimensions(outputDimensions).build();
 
         pools.entrySet().stream()
-                .forEach(e -> MDAHelper.put(output, poolingType.getPoolingMethod().apply(e.getValue()), e.getKey()));
+                .forEach(e -> MDAHelper.put(output, poolingType.getPoolingMethod().applyAsDouble(e.getValue()), e.getKey()));
 
         return output;
     }

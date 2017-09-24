@@ -1,14 +1,13 @@
 package com.brannan.convnet.network.layers.pooling;
 
 import static java.util.Collections.max;
-import static java.util.stream.Collectors.averagingDouble;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
 
 /**
@@ -20,32 +19,25 @@ public class PoolingLibrary {
 
     private static final double EPSILON = 0.0000001;
 
-    
     /**
      * Function to compute Max Pooling.
      */
-    private static final Function<Set<PoolTuple>, Double> MAX_POOL = p -> max(p,
+    private static final ToDoubleFunction<Set<PoolTuple>> MAX_POOL = p -> max(p,
             (a, b) -> Double.compare(a.getElement(), b.getElement())).getElement();
 
-    
     /**
      * Function to compute Mean Pooling.
      */
-    private static final Function<Set<PoolTuple>, Double> MEAN_POOL = p -> p.stream()
-            .collect(averagingDouble((a) -> a.getElement()));
+    private static final ToDoubleFunction<Set<PoolTuple>> MEAN_POOL = p -> p.stream().mapToDouble(a -> a.getElement())
+            .summaryStatistics().getAverage();
 
-    
     /**
      * Function to compute Median Pooling.
      */
-    private static final Function<Set<PoolTuple>, Double> MEDIAN_POOL = p -> {
-        List<PoolTuple> sorted = p.stream().collect(Collectors.toList());
-        Collections.sort(sorted, (a, b) -> Double.compare(a.getElement(), b.getElement()));
-        if (sorted.size() % 2 == 0) {
-            return sorted.get((sorted.size()) / 2 - 1).getElement();
-        } else {
-            return sorted.get(Math.floorDiv(sorted.size(), 2)).getElement();
-        }
+    private static final ToDoubleFunction<Set<PoolTuple>> MEDIAN_POOL = p -> {
+        double[] sortedValues = p.stream().mapToDouble(a -> a.getElement()).sorted().toArray();
+        return sortedValues[sortedValues.length % 2 == 0 ? sortedValues.length / 2 - 1
+                : Math.floorDiv(sortedValues.length, 2)];
     };
 
     /**
@@ -53,7 +45,7 @@ public class PoolingLibrary {
      */
     private static final Function<Set<PoolTuple>, Set<PoolTuple>> MAX_DERIVATIVE = p -> {
         Set<PoolTuple> results = new HashSet<>();
-        double max = MAX_POOL.apply(p);
+        double max = MAX_POOL.applyAsDouble(p);
         Map<Boolean, List<PoolTuple>> maxAndNotMax = p.stream()
                 .collect(Collectors.groupingBy(a -> Math.abs(a.getElement() - max) < EPSILON));
         PoolTuple maxy = new PoolTuple(1D, maxAndNotMax.get(true).get(0).getOrigin());
@@ -69,7 +61,6 @@ public class PoolingLibrary {
         return results;
     };
 
-    
     /**
      * Function to compute the derivatives from Mean Pooling.
      */
@@ -83,7 +74,6 @@ public class PoolingLibrary {
         return result;
     };
 
-    
     /**
      * @author Brannan R. Hancock
      *
@@ -94,14 +84,14 @@ public class PoolingLibrary {
 
         private final Function<Set<PoolTuple>, Set<PoolTuple>> derivativeMethod;
 
-        private final Function<Set<PoolTuple>, Double> poolingMethod;
+        private final ToDoubleFunction<Set<PoolTuple>> poolingMethod;
 
-        
+
         /**
          * @param poolingMethod
          * @param derivativeMethod
          */
-        PoolingType(final Function<Set<PoolTuple>, Double> poolingMethod,
+        PoolingType(final ToDoubleFunction<Set<PoolTuple>> poolingMethod,
                 final Function<Set<PoolTuple>, Set<PoolTuple>> derivativeMethod) {
             this.poolingMethod = poolingMethod;
             this.derivativeMethod = derivativeMethod;
@@ -111,7 +101,7 @@ public class PoolingLibrary {
         /**
          * @return the poolingMethod
          */
-        public Function<Set<PoolTuple>, Double> getPoolingMethod() {
+        public ToDoubleFunction<Set<PoolTuple>> getPoolingMethod() {
             return poolingMethod;
         }
 
