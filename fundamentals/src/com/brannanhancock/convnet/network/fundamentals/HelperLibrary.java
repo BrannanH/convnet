@@ -10,7 +10,11 @@ import java.util.List;
  * @author Brannan
  *
  */
-public class HelperLibrary {
+public final class HelperLibrary {
+
+    private HelperLibrary() {
+        throw new UnsupportedOperationException("Utility Class should not be instantiated.");
+    }
 
     /**
      * @param t
