@@ -5,7 +5,7 @@ addons:
   sonarcloud:
     organization: brannanh-github
     token:
-      secure: bb0b4c628cace31225cc3f0087f6e81f9d637ac8
+      secure: $SONAR_KEY
 jdk:
   - oraclejdk8
 script:
