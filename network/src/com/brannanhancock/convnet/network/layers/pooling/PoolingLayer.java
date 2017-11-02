@@ -55,8 +55,7 @@ public class PoolingLayer {
 
         final MDA forward = computeOutput(outputDimensions(operand.getDimensions(), poolSizes), pools, poolingType);
         final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn = computeDOutByDIn(pools, poolingType);
-        final ForwardOutputTuple result = new ForwardOutputTuple(forward, dOutByDIn, null);
-        return result;
+        return new ForwardOutputTuple(forward, dOutByDIn, null);
     }
 
 
@@ -92,9 +91,9 @@ public class PoolingLayer {
         // create dLossByDIn at the right size
         final MDABuilder dLossByDInBuilder = new MDABuilder(originalInputSize);
 
-        // for each location in dOutByDIn's keyset get dLossByDOut(location).
-        // Multiply each double in the Value Map of dOutByDIn by it, and add
-        // that to its location in dLossByDIn;
+        /* for each location in dOutByDIn's keyset get dLossByDOut(location).
+         Multiply each double in the Value Map of dOutByDIn by it, and add
+         that to its location in dLossByDIn; */
         for (final Entry<List<Integer>, Map<List<Integer>, Double>> entry : dOutByDIn.entrySet()) {
             final double coefficient = dLossByDOut.get(entry.getKey());
             for (final Entry<List<Integer>, Double> subEntry : entry.getValue().entrySet()) {
@@ -102,7 +101,7 @@ public class PoolingLayer {
             }
         }
         return new ReverseOutputTuple(dLossByDInBuilder.build());
-    };
+    }
 
 
     /**

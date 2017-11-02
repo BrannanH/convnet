@@ -159,7 +159,7 @@ public class ExtractDimensionService {
 
                             toPlace[i] = position[i];
 
-                        } else if (i >= dimension) {
+                        } else {
 
                             toPlace[i] = position[i + 1];
 

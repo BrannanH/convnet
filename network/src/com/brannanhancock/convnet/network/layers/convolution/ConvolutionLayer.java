@@ -30,8 +30,7 @@ public class ConvolutionLayer {
 
     public MDA forwardNoTrain(final MDA operand, final MDA feature, final PaddingType paddingType) {
         dimensionVerificationService.verifyLeftBiggerThanRight(operand.getDimensions(), feature.getDimensions());
-        final MDA output = new MDABuilder(outputDimensions(operand.getDimensions(), feature.getDimensions(), paddingType)).build();
-        return output;
+        return new MDABuilder(outputDimensions(operand.getDimensions(), feature.getDimensions(), paddingType)).build();
     }
 
     public ReverseOutputTuple reverse(final MDA dLossByDOut, final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn,

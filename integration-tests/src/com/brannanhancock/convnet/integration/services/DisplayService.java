@@ -26,6 +26,9 @@ public class DisplayService {
     private static final int BITS_FOR_GREEN = 16;
     private static final int BITS_FOR_BLUE = 8;
 
+    private DisplayService() {
+        throw new UnsupportedOperationException("Helper class should not be instantiated.");
+    }
 
     public static void display(final MDA... imageStores) {
 

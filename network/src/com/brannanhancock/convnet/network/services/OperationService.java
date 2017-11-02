@@ -42,9 +42,9 @@ public class OperationService {
 
         final MDABuilder resultBuilder = new MDABuilder(operand1.getDimensions());
 
-        final ToDoubleFunction<int[]> double1 = (final int[] position) -> operand1.get(position);
+        final ToDoubleFunction<int[]> double1 = operand1::get;
 
-        final ToDoubleFunction<int[]> double2 = (final int[] position) -> operand2.get(position);
+        final ToDoubleFunction<int[]> double2 = operand2::get;
 
         final ToDoubleFunction<int[]> finalOperation = (final int[] position) -> operation.applyAsDouble(double1.applyAsDouble(position), double2.applyAsDouble(position));
 
@@ -57,7 +57,7 @@ public class OperationService {
     public MDA operate(final MDA operand1, final double operand2, final DoubleBinaryOperator operation) {
         final MDABuilder resultBuilder = new MDABuilder(operand1.getDimensions());
 
-        final ToDoubleFunction<int[]> double1 = (final int[] position) -> operand1.get(position);
+        final ToDoubleFunction<int[]> double1 = operand1::get;
 
         final DoubleSupplier double2 = () -> operand2;
 
