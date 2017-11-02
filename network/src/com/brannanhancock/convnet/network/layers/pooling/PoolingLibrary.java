@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * @author Brannan R. Hancock
  *
  */
-public class PoolingLibrary {
+class PoolingLibrary {
 
     private static final double EPSILON = 0.0000001;
 

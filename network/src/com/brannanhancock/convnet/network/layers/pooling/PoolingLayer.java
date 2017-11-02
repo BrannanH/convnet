@@ -177,7 +177,6 @@ public class PoolingLayer {
             final int[] poolSizes) {
 
         final Map<List<Integer>, Set<PoolTuple>> pools = createInitialPooling(operand);
-        // intermediateMapping = new HashMap<>();
         final Map<List<Integer>, List<List<Integer>>> intermediateMapping2 = new HashMap<>();
 
         final Map<List<Integer>, List<List<Integer>>> intermediateMapping = pools.keySet().stream()
