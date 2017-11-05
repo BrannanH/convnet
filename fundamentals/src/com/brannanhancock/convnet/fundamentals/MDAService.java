@@ -47,5 +47,5 @@ class MDAService {
             location += increments[i] * position[i];
         }
         return location;
-    }ß
+    }
 }

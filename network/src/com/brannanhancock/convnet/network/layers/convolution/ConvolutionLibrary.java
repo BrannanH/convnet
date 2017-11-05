@@ -2,7 +2,7 @@ package com.brannanhancock.convnet.network.layers.convolution;
 
 import java.util.function.BiFunction;
 
-ßclass ConvolutionLibrary {
+class ConvolutionLibrary {
 
     /**
      * This function calculates the output dimensions for a convolution which ignores edge effects.
