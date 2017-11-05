@@ -17,14 +17,14 @@ import java.util.function.IntConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import javax.inject.Inject;
+
 import com.brannanhancock.convnet.fundamentals.HelperLibrary;
 import com.brannanhancock.convnet.fundamentals.MDA;
 import com.brannanhancock.convnet.fundamentals.MDABuilder;
 import com.brannanhancock.convnet.network.layers.ForwardOutputTuple;
-import com.brannanhancock.convnet.network.layers.ReverseOutputTuple;
 import com.brannanhancock.convnet.network.layers.pooling.PoolingLibrary.PoolingType;
 import com.brannanhancock.convnet.network.services.DimensionVerificationService;
-import com.google.inject.Inject;
 
 /**
  *
@@ -82,7 +82,7 @@ public class PoolingLayer {
      * @param originalInputSize
      * @return
      */
-    public ReverseOutputTuple reverse(final MDA dLossByDOut, final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn,
+    public MDA reverse(final MDA dLossByDOut, final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn,
             final int[] originalInputSize) {
 
         // verify the dimensions in the derivative map are consistent
@@ -100,7 +100,7 @@ public class PoolingLayer {
                 dLossByDInBuilder.withAmountAddedToDataPoint(coefficient * subEntry.getValue(), HelperLibrary.listAsArray(subEntry.getKey()));
             }
         }
-        return new ReverseOutputTuple(dLossByDInBuilder.build());
+        return dLossByDInBuilder.build();
     }
 
 

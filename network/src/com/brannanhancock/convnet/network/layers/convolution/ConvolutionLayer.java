@@ -6,7 +6,6 @@ import java.util.Map;
 import com.brannanhancock.convnet.fundamentals.MDA;
 import com.brannanhancock.convnet.fundamentals.MDABuilder;
 import com.brannanhancock.convnet.network.layers.ForwardOutputTuple;
-import com.brannanhancock.convnet.network.layers.ReverseOutputTuple;
 import com.brannanhancock.convnet.network.layers.convolution.ConvolutionLibrary.PaddingType;
 import com.brannanhancock.convnet.network.services.DimensionVerificationService;
 
@@ -33,7 +32,7 @@ public class ConvolutionLayer {
         return new MDABuilder(outputDimensions(operand.getDimensions(), feature.getDimensions(), paddingType)).build();
     }
 
-    public ReverseOutputTuple reverse(final MDA dLossByDOut, final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn,
+    public MDA reverse(final MDA dLossByDOut, final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn,
             final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDFeature) {
         // TODO Auto-generated method stub
         return null;

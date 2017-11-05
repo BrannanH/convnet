@@ -15,7 +15,6 @@ import org.mockito.MockitoAnnotations;
 import com.brannanhancock.convnet.fundamentals.HelperLibrary;
 import com.brannanhancock.convnet.fundamentals.MDA;
 import com.brannanhancock.convnet.fundamentals.MDABuilder;
-import com.brannanhancock.convnet.network.layers.pooling.PoolingLayer;
 import com.brannanhancock.convnet.network.services.DimensionVerificationService;
 import com.brannanhancock.convnet.network.testsupport.CompareMDAs;
 import com.google.common.collect.Lists;
@@ -51,7 +50,7 @@ public class TestPoolingLayer {
         final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn = new HashMap<>();
 
         // When
-        final MDA output = layer.reverse(dLossByDOut, dOutByDIn, forwardInputDimensions).getdLossByDIn();
+        final MDA output = layer.reverse(dLossByDOut, dOutByDIn, forwardInputDimensions);
 
         // Then
         verify(dimensionVerificationService).verifyDerivativeMap(dOutByDIn);
@@ -122,7 +121,7 @@ public class TestPoolingLayer {
         expectedOutputBuilder.withDataPoint(1D, 3, 3);
 
         // When
-        final MDA dLossByDIn = layer.reverse(dLossByDOutBuilder.build(), dOutByDIn, forwardInputDimensions).getdLossByDIn();
+        final MDA dLossByDIn = layer.reverse(dLossByDOutBuilder.build(), dOutByDIn, forwardInputDimensions);
 
         // Then
         verify(dimensionVerificationService).verifyDerivativeMap(dOutByDIn);
@@ -157,7 +156,7 @@ public class TestPoolingLayer {
         expectedOutputBuilder.withDataPoint(derivative*coefficient2, 0,1);
 
         // When
-        final MDA dLossByDIn = layer.reverse(dLossByDOutBuilder.build(), dOutByDIn, forwardInputDimensions).getdLossByDIn();
+        final MDA dLossByDIn = layer.reverse(dLossByDOutBuilder.build(), dOutByDIn, forwardInputDimensions);
 
         // Then
         verify(dimensionVerificationService).verifyDerivativeMap(dOutByDIn);
