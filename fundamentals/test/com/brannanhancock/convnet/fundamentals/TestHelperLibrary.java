@@ -1,4 +1,4 @@
-package com.brannanhancock.convnet.network.fundamentals;
+package com.brannanhancock.convnet.fundamentals;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.brannanhancock.convnet.network.fundamentals.HelperLibrary;
+import com.brannanhancock.convnet.fundamentals.HelperLibrary;
 import com.google.common.collect.Lists;
 
 public class TestHelperLibrary {

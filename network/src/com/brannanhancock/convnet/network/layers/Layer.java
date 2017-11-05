@@ -3,7 +3,7 @@ package com.brannanhancock.convnet.network.layers;
 import java.util.List;
 import java.util.Map;
 
-import com.brannanhancock.convnet.network.fundamentals.MDA;
+import com.brannanhancock.convnet.fundamentals.MDA;
 
 /**
  * This interface outlines the public methods which are necessary for a Layer in

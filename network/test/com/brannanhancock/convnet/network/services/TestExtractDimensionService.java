@@ -5,8 +5,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.brannanhancock.convnet.network.fundamentals.MDA;
-import com.brannanhancock.convnet.network.fundamentals.MDABuilder;
+import com.brannanhancock.convnet.fundamentals.MDA;
+import com.brannanhancock.convnet.fundamentals.MDABuilder;
 import com.brannanhancock.convnet.network.services.ExtractDimensionService;
 
 public class TestExtractDimensionService {

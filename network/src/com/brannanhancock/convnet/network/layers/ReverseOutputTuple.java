@@ -1,6 +1,6 @@
 package com.brannanhancock.convnet.network.layers;
 
-import com.brannanhancock.convnet.network.fundamentals.MDA;
+import com.brannanhancock.convnet.fundamentals.MDA;
 
 /**
  * This is the output type for each Layers reverse operation

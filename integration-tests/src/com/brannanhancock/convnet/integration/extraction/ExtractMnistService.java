@@ -4,7 +4,7 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import com.brannanhancock.convnet.network.fundamentals.MDABuilder;
+import com.brannanhancock.convnet.fundamentals.MDABuilder;
 
 /**
  * This class exists to extract the data from the MNIST database.

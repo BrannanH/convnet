@@ -3,8 +3,8 @@ package com.brannanhancock.convnet.network.layers.convolution;
 import java.util.List;
 import java.util.Map;
 
-import com.brannanhancock.convnet.network.fundamentals.MDA;
-import com.brannanhancock.convnet.network.fundamentals.MDABuilder;
+import com.brannanhancock.convnet.fundamentals.MDA;
+import com.brannanhancock.convnet.fundamentals.MDABuilder;
 import com.brannanhancock.convnet.network.layers.ForwardOutputTuple;
 import com.brannanhancock.convnet.network.layers.ReverseOutputTuple;
 import com.brannanhancock.convnet.network.layers.convolution.ConvolutionLibrary.PaddingType;

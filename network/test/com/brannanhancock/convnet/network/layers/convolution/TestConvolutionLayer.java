@@ -1,6 +1,6 @@
 package com.brannanhancock.convnet.network.layers.convolution;
 
-import static com.brannanhancock.convnet.network.fundamentals.HelperLibrary.arrayEquality;
+import static com.brannanhancock.convnet.fundamentals.HelperLibrary.arrayEquality;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
@@ -9,8 +9,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import com.brannanhancock.convnet.network.fundamentals.MDA;
-import com.brannanhancock.convnet.network.fundamentals.MDABuilder;
+import com.brannanhancock.convnet.fundamentals.MDA;
+import com.brannanhancock.convnet.fundamentals.MDABuilder;
 import com.brannanhancock.convnet.network.layers.convolution.ConvolutionLayer;
 import com.brannanhancock.convnet.network.layers.convolution.ConvolutionLibrary.PaddingType;
 import com.brannanhancock.convnet.network.services.DimensionVerificationService;

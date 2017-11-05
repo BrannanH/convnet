@@ -1,4 +1,4 @@
-package com.brannanhancock.convnet.network.fundamentals;
+package com.brannanhancock.convnet.fundamentals;
 
 import java.util.Arrays;
 import java.util.OptionalInt;
@@ -47,6 +47,5 @@ class MDAService {
             location += increments[i] * position[i];
         }
         return location;
-    }
-
+    }ß
 }

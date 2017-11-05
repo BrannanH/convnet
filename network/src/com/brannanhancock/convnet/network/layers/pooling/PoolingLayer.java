@@ -1,7 +1,7 @@
 package com.brannanhancock.convnet.network.layers.pooling;
 
-import static com.brannanhancock.convnet.network.fundamentals.HelperLibrary.arrayAsList;
-import static com.brannanhancock.convnet.network.fundamentals.HelperLibrary.cloneList;
+import static com.brannanhancock.convnet.fundamentals.HelperLibrary.arrayAsList;
+import static com.brannanhancock.convnet.fundamentals.HelperLibrary.cloneList;
 import static java.lang.Math.floorDiv;
 
 import java.util.ArrayList;
@@ -17,9 +17,9 @@ import java.util.function.IntConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.brannanhancock.convnet.network.fundamentals.HelperLibrary;
-import com.brannanhancock.convnet.network.fundamentals.MDA;
-import com.brannanhancock.convnet.network.fundamentals.MDABuilder;
+import com.brannanhancock.convnet.fundamentals.HelperLibrary;
+import com.brannanhancock.convnet.fundamentals.MDA;
+import com.brannanhancock.convnet.fundamentals.MDABuilder;
 import com.brannanhancock.convnet.network.layers.ForwardOutputTuple;
 import com.brannanhancock.convnet.network.layers.ReverseOutputTuple;
 import com.brannanhancock.convnet.network.layers.pooling.PoolingLibrary.PoolingType;

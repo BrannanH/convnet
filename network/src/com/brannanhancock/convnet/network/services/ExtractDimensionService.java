@@ -1,7 +1,7 @@
 package com.brannanhancock.convnet.network.services;
 
-import com.brannanhancock.convnet.network.fundamentals.MDA;
-import com.brannanhancock.convnet.network.fundamentals.MDABuilder;
+import com.brannanhancock.convnet.fundamentals.MDA;
+import com.brannanhancock.convnet.fundamentals.MDABuilder;
 
 /**
  * This class is used to extract a subset of an MDA.

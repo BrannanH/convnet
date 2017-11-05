@@ -12,9 +12,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.brannanhancock.convnet.network.fundamentals.HelperLibrary;
-import com.brannanhancock.convnet.network.fundamentals.MDA;
-import com.brannanhancock.convnet.network.fundamentals.MDABuilder;
+import com.brannanhancock.convnet.fundamentals.HelperLibrary;
+import com.brannanhancock.convnet.fundamentals.MDA;
+import com.brannanhancock.convnet.fundamentals.MDABuilder;
 import com.brannanhancock.convnet.network.layers.pooling.PoolingLayer;
 import com.brannanhancock.convnet.network.services.DimensionVerificationService;
 import com.brannanhancock.convnet.network.testsupport.CompareMDAs;

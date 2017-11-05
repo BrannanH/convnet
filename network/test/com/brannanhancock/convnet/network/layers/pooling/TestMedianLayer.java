@@ -7,8 +7,8 @@ import static org.mockito.Mockito.mock;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.brannanhancock.convnet.network.fundamentals.MDA;
-import com.brannanhancock.convnet.network.fundamentals.MDABuilder;
+import com.brannanhancock.convnet.fundamentals.MDA;
+import com.brannanhancock.convnet.fundamentals.MDABuilder;
 import com.brannanhancock.convnet.network.layers.ForwardOutputTuple;
 import com.brannanhancock.convnet.network.layers.pooling.PoolingLayer;
 import com.brannanhancock.convnet.network.layers.pooling.PoolingLibrary.PoolingType;

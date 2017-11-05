@@ -1,6 +1,6 @@
 package com.brannanhancock.convnet.network.layers.convolution;
 
-import static com.brannanhancock.convnet.network.fundamentals.HelperLibrary.arrayEquality;
+import static com.brannanhancock.convnet.fundamentals.HelperLibrary.arrayEquality;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;

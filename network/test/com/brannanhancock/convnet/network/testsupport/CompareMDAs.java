@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 
-import com.brannanhancock.convnet.network.fundamentals.MDA;
+import com.brannanhancock.convnet.fundamentals.MDA;
 
 public class CompareMDAs {
 

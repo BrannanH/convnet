@@ -1,6 +1,6 @@
 package com.brannanhancock.convnet.network.layers.pooling;
 
-import static com.brannanhancock.convnet.network.fundamentals.HelperLibrary.arrayAsList;
+import static com.brannanhancock.convnet.fundamentals.HelperLibrary.arrayAsList;
 
 /**
  * A class to associate a value with its origin in the un-pooled MDA.

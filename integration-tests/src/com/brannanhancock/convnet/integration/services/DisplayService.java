@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.brannanhancock.convnet.network.fundamentals.MDA;
+import com.brannanhancock.convnet.fundamentals.MDA;
 
 /**
  * This class allows for displaying the contents of an MDA. It must be passed

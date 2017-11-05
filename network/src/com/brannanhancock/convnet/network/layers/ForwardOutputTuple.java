@@ -3,7 +3,7 @@ package com.brannanhancock.convnet.network.layers;
 import java.util.List;
 import java.util.Map;
 
-import com.brannanhancock.convnet.network.fundamentals.MDA;
+import com.brannanhancock.convnet.fundamentals.MDA;
 
 /**
  * This is the output of each of the layers which deal with an MDA.

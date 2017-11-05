@@ -1,4 +1,4 @@
-package com.brannanhancock.convnet.network.fundamentals;
+package com.brannanhancock.convnet.fundamentals;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;

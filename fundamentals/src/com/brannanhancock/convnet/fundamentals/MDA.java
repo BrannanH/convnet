@@ -1,4 +1,4 @@
-package com.brannanhancock.convnet.network.fundamentals;
+package com.brannanhancock.convnet.fundamentals;
 
 import java.util.List;
 

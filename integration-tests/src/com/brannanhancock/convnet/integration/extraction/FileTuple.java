@@ -1,6 +1,6 @@
 package com.brannanhancock.convnet.integration.extraction;
 
-import com.brannanhancock.convnet.network.fundamentals.MDA;
+import com.brannanhancock.convnet.fundamentals.MDA;
 
 /**
  * This file tuple is made as the return type of the extract. It simply bundles
