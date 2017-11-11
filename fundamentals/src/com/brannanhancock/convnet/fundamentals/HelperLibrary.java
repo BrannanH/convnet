@@ -3,8 +3,8 @@ package com.brannanhancock.convnet.fundamentals;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Brannan
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public final class HelperLibrary {
 
-    private HelperLibrary() {
+    HelperLibrary() {
         throw new UnsupportedOperationException("Utility Class should not be instantiated.");
     }
 
@@ -39,10 +39,7 @@ public final class HelperLibrary {
      * @return
      */
     public static <T> List<T> cloneList(final List<T> t) {
-        final List<T> r = new ArrayList<>();
-
-        r.addAll(t);
-        return r;
+        return t.stream().collect(Collectors.toList());
     }
 
 

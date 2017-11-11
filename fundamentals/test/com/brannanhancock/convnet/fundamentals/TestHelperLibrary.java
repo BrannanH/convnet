@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.brannanhancock.convnet.fundamentals.HelperLibrary;
 import com.google.common.collect.Lists;
 
 public class TestHelperLibrary {
@@ -51,6 +50,17 @@ public class TestHelperLibrary {
         // Then
         assertTrue(result[0] == 5);
         assertTrue(result[1] == 4);
+    }
+
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testConstructorThrowsError() {
+        // Given - nothing
+
+        // When
+        new HelperLibrary();
+
+        // Then - expect exception
     }
 
 }
