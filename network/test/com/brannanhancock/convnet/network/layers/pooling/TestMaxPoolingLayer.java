@@ -17,7 +17,7 @@ import org.mockito.MockitoAnnotations;
 import com.brannanhancock.convnet.fundamentals.MDA;
 import com.brannanhancock.convnet.fundamentals.MDABuilder;
 import com.brannanhancock.convnet.network.layers.ForwardOutputTuple;
-import com.brannanhancock.convnet.network.layers.pooling.PoolingLayer;
+import com.brannanhancock.convnet.network.layers.pooling.PoolingService;
 import com.brannanhancock.convnet.network.layers.pooling.PoolingLibrary.PoolingType;
 import com.brannanhancock.convnet.network.services.DimensionVerificationService;
 import com.google.common.collect.Lists;
@@ -32,12 +32,12 @@ public class TestMaxPoolingLayer {
 	@Mock
 	DimensionVerificationService dimensionVerificationService;
 
-	private PoolingLayer maxPoolingLayer;
+	private PoolingService maxPoolingLayer;
 
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		maxPoolingLayer = new PoolingLayer(dimensionVerificationService);
+		maxPoolingLayer = new PoolingService(dimensionVerificationService);
 	}
 
 	@Test

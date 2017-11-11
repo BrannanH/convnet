@@ -10,7 +10,7 @@ import org.junit.Test;
 import com.brannanhancock.convnet.fundamentals.MDA;
 import com.brannanhancock.convnet.fundamentals.MDABuilder;
 import com.brannanhancock.convnet.network.layers.ForwardOutputTuple;
-import com.brannanhancock.convnet.network.layers.pooling.PoolingLayer;
+import com.brannanhancock.convnet.network.layers.pooling.PoolingService;
 import com.brannanhancock.convnet.network.layers.pooling.PoolingLibrary.PoolingType;
 import com.brannanhancock.convnet.network.services.DimensionVerificationService;
 import com.brannanhancock.convnet.network.testsupport.CompareMDAs;
@@ -27,12 +27,12 @@ public class TestMedianLayer {
 
     private final DimensionVerificationService dimensionsVerificationService = mock(DimensionVerificationService.class);
 
-    private PoolingLayer layer;
+    private PoolingService layer;
 
 
     @Before
     public void setup() {
-        layer = new PoolingLayer(dimensionsVerificationService);
+        layer = new PoolingService(dimensionsVerificationService);
     }
 
 

@@ -8,7 +8,7 @@ import static com.brannanhancock.convnet.fundamentals.HelperLibrary.arrayAsList;
  * @author Brannan R. Hancock
  *
  */
-class PoolTuple {
+final class PoolTuple {
 
     private final double element;
     private final int[] origin;

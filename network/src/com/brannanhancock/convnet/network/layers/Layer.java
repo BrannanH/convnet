@@ -19,7 +19,7 @@ public interface Layer {
      * @param operand - the MDA at the input to this layer.
      * @return - the MDA which is the result of this layer.
      */
-    ForwardOutputTuple forward(MDA operand);
+    MDA forward(MDA operand);
 
 
     /**

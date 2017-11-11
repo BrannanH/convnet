@@ -9,13 +9,13 @@ import org.mockito.MockitoAnnotations;
 
 import com.brannanhancock.convnet.fundamentals.MDA;
 import com.brannanhancock.convnet.fundamentals.MDABuilder;
-import com.brannanhancock.convnet.network.layers.pooling.PoolingLayer;
+import com.brannanhancock.convnet.network.layers.pooling.PoolingService;
 import com.brannanhancock.convnet.network.layers.pooling.PoolingLibrary.PoolingType;
 import com.brannanhancock.convnet.network.services.DimensionVerificationService;
 
 public class TestMeanPoolingLayer {
 
-    private PoolingLayer layer;
+    private PoolingService layer;
 
     @Mock
     private DimensionVerificationService dimensionVerificationService;
@@ -23,7 +23,7 @@ public class TestMeanPoolingLayer {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        layer = new PoolingLayer(dimensionVerificationService);
+        layer = new PoolingService(dimensionVerificationService);
     }
 
 
