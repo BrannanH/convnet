@@ -3,6 +3,7 @@ package com.brannanhancock.convnet.network.layers.pooling;
 import static com.brannanhancock.convnet.network.testsupport.CompareMDAs.checkExpectation;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -60,6 +61,8 @@ public class TestMedianLayer {
         expectedOutputBuilder.withDataPoint(2, 0, 0);
         expectedOutputBuilder.withDataPoint(5, 0, 1);
 
+        when(dimensionsVerificationService.verifyLeftBiggerThanRight(inputDimensions, poolSizes)).thenReturn(true);
+
         // When
         final ForwardOutputTuple output = layer.forward(inputBuilder.build(), poolSizes, PoolingType.MEDIAN);
         final MDA forward = output.getOutput();
@@ -85,6 +88,8 @@ public class TestMedianLayer {
         expectedOutputBuilder.withDataPoint(29, 1, 1);
         expectedOutputBuilder.withDataPoint(47, 1, 2);
 
+        when(dimensionsVerificationService.verifyLeftBiggerThanRight(inputDimensions, poolSizes)).thenReturn(true);
+
         // When
         final ForwardOutputTuple output = layer.forward(input, poolSizes, PoolingType.MEDIAN);
         final MDA forward = output.getOutput();
@@ -107,6 +112,8 @@ public class TestMedianLayer {
         expectedOutputBuilder.withDataPoint(18D, 1, 0, 0);
         expectedOutputBuilder.withDataPoint(33D, 0, 1, 0);
         expectedOutputBuilder.withDataPoint(36D, 1, 1, 0);
+
+        when(dimensionsVerificationService.verifyLeftBiggerThanRight(inputDimensions, poolSizes)).thenReturn(true);
 
         // When
         final ForwardOutputTuple output = layer.forward(input, poolSizes, PoolingType.MEDIAN);

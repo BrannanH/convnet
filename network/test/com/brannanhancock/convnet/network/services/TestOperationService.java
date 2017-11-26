@@ -19,10 +19,10 @@ import com.brannanhancock.convnet.network.services.OperationService;
  */
 public class TestOperationService {
 
-    MDABuilder multiD1;
-    MDABuilder multiD2;
-    MDA result;
-    OperationService service;
+    private MDABuilder multiD1;
+    private MDABuilder multiD2;
+    private MDA result;
+    private OperationService service;
 
 
     @Before

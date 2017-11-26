@@ -20,9 +20,9 @@ import com.brannanhancock.convnet.network.layers.pooling.PoolingLibrary.PoolingT
 
 public class TestPoolingLayer {
 
-    @Mock PoolingService poolingService;
-    @Mock MDA mda;
-    PoolingLayerBuilder builder;
+    private @Mock PoolingService poolingService;
+    private @Mock MDA mda;
+    private PoolingLayerBuilder builder;
 
 
     @Before

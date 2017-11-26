@@ -1,6 +1,7 @@
 package com.brannanhancock.convnet.network.layers.pooling;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -54,6 +55,8 @@ public class TestMeanPoolingLayer {
         expectedOutputBuilder.withDataPoint(13, 1, 2);
         expectedOutputBuilder.withDataPoint(14, 1, 3);
         final MDA expectedOutput = expectedOutputBuilder.build();
+
+        when(dimensionVerificationService.verifyLeftBiggerThanRight(inputDimensions, poolingSize)).thenReturn(true);
 
         // When
         final MDA output = layer.forward(operand, poolingSize, PoolingType.MEAN).getOutput();

@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
+import com.brannanhancock.convnet.network.layers.LayerBuilder;
 import com.brannanhancock.convnet.network.layers.pooling.PoolingLibrary.PoolingType;
 
 /**
@@ -15,7 +16,7 @@ import com.brannanhancock.convnet.network.layers.pooling.PoolingLibrary.PoolingT
  * @author Brannan R. Hancock
  *
  */
-final class PoolingLayerBuilder {
+final class PoolingLayerBuilder implements LayerBuilder<PoolingLayer> {
 
     private final PoolingService poolingLayerService;
 
@@ -45,7 +46,11 @@ final class PoolingLayerBuilder {
         return this;
     }
 
-    PoolingLayer build() {
+    /**
+     * @see {@link LayerBuilder#build}
+     */
+    @Override
+    public PoolingLayer build() {
         if (inputDimensions.isPresent()) {
             return new PoolingLayer(poolSizes.orElse(inputDimensions.get()), // Default to the input dimensions resulting in no pooling
                     poolingType.orElse(PoolingType.MAX), // default to max pooling

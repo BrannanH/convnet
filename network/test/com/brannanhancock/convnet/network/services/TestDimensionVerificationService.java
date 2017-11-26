@@ -1,5 +1,6 @@
 package com.brannanhancock.convnet.network.services;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
@@ -19,9 +20,9 @@ import com.google.common.collect.Maps;
  */
 public class TestDimensionVerificationService {
 	
-	private int[] inputDimensions = {28,28,12};
+	private final int[] inputDimensions = {28,28,12};
 	
-	private DimensionVerificationService dimensionVerificationService = new DimensionVerificationService();
+	private final DimensionVerificationService dimensionVerificationService = new DimensionVerificationService();
 	
     /**
      * In this test setup the number of active dimensions is less than the
@@ -31,16 +32,11 @@ public class TestDimensionVerificationService {
     public void testTooManyFilterDimensions() {
         // Given
         int[] poolSizes = {4, 4, 4, 4};
-        boolean caught = false;
-        
+
         // When
-        try {
-            dimensionVerificationService.verifyLeftBiggerThanRight(inputDimensions, poolSizes);
-        } catch ( IllegalArgumentException e ) {
-            // Then
-            caught = true;
-        }
-        assertTrue(caught);
+		boolean result = dimensionVerificationService.verifyLeftBiggerThanRight(inputDimensions, poolSizes);
+
+		assertFalse(result);
     }
 	
     
@@ -52,16 +48,12 @@ public class TestDimensionVerificationService {
 	public void testFeatureLargerThanImage() {
 		// Given
 		int[] poolSizes = {28, 28, 13};
-		boolean caught = false;
-		
+
 		// When
-		try {
-		    dimensionVerificationService.verifyLeftBiggerThanRight(inputDimensions, poolSizes);
-		} catch ( IllegalArgumentException e ) {
-		    // Then
-		    caught = true;
-		}
-		assertTrue(caught);
+		boolean result = dimensionVerificationService.verifyLeftBiggerThanRight(inputDimensions, poolSizes);
+
+		// Then
+		assertFalse(result);
 	}
 	
 	

@@ -11,9 +11,9 @@ import com.brannanhancock.convnet.network.services.ExtractDimensionService;
 
 public class TestExtractDimensionService {
 
-	int[] dimensions = {2,3,4, 5, 9};
-	MDABuilder multiD1Builder = new MDABuilder(dimensions);
-	final MDA multiD1 = multiD1Builder.build();
+	private final int[] dimensions = {2,3,4, 5, 9};
+	private final MDABuilder multiD1Builder = new MDABuilder(dimensions);
+	private final MDA multiD1 = multiD1Builder.build();
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testDimensionTooLarge() {

@@ -1,9 +1,6 @@
 package com.brannanhancock.convnet.network.services;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -24,24 +21,21 @@ public class DimensionVerificationService {
      * be compared with</li>
      *
      * @param inputDimensions
-     * @param feature
+     * @param featureDimensions
      * @return
      */
-    public void verifyLeftBiggerThanRight(final int[] inputDimensions, final int[] featureDimensions) {
+    public boolean verifyLeftBiggerThanRight(final int[] inputDimensions, final int[] featureDimensions) {
 
         if (inputDimensions.length != featureDimensions.length) {
-            throw new IllegalArgumentException("The correct number of dimensions she be specified: Input has "
-                    + inputDimensions.length + " whereas the filter has " + featureDimensions.length);
+            return false;
         }
 
         for (int i = 0; i < featureDimensions.length; i++) {
-
             if (inputDimensions[i] < featureDimensions[i]) {
-
-                throw new IllegalArgumentException(
-                        "Each filter dimension must be smaller than or equal to the equivalent dimension on the MDA");
+                return false;
             }
         }
+        return true;
     }
 
 
@@ -51,23 +45,32 @@ public class DimensionVerificationService {
      * @return
      */
     public boolean verifyDerivativeMap(final Map<List<Integer>, Map<List<Integer>, Double>> testMap) {
-        final int outerMaxLength = testMap.keySet().stream().collect(Collectors.maxBy(Comparator.comparingInt(List::size))).get()
-                .size();
-        Optional<List<Integer>> invalid = testMap.keySet().stream().filter(l -> l.size() != outerMaxLength).findAny();
+        final OptionalInt outerMaxLength = testMap.keySet().stream().mapToInt(List::size).max();
+        if(!outerMaxLength.isPresent()) {
+            throw new IllegalArgumentException("The dimensions for dOutByDIn can not be empty.");
+        }
+
+        Optional<List<Integer>> invalid = testMap.keySet().stream()
+                .filter(l -> l.size() != outerMaxLength.getAsInt())
+                .findAny();
+
         if (invalid.isPresent()) {
             throw new IllegalArgumentException("The dimensions specified for dOutByDIn should have consistent length.");
         }
 
         final int innerMaxLength = testMap.values().stream().flatMap((final Map<List<Integer>, Double> k) -> k.keySet().stream())
                 .collect(Collectors.maxBy(Comparator.comparingInt(List::size))).get().size();
+
         invalid = testMap.values().stream().flatMap((final Map<List<Integer>, Double> k) -> k.keySet().stream())
-                .filter(l -> l.size() != innerMaxLength).findAny();
+                .filter(l -> l.size() != innerMaxLength)
+                .findAny();
+
         if (invalid.isPresent()) {
             throw new IllegalArgumentException(
                     "The dimensions specified for dLossByDOut should have consistent length.");
         }
 
-        if (outerMaxLength != innerMaxLength) {
+        if (outerMaxLength.getAsInt() != innerMaxLength) {
             throw new IllegalArgumentException(
                     "The number of dimensions in the derivative mappings should be the same.");
         }

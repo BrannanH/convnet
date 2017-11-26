@@ -1,7 +1,6 @@
 package com.brannanhancock.convnet.network.layers.pooling;
 
 import static com.brannanhancock.convnet.fundamentals.HelperLibrary.arrayAsList;
-import static com.brannanhancock.convnet.fundamentals.HelperLibrary.cloneList;
 import static java.lang.Math.floorDiv;
 
 import java.util.ArrayList;
@@ -113,7 +112,9 @@ class PoolingService {
      */
     public int[] outputDimensions(final int[] inputDimensions, final int[] poolSizes) {
 
-        dimensionsService.verifyLeftBiggerThanRight(inputDimensions, poolSizes);
+        if(!dimensionsService.verifyLeftBiggerThanRight(inputDimensions, poolSizes)) {
+            throw new IllegalArgumentException("The input passed to the pooling layer is not correctly configured.");
+        }
 
         final int[] results = new int[inputDimensions.length];
 
@@ -181,7 +182,7 @@ class PoolingService {
 
         final Map<List<Integer>, List<List<Integer>>> intermediateMapping = pools.keySet().stream()
                 .collect(Collectors.groupingBy(w -> {
-                    final List<Integer> clone = cloneList(w);
+                    final List<Integer> clone = new ArrayList(w);
                     clone.set(0, floorDiv(w.get(0), poolSizes[0]));
                     return clone;
                 }));
@@ -216,7 +217,7 @@ class PoolingService {
             final Map<List<Integer>, List<List<Integer>>> result = intermediateMapping.keySet().stream()
                     .collect(Collectors.groupingBy(collectByMappingToQuotient(poolSizes, i)));
 
-            result.entrySet().stream().forEach(updateMappings(intermediateMapping, intermediateMapping2));
+            result.entrySet().forEach(updateMappings(intermediateMapping, intermediateMapping2));
 
             intermediateMapping.clear();
 
@@ -237,8 +238,8 @@ class PoolingService {
      */
     private Function<? super List<Integer>, ? extends List<Integer>> collectByMappingToQuotient(final int[] poolSizes,
             final int i) {
-        return w -> {
-            final List<Integer> clone = cloneList(w);
+        return (List<Integer> w) -> {
+            final List<Integer> clone = new ArrayList(w);
             clone.set(i, floorDiv(w.get(i), poolSizes[i]));
             return clone;
         };
@@ -272,8 +273,7 @@ class PoolingService {
 
     /**
      * Compute the output from the Poolings and the Pooling Type.
-     * @param inputDimensions
-     * @param poolSizes
+     * @param outputDimensions
      * @param pools
      * @param poolingType
      * @return
@@ -283,7 +283,7 @@ class PoolingService {
 
         final MDABuilder outputBuilder = new MDABuilder(outputDimensions);
 
-        pools.entrySet().stream()
+        pools.entrySet()
                 .forEach(e -> outputBuilder.withDataPoint(poolingType.getPoolingMethod().applyAsDouble(e.getValue()), HelperLibrary.listAsArray(e.getKey())));
 
         return outputBuilder.build();

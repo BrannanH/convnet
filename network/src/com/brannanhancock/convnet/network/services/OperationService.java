@@ -80,7 +80,7 @@ public class OperationService {
      * @param index
      * @return
      */
-    private MDABuilder recursiveOperate(final MDABuilder resultBuilder, final int[] position, final ToDoubleFunction<int[]> operation, final int index, final int[] dimensions) {
+    private void recursiveOperate(final MDABuilder resultBuilder, final int[] position, final ToDoubleFunction<int[]> operation, final int index, final int[] dimensions) {
         for (int i = 0; i < dimensions[index]; i++) {
             position[index] = i;
             if (index == dimensions.length - 1) {
@@ -89,6 +89,5 @@ public class OperationService {
             }
             recursiveOperate(resultBuilder, position, operation, index + 1, dimensions);
         }
-        return resultBuilder;
     }
 }

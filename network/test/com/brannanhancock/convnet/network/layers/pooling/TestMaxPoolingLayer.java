@@ -3,6 +3,7 @@ package com.brannanhancock.convnet.network.layers.pooling;
 import static com.brannanhancock.convnet.network.testsupport.CompareMDAs.checkExpectation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Map.Entry;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -30,13 +32,14 @@ import com.google.common.collect.Lists;
 public class TestMaxPoolingLayer {
 
 	@Mock
-	DimensionVerificationService dimensionVerificationService;
+	private DimensionVerificationService dimensionVerificationService;
 
 	private PoolingService maxPoolingLayer;
 
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
+		when(dimensionVerificationService.verifyLeftBiggerThanRight(Matchers.anyVararg(), Matchers.anyVararg())).thenReturn(true);
 		maxPoolingLayer = new PoolingService(dimensionVerificationService);
 	}
 

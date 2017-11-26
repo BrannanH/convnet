@@ -1,45 +1,74 @@
 package com.brannanhancock.convnet.network.layers.convolution;
 
-import java.util.List;
-import java.util.Map;
-
 import com.brannanhancock.convnet.fundamentals.MDA;
 import com.brannanhancock.convnet.fundamentals.MDABuilder;
-import com.brannanhancock.convnet.network.layers.ForwardOutputTuple;
+import com.brannanhancock.convnet.network.layers.Layer;
 import com.brannanhancock.convnet.network.layers.convolution.ConvolutionLibrary.PaddingType;
 import com.brannanhancock.convnet.network.services.DimensionVerificationService;
+
+import java.util.Optional;
 
 /**
  *
  * @author Brannan R. Hancock
  *
  */
-public class ConvolutionLayer {
+public class ConvolutionLayer extends Layer {
 
-    private final DimensionVerificationService dimensionVerificationService;
+    private final ConvolutionService convolutionService;
+    private final MDA feature;
+    private final int[] inputDimensions;
+    private final int[][] connections;
+    private final PaddingType paddingType;
 
-    public ConvolutionLayer(final DimensionVerificationService dimensionVerificationService) {
-        this.dimensionVerificationService = dimensionVerificationService;
+    private Optional<int[]> outputDimensions = Optional.empty();
+
+    ConvolutionLayer(final MDA feature,
+                     final int[] inputDimensions,
+                     final int[][] connections,
+                     final PaddingType paddingType,
+                     final ConvolutionService convolutionService) {
+        this.convolutionService = convolutionService;
+        this.feature = feature;
+        this.inputDimensions = inputDimensions;
+        this.connections = connections;
+        this.paddingType = paddingType;
     }
 
-    public ForwardOutputTuple forward(final MDA operand, final MDA feature, final PaddingType paddingType) {
+    @Override
+    public MDA forward(final MDA operand) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public MDA forwardNoTrain(final MDA operand, final MDA feature, final PaddingType paddingType) {
-        dimensionVerificationService.verifyLeftBiggerThanRight(operand.getDimensions(), feature.getDimensions());
-        return new MDABuilder(outputDimensions(operand.getDimensions(), feature.getDimensions(), paddingType)).build();
+    @Override
+    public MDA forwardNoTrain(final MDA operand) {
+        if(!convolutionService.verifyOperandSatisfiesInputDimensions(operand.getDimensions(), inputDimensions)) {
+            throw new IllegalArgumentException("Operand passed to Convolution Layer did not have legal dimensions");
+        }
+
+        if(!convolutionService.verifyInputBiggerThanFeature(operand.getDimensions(), feature.getDimensions())) {
+            throw new IllegalArgumentException("Operand passed to Convolution Layer is smaller than this Layer's feature");
+        }
+
+        final MDABuilder resultBuilder = new MDABuilder(outputDimensions());
+        // TODO Auto-generated method stub
+        return resultBuilder.build();
     }
 
-    public MDA reverse(final MDA dLossByDOut, final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn,
-            final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDFeature) {
+    @Override
+    public MDA reverse(final MDA dLossByDOut) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public int[] outputDimensions(final int[] inputDimensions, final int[] filterDimensions, final PaddingType paddingType) {
-        return paddingType.getOutputDimensionsFunction().apply(inputDimensions, filterDimensions);
+    @Override
+    public int[] outputDimensions() {
+        if(outputDimensions.isPresent()) {
+            return outputDimensions.get();
+        }
+        outputDimensions = Optional.of(paddingType.getOutputDimensionsFunction().apply(inputDimensions, feature.getDimensions()));
+        return outputDimensions.get();
     }
 
 }

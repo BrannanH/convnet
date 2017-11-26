@@ -67,7 +67,7 @@ final class PoolingLibrary {
     private static final Function<Set<PoolTuple>, Set<PoolTuple>> MEAN_DERIVATIVE = p -> {
         final double derivative = p.size();
         final Set<PoolTuple> result = new HashSet<>();
-        p.stream().forEach(a -> {
+        p.forEach(a -> {
             final PoolTuple forward = new PoolTuple(1D / derivative, a.getOrigin());
             result.add(forward);
         });

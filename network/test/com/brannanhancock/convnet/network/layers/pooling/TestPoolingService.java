@@ -28,7 +28,7 @@ public class TestPoolingService {
 
     private PoolingService layer;
 
-    @Mock DimensionVerificationService dimensionVerificationService;
+    private @Mock DimensionVerificationService dimensionVerificationService;
 
     @Before
     public void setup() {
@@ -54,7 +54,7 @@ public class TestPoolingService {
 
         // Then
         verify(dimensionVerificationService).verifyDerivativeMap(dOutByDIn);
-        assertTrue(HelperLibrary.arrayEquality(output.getDimensions(), forwardInputDimensions));
+        assertTrue(HelperLibrary.isArrayEquality(output.getDimensions(), forwardInputDimensions));
     }
 
 

@@ -9,7 +9,7 @@ import com.brannanhancock.convnet.fundamentals.MDA;
  * @author Brannan
  *
  */
-public interface Layer {
+public abstract class Layer {
 
     /**
      * This method is used in the forward pass through the Neural Network, where
@@ -19,7 +19,7 @@ public interface Layer {
      * @param operand - the MDA at the input to this layer.
      * @return - the MDA which is the result of this layer.
      */
-    MDA forward(MDA operand);
+    public abstract MDA forward(MDA operand);
 
 
     /**
@@ -30,7 +30,7 @@ public interface Layer {
      * @param operand - the MDA at the input to this layer.
      * @return - the MDA which is the result of this layer.
      */
-    MDA forwardNoTrain(MDA operand);
+    public abstract MDA forwardNoTrain(MDA operand);
 
 
     /**
@@ -41,7 +41,7 @@ public interface Layer {
      *            each element output from this layer on the forward pass.
      * @return
      */
-    MDA reverse(MDA dLossByDOut);
+    public abstract MDA reverse(MDA dLossByDOut);
 
 
     /**
@@ -51,5 +51,5 @@ public interface Layer {
      * @return - an array representing the size of each dimension in the MDA
      *         output by a forward pass through this layer.
      */
-    int[] outputDimensions();
+    public abstract int[] outputDimensions();
 }

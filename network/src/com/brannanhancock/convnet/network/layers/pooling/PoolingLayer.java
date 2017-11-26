@@ -10,7 +10,10 @@ import com.brannanhancock.convnet.network.layers.ForwardOutputTuple;
 import com.brannanhancock.convnet.network.layers.Layer;
 import com.brannanhancock.convnet.network.layers.pooling.PoolingLibrary.PoolingType;
 
-public final class PoolingLayer implements Layer {
+/**
+ *
+ */
+public final class PoolingLayer extends Layer {
 
     private final int[] poolSizes;
     private final PoolingType poolingType;
@@ -25,6 +28,7 @@ public final class PoolingLayer implements Layer {
         this.inputDimensions = inputDimensions;
     }
 
+
     /**
      * @see {@link Layer#forward}
      */
@@ -34,6 +38,7 @@ public final class PoolingLayer implements Layer {
         this.dOutByDIn = Optional.of(forwardOutputTuple.getdOutByDIn());
         return forwardOutputTuple.getOutput();
     }
+
 
     /**
      * @see {@link Layer#forwardNoTrain}
