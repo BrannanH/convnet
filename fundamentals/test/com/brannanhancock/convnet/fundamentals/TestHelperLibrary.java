@@ -1,13 +1,12 @@
 package com.brannanhancock.convnet.fundamentals;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import com.google.common.collect.Lists;
+import org.junit.Test;
 
 import java.util.List;
 
-import org.junit.Test;
-
-import com.google.common.collect.Lists;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TestHelperLibrary {
 
@@ -18,7 +17,7 @@ public class TestHelperLibrary {
         final int[] array2 = {1, 1, 2};
 
         // When
-        final boolean result = HelperLibrary.arrayEquality(array1, array2);
+        final boolean result = HelperLibrary.isArrayEquality(array1, array2);
 
         // Then
         assertFalse("Arrays are not equal", result);
@@ -61,6 +60,45 @@ public class TestHelperLibrary {
         new HelperLibrary();
 
         // Then - expect exception
+    }
+
+    @Test
+    public void testMatchingInputsReturnTrue() {
+        // Given
+        final int[] array1 = {28, 28};
+        final int[] array2 = {28, 28};
+
+        // When
+        final boolean result = HelperLibrary.isArrayEquality(array2, array1);
+
+        // Then
+        assertTrue("These two inputs are equal, so should return true", result);
+    }
+
+    @Test
+    public void testInputsOfDifferentLengthsReturnFalse() {
+        // Given
+        final int[] array1 = {28, 28, 1};
+        final int[] array2 = {28, 28};
+
+        // When
+        final boolean result = HelperLibrary.isArrayEquality(array2, array1);
+
+        // Then
+        assertFalse("These two inputs are equal, so should return true", result);
+    }
+
+    @Test
+    public void testDifferentInputsWithSameLengthsReturnFalse() {
+        // Given
+        final int[] array1 = {28, 27};
+        final int[] array2 = {28, 28};
+
+        // When
+        final boolean result = HelperLibrary.isArrayEquality(array2, array1);
+
+        // Then
+        assertFalse("These two inputs are equal, so should return true", result);
     }
 
 }

@@ -1,21 +1,18 @@
 package com.brannanhancock.convnet.fundamentals;
 
-import static com.brannanhancock.convnet.fundamentals.HelperLibrary.arrayEquality;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-
+import com.google.common.collect.Lists;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.brannanhancock.convnet.fundamentals.MDA;
-import com.brannanhancock.convnet.fundamentals.MDABuilder;
-import com.google.common.collect.Lists;
+import java.util.List;
+
+import static com.brannanhancock.convnet.fundamentals.HelperLibrary.isArrayEquality;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestMDABuilder {
 
-    int[] dimensions = { 1, 2 };
+    private int[] dimensions = {1, 2};
 
     @Before
     public void setUp() {
@@ -33,7 +30,7 @@ public class TestMDABuilder {
         final MDA mDA = builder.build();
 
         // Then
-        assertTrue("Dimensions should be as expected", arrayEquality(inputDimensions, mDA.getDimensions()));
+        assertTrue("Dimensions should be as expected", isArrayEquality(inputDimensions, mDA.getDimensions()));
     }
 
 
