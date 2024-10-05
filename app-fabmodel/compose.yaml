@@ -1,0 +1,32 @@
+services:
+#  neo4j:
+#    image: 'neo4j:latest'
+#    environment:
+#      - 'NEO4J_AUTH=neo4j/notverysecret'
+#    ports:
+#      - '7687'
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_DB=mydatabase'
+      - 'POSTGRES_PASSWORD=secret'
+      - 'POSTGRES_USER=myuser'
+    ports:
+      - '5432'
+  prometheus:
+    image: 'prom/prometheus:latest'
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./monitoring_config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_config:/etc/prometheus/
+  grafana:
+    image: grafana/grafana-oss
+    container_name: grafana
+    ports:
+      - '3000:3000'
+    volumes:
+      - 'grafana_storage:/var/lib/grafana'
+volumes:
+  prometheus_config: {}
+  grafana_storage: {}

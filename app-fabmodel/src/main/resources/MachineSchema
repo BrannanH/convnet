@@ -1,0 +1,8 @@
+type Machine {
+  id: ID!
+  loadTime: Float!
+  unloadTime: Float!
+  ports: [LoadPort!]!
+  chambers: [Chamber!]!
+  portToChamberMappings: [PortToChamberMapping!]!
+}

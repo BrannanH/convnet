@@ -1,0 +1,39 @@
+type RouteStep {
+  id: ID!
+  possibleMachinesWithGivenConfiguration: [MachineWithConfigurationRequirements!]!
+  routeStackConstraints: [RouteStackConstraint!]!
+}
+
+type MachineWithConfigurationRequirements {
+  machine: Machine!
+  configurationRequirements: [MachineConfiguration!]!
+}
+
+type Machine {
+  id: ID!
+  machineType: String!
+  loadTime: Float!
+  unloadTime: Float!
+  possibleMachineConfigurations: [MachineConfiguration!]!
+}
+
+type MachineConfiguration {
+  id: ID!
+}
+
+type Route {
+  id: ID!
+  possibleSteps: [[RouteStep!]!]!
+}
+
+type RouteStackConstraint {
+  where: String!
+}
+
+type Fab {
+  routes: [Route!]!
+}
+
+type Query {
+  fab: Fab!
+}

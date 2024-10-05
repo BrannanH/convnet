@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: app-fabmodel
+  graphql:
+    graphiql:
+      enabled: true
+management:
+  endpoints:
+    health:
+      show: always
+    web:
+      exposure:
+        include: health, metrics, prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+vaadin:
+  launch-browser: true
+
