@@ -1,14 +1,7 @@
 package com.brannanhancock.convnet.fundamentals.layers.pooling;
 
-import com.brannanhancock.convnet.fundamentals.layers.ForwardOutputTuple;
 import com.brannanhancock.convnet.fundamentals.layers.Layer;
 import com.brannanhancock.convnet.fundamentals.layers.pooling.PoolingLibrary.PoolingType;
-import com.brannanhancock.convnet.fundamentals.mda.MDA;
-import com.brannanhancock.convnet.fundamentals.mda.MDABuilder;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  *
