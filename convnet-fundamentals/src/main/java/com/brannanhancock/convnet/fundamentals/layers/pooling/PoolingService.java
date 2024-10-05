@@ -1,6 +1,11 @@
 package com.brannanhancock.convnet.fundamentals.layers.pooling;
 
-import static java.lang.Math.floorDiv;
+import com.brannanhancock.convnet.fundamentals.layers.DimensionVerificationService;
+import com.brannanhancock.convnet.fundamentals.layers.ForwardOutputTuple;
+import com.brannanhancock.convnet.fundamentals.layers.pooling.PoolingLibrary.PoolingType;
+import com.brannanhancock.convnet.fundamentals.mda.MDA;
+import com.brannanhancock.convnet.fundamentals.mda.MDABuilder;
+import jakarta.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,12 +21,7 @@ import java.util.function.IntConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.brannanhancock.convnet.fundamentals.layers.DimensionVerificationService;
-import com.brannanhancock.convnet.fundamentals.layers.ForwardOutputTuple;
-import com.brannanhancock.convnet.fundamentals.mda.MDA;
-import com.brannanhancock.convnet.fundamentals.mda.MDABuilder;
-import com.brannanhancock.convnet.fundamentals.layers.pooling.PoolingLibrary.PoolingType;
-import jakarta.inject.Inject;
+import static java.lang.Math.floorDiv;
 
 /**
  *

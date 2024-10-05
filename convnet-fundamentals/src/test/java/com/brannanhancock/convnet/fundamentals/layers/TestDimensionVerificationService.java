@@ -1,16 +1,14 @@
 package com.brannanhancock.convnet.fundamentals.layers;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+import org.testcontainers.shaded.com.google.common.collect.Maps;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
-import org.testcontainers.shaded.com.google.common.collect.Maps;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 /**

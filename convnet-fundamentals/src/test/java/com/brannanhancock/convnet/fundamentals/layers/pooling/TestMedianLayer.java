@@ -1,9 +1,5 @@
 package com.brannanhancock.convnet.fundamentals.layers.pooling;
 
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import com.brannanhancock.convnet.fundamentals.layers.CompareMDAs;
 import com.brannanhancock.convnet.fundamentals.layers.DimensionVerificationService;
 import com.brannanhancock.convnet.fundamentals.layers.ForwardOutputTuple;
@@ -11,6 +7,10 @@ import com.brannanhancock.convnet.fundamentals.mda.MDA;
 import com.brannanhancock.convnet.fundamentals.mda.MDABuilder;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Test class for the Median Test Layer

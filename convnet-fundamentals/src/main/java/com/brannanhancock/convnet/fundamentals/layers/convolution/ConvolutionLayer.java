@@ -1,9 +1,9 @@
 package com.brannanhancock.convnet.fundamentals.layers.convolution;
 
 import com.brannanhancock.convnet.fundamentals.layers.Layer;
+import com.brannanhancock.convnet.fundamentals.layers.convolution.ConvolutionLibrary.PaddingType;
 import com.brannanhancock.convnet.fundamentals.mda.MDA;
 import com.brannanhancock.convnet.fundamentals.mda.MDABuilder;
-import com.brannanhancock.convnet.fundamentals.layers.convolution.ConvolutionLibrary.PaddingType;
 
 import java.util.Arrays;
 import java.util.Optional;

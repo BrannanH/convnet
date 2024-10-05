@@ -1,11 +1,11 @@
 package com.brannanhancock.convnet.fundamentals.layers;
 
-import static com.brannanhancock.convnet.fundamentals.layers.ExtractDimensionService.subsetOf;
-import static org.junit.Assert.assertEquals;
-
 import com.brannanhancock.convnet.fundamentals.mda.MDA;
 import com.brannanhancock.convnet.fundamentals.mda.MDABuilder;
 import org.junit.Test;
+
+import static com.brannanhancock.convnet.fundamentals.layers.ExtractDimensionService.subsetOf;
+import static org.junit.Assert.assertEquals;
 
 
 public class TestExtractDimensionService {

@@ -2,12 +2,8 @@ package com.brannanhancock.convnet.fundamentals.integration.extraction;
 
 import com.brannanhancock.convnet.fundamentals.mda.MDA;
 
+import javax.swing.*;
 import java.awt.image.BufferedImage;
-
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 /**
  * This class allows for displaying the contents of an MDA. It must be passed

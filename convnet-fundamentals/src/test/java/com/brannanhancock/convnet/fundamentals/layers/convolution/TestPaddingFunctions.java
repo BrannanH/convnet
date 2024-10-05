@@ -1,10 +1,8 @@
 package com.brannanhancock.convnet.fundamentals.layers.convolution;
 
-import static org.junit.Assert.assertArrayEquals;
-
 import org.junit.Test;
 
-import java.util.Arrays;
+import static org.junit.Assert.assertArrayEquals;
 
 public class TestPaddingFunctions {
 

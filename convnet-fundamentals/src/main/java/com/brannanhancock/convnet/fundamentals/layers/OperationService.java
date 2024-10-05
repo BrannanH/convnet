@@ -1,11 +1,11 @@
 package com.brannanhancock.convnet.fundamentals.layers;
 
+import com.brannanhancock.convnet.fundamentals.mda.MDA;
+import com.brannanhancock.convnet.fundamentals.mda.MDABuilder;
+
 import java.util.function.DoubleBinaryOperator;
 import java.util.function.DoubleSupplier;
 import java.util.function.ToDoubleFunction;
-
-import com.brannanhancock.convnet.fundamentals.mda.MDA;
-import com.brannanhancock.convnet.fundamentals.mda.MDABuilder;
 
 /**
  * This class provides the methods necessary for element wise operations. It

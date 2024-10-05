@@ -2,9 +2,9 @@ package com.brannanhancock.convnet.fundamentals.layers;
 
 import com.brannanhancock.convnet.fundamentals.mda.MDA;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.Arrays;
+
+import static org.junit.Assert.assertEquals;
 
 public class CompareMDAs {
 

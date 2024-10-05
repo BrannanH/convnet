@@ -1,10 +1,10 @@
 package com.brannanhancock.convnet.fundamentals.layers.pooling;
 
-import java.util.Optional;
-
 import com.brannanhancock.convnet.fundamentals.layers.LayerBuilder;
 import com.brannanhancock.convnet.fundamentals.layers.pooling.PoolingLibrary.PoolingType;
 import jakarta.inject.Inject;
+
+import java.util.Optional;
 
 /**
  * This class explicitly injects the dependencies of the Pooling Layer it

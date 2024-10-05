@@ -1,8 +1,5 @@
 package com.brannanhancock.convnet.fundamentals.layers.pooling;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-
 import com.brannanhancock.convnet.fundamentals.layers.DimensionVerificationService;
 import com.brannanhancock.convnet.fundamentals.mda.MDA;
 import com.brannanhancock.convnet.fundamentals.mda.MDABuilder;
@@ -10,6 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 public class TestMeanPoolingLayer {
 

@@ -1,18 +1,17 @@
 package com.brannanhancock.convnet.fundamentals.layers.convolution;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
-
 import com.brannanhancock.convnet.fundamentals.layers.DimensionVerificationService;
 import com.brannanhancock.convnet.fundamentals.mda.MDA;
 import com.brannanhancock.convnet.fundamentals.mda.MDABuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
+
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 /**
  *
