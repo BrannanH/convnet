@@ -3,6 +3,9 @@ package com.brannanhancock.convnet.fundamentals.layers.convolution;
 
 
 import com.brannanhancock.convnet.fundamentals.layers.DimensionVerificationService;
+import com.brannanhancock.convnet.fundamentals.layers.ForwardOutputTuple;
+import com.brannanhancock.convnet.fundamentals.layers.LayerService;
+import com.brannanhancock.convnet.fundamentals.layers.ReversePassOutput;
 import com.brannanhancock.convnet.fundamentals.mda.MDA;
 import com.brannanhancock.convnet.fundamentals.mda.MDABuilder;
 import jakarta.inject.Inject;
@@ -11,12 +14,12 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-class ConvolutionService {
+public class ConvolutionService implements LayerService<ConvolutionLayer> {
 
     private final DimensionVerificationService dimensionVerificationService;
 
     @Inject
-    ConvolutionService(final DimensionVerificationService dimensionVerificationService) {
+    public ConvolutionService(final DimensionVerificationService dimensionVerificationService) {
         this.dimensionVerificationService = dimensionVerificationService;
     }
 
@@ -98,5 +101,36 @@ class ConvolutionService {
                 recursiveChunk(destination, operand, alpha, dimension + 1, source, builder, entry);
             }
         }
+    }
+
+    @Override
+    public ForwardOutputTuple forward(ConvolutionLayer layer, MDA operand) {
+        return null;
+    }
+
+    @Override
+    public MDA forwardNoTrain(ConvolutionLayer layer, MDA operand) {
+        if(!Arrays.equals(operand.getDimensions(), layer.getInputDimensions())) {
+            throw new IllegalArgumentException("Operand passed to Convolution Layer did not have legal dimensions");
+        }
+
+        if(!verifyInputBiggerThanFeature(operand.getDimensions(), layer.getFeature().getDimensions())) {
+            throw new IllegalArgumentException("Operand passed to Convolution Layer is smaller than this Layer's feature");
+        }
+
+        final MDABuilder resultBuilder = new MDABuilder(outputDimensionsFor(layer));
+        // TODO Auto-generated method stub
+        return resultBuilder.build();
+    }
+
+    @Override
+    public ReversePassOutput reverse(ForwardOutputTuple resultFromForwardPass, MDA dLossByDOut) {
+        return null;
+    }
+
+    @Override
+    public int[] outputDimensionsFor(ConvolutionLayer layer) {
+        return layer.getPaddingType().getOutputDimensionsFunction()
+                .apply(layer.getInputDimensions(), layer.getFeature().getDimensions());
     }
 }

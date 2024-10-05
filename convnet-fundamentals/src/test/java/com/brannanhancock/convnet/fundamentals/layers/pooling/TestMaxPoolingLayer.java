@@ -100,7 +100,7 @@ public class TestMaxPoolingLayer {
 		temp = new HashMap<>();
 
 		// When
-		final ForwardOutputTuple output = maxPoolingLayer.forward(inputBuilder.build(), poolingSize, PoolingLibrary.PoolingType.MAX);
+		final ForwardOutputTuple output = maxPoolingLayer.forward(new PoolingLayer(poolingSize, PoolingLibrary.PoolingType.MAX, inputDimensions), inputBuilder.build());
 		final MDA result = output.getOutput();
 		final Map<List<Integer>, Map<List<Integer>, Double>> derivative = output.getdOutByDIn();
 
@@ -164,7 +164,7 @@ public class TestMaxPoolingLayer {
 		expectedDerivative.put(List.of(1,1), temp);
 
 		// When
-		final ForwardOutputTuple output = maxPoolingLayer.forward(inputBuilder.build(), poolingSize, PoolingLibrary.PoolingType.MAX);
+		final ForwardOutputTuple output = maxPoolingLayer.forward(new PoolingLayer(poolingSize, PoolingLibrary.PoolingType.MAX, inputDimensions), inputBuilder.build());
 		final MDA result = output.getOutput();
 		final Map<List<Integer>, Map<List<Integer>, Double>> derivative = output.getdOutByDIn();
 
@@ -238,7 +238,7 @@ public class TestMaxPoolingLayer {
 		expectedDerivative.put(List.of(1,1,0), temp);
 
 		// When
-		final ForwardOutputTuple result = maxPoolingLayer.forward(inputBuilder.build(), poolingSize, PoolingLibrary.PoolingType.MAX);
+		final ForwardOutputTuple result = maxPoolingLayer.forward(new PoolingLayer(poolingSize, PoolingLibrary.PoolingType.MAX, inputDimensions), inputBuilder.build());
 		final MDA output = result.getOutput();
 		final Map<List<Integer>, Map<List<Integer>, Double>> derivative = result.getdOutByDIn();
 
@@ -325,7 +325,7 @@ public class TestMaxPoolingLayer {
         expectedDerivative.put(List.of(1, 3, 0), temp);
 
         // When
-        final ForwardOutputTuple result = maxPoolingLayer.forward(inputBuilder.build(), poolingSize, PoolingLibrary.PoolingType.MAX);
+        final ForwardOutputTuple result = maxPoolingLayer.forward(new PoolingLayer(poolingSize, PoolingLibrary.PoolingType.MAX, inputDimensions), inputBuilder.build());
         final MDA output = result.getOutput();
         final Map<List<Integer>, Map<List<Integer>, Double>> derivative = result.getdOutByDIn();
 

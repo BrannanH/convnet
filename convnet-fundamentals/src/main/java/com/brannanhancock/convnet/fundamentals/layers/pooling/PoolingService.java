@@ -2,6 +2,8 @@ package com.brannanhancock.convnet.fundamentals.layers.pooling;
 
 import com.brannanhancock.convnet.fundamentals.layers.DimensionVerificationService;
 import com.brannanhancock.convnet.fundamentals.layers.ForwardOutputTuple;
+import com.brannanhancock.convnet.fundamentals.layers.LayerService;
+import com.brannanhancock.convnet.fundamentals.layers.ReversePassOutput;
 import com.brannanhancock.convnet.fundamentals.layers.pooling.PoolingLibrary.PoolingType;
 import com.brannanhancock.convnet.fundamentals.mda.MDA;
 import com.brannanhancock.convnet.fundamentals.mda.MDABuilder;
@@ -28,96 +30,62 @@ import static java.lang.Math.floorDiv;
  * @author Brannan R. Hancock
  *
  */
-class PoolingService {
+public class PoolingService implements LayerService<PoolingLayer>  {
 
     private final DimensionVerificationService dimensionsService;
 
 
     @Inject
-    PoolingService(final DimensionVerificationService dimensionsService) {
+    public PoolingService(final DimensionVerificationService dimensionsService) {
         this.dimensionsService = dimensionsService;
     }
 
+    @Override
+    public ForwardOutputTuple forward(PoolingLayer layer, MDA operand) {
+        final Map<List<Integer>, Set<PoolTuple>> pools = createPools(operand, layer.getPoolSizes());
 
-    /**
-     * Computes the forward pass of the network in training phase, thus also computing all necessary
-     * derivatives to update all relevant values in the network.
-     * @param operand
-     * @param poolSizes
-     * @param poolingType
-     * @return
-     */
-    public ForwardOutputTuple forward(final MDA operand, final int[] poolSizes, final PoolingType poolingType) {
-        final Map<List<Integer>, Set<PoolTuple>> pools = createPools(operand, poolSizes);
-
-        final MDA forward = computeOutput(outputDimensions(operand.getDimensions(), poolSizes), pools, poolingType);
-        final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn = computeDOutByDIn(pools, poolingType);
-        return new ForwardOutputTuple(forward, dOutByDIn, null);
+        final MDA forward = computeOutput(outputDimensionsFor(layer), pools, layer.getPoolingType());
+        final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn = computeDOutByDIn(pools, layer.getPoolingType());
+        return new ForwardOutputTuple(layer, forward, dOutByDIn, null);
     }
 
+    @Override
+    public MDA forwardNoTrain(PoolingLayer layer, MDA operand) {
+        final Map<List<Integer>, Set<PoolTuple>> pools = createPools(operand, layer.getPoolSizes());
 
-    /**
-     * Used for testing the network rather than training it.
-     * Compute the forward pass without computing any derivatives.
-     * @param operand
-     * @param poolSizes
-     * @param poolingType
-     * @return
-     */
-    public MDA forwardNoTrain(final MDA operand, final int[] poolSizes, final PoolingType poolingType) {
-
-        final Map<List<Integer>, Set<PoolTuple>> pools = createPools(operand, poolSizes);
-
-        return computeOutput(outputDimensions(operand.getDimensions(), poolSizes), pools, poolingType);
+        return computeOutput(outputDimensionsFor(layer), pools, layer.getPoolingType());
     }
 
-
-    /**
-     * Compute dLossByDIn from dLossByDOut and dOutByDIn
-     * @param dLossByDOut
-     * @param dOutByDIn
-     * @param originalInputSize
-     * @return
-     */
-    public MDA reverse(final MDA dLossByDOut, final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn,
-            final int[] originalInputSize) {
-
+    @Override
+    public ReversePassOutput reverse(ForwardOutputTuple resultFromForwardPass, MDA dLossByDOut) {
         // verify the dimensions in the derivative map are consistent
-        dimensionsService.verifyDerivativeMap(dOutByDIn);
+        dimensionsService.verifyDerivativeMap(resultFromForwardPass.getdOutByDIn());
 
         // create dLossByDIn at the right size
-        final MDABuilder dLossByDInBuilder = new MDABuilder(originalInputSize);
+        final MDABuilder dLossByDInBuilder = new MDABuilder(resultFromForwardPass.getLayer().getInputDimensions());
 
         /* for each location in dOutByDIn's keyset get dLossByDOut(location).
          Multiply each double in the Value Map of dOutByDIn by it, and add
          that to its location in dLossByDIn; */
-        for (final Entry<List<Integer>, Map<List<Integer>, Double>> entry : dOutByDIn.entrySet()) {
+        for (final Entry<List<Integer>, Map<List<Integer>, Double>> entry : resultFromForwardPass.getdOutByDIn().entrySet()) {
             final double coefficient = dLossByDOut.get(entry.getKey());
             for (final Entry<List<Integer>, Double> subEntry : entry.getValue().entrySet()) {
                 dLossByDInBuilder.withAmountAddedToDataPoint(coefficient * subEntry.getValue(), subEntry.getKey().stream().mapToInt(Integer::intValue).toArray());
             }
         }
-        return dLossByDInBuilder.build();
+        return new ReversePassOutput(resultFromForwardPass.getLayer(), null, dLossByDInBuilder.build());
     }
 
-
-    /**
-     * Compute the output dimensions from the input dimensions and the pooling sizes
-     *
-     * @param inputDimensions
-     * @param poolSizes
-     * @return
-     */
-    public int[] outputDimensions(final int[] inputDimensions, final int[] poolSizes) {
-
-        if(!dimensionsService.verifyLeftBiggerThanRight(inputDimensions, poolSizes)) {
+    @Override
+    public int[] outputDimensionsFor(PoolingLayer layer) {
+        if(!dimensionsService.verifyLeftBiggerThanRight(layer.getInputDimensions(), layer.getPoolSizes())) {
             throw new IllegalArgumentException("The input passed to the pooling layer is not correctly configured.");
         }
 
-        final int[] results = new int[inputDimensions.length];
+        final int[] results = new int[layer.getInputDimensions().length];
 
-        for (int i = 0; i < inputDimensions.length; i++) {
-            results[i] = floorDiv(inputDimensions[i], poolSizes[i]);
+        for (int i = 0; i < layer.getInputDimensions().length; i++) {
+            results[i] = floorDiv(layer.getInputDimensions()[i], layer.getPoolSizes()[i]);
         }
 
         return results;

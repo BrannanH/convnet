@@ -56,7 +56,7 @@ public class TestMeanPoolingLayer {
         when(dimensionVerificationService.verifyLeftBiggerThanRight(inputDimensions, poolingSize)).thenReturn(true);
 
         // When
-        final MDA output = layer.forward(operand, poolingSize, PoolingLibrary.PoolingType.MEAN).getOutput();
+        final MDA output = layer.forward(new PoolingLayer(poolingSize, PoolingLibrary.PoolingType.MEAN, inputDimensions), operand).getOutput();
 
         // Then
         for (int i = 0; i < 2; i++) {

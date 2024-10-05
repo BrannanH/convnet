@@ -1,5 +1,6 @@
 package com.brannanhancock.convnet.fundamentals.layers.pooling;
 
+import com.brannanhancock.convnet.fundamentals.layers.DimensionVerificationService;
 import com.brannanhancock.convnet.fundamentals.layers.ForwardOutputTuple;
 import com.brannanhancock.convnet.fundamentals.mda.MDA;
 import org.junit.Before;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -18,7 +20,7 @@ import static org.mockito.Mockito.when;
 
 public class TestPoolingLayer {
 
-    private @Mock PoolingService poolingService;
+    private PoolingService poolingService = new PoolingService(new DimensionVerificationService());
     private @Mock MDA mda;
     private PoolingLayerBuilder builder;
 
@@ -41,18 +43,18 @@ public class TestPoolingLayer {
         // Given
         final int[] inputDimensions = {4,5};
         final PoolingLibrary.PoolingType poolingType = PoolingLibrary.PoolingType.MAX;
-        final PoolingLayer poolingLayer = builder.withInputDimensions(inputDimensions).build();
-
-        final MDA outputMDA = mock(MDA.class);
-        final Map<List<Integer>, Map<List<Integer>, Double>> map = new HashMap<>();
-        final ForwardOutputTuple expectedOutput = new ForwardOutputTuple(outputMDA, map , null);
-        when(poolingService.forward(mda, inputDimensions, poolingType)).thenReturn(expectedOutput);
 
         // When
-        final MDA result = poolingLayer.forward(mda);
+        final PoolingLayer poolingLayer = builder.withInputDimensions(inputDimensions).build();
 
         // Then
-        assertEquals("The resultant MDA should be the one returned by the pooling Service", outputMDA, result);
+        assertEquals("Pooling Type Default should be max", PoolingLibrary.PoolingType.MAX, poolingLayer.getPoolingType());
+
+        // When
+        final int[] result = poolingService.outputDimensionsFor(poolingLayer);
+
+        // Then
+        assertArrayEquals("Result of default pooling should have same output dimensions as input", inputDimensions, result);
     }
 
 
@@ -64,72 +66,5 @@ public class TestPoolingLayer {
         builder.withPoolingType(PoolingLibrary.PoolingType.MEAN).withPoolSizes(1,2,3).build();
 
         // Then - expect exception
-    }
-
-
-    @Test
-    public void testForwardNoTrainCorrectlyDelegates() {
-     // Given
-        final int[] inputDimensions = {4,5};
-        final PoolingLibrary.PoolingType poolingType = PoolingLibrary.PoolingType.MAX;
-        final PoolingLayer poolingLayer = builder.withInputDimensions(inputDimensions).build();
-
-        final MDA outputMDA = mock(MDA.class);
-        when(poolingService.forwardNoTrain(mda, inputDimensions, poolingType)).thenReturn(outputMDA);
-
-        // When
-        final MDA result = poolingLayer.forwardNoTrain(mda);
-
-        // Then
-        assertEquals("The resultant MDA should be the one returned by the pooling Service", outputMDA, result);
-    }
-
-
-    @Test
-    public void testReverseCorrectlyDelegates() {
-        // Given
-        final int[] inputDimensions = {4,5};
-        final PoolingLibrary.PoolingType poolingType = PoolingLibrary.PoolingType.MAX;
-        final PoolingLayer poolingLayer = builder.withInputDimensions(inputDimensions).build();
-
-        final MDA outputMDA = mock(MDA.class);
-        final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn = new HashMap<>();
-        final ForwardOutputTuple expectedOutput = new ForwardOutputTuple(outputMDA, dOutByDIn , null);
-        when(poolingService.forward(mda, inputDimensions, poolingType)).thenReturn(expectedOutput);
-
-        final MDA dLossByDOut = mock(MDA.class);
-
-        // When
-        poolingLayer.forward(mda);
-        poolingLayer.reverse(dLossByDOut);
-
-        // Then - Reverse should be passed dOutByDIn which came from a forward pass
-        verify(poolingService).reverse(dLossByDOut, dOutByDIn, inputDimensions);
-    }
-
-
-    @Test
-    public void testReverseWithoutForwardPassReturnsZeros() {
-        // Given
-        final int[] inputDimensions = {4,5};
-        final int[] poolSizes = {2,1};
-        final PoolingLayer poolingLayer = builder.withInputDimensions(inputDimensions)
-                .withPoolSizes(poolSizes).build();
-
-        final MDA dLossByDOut = mock(MDA.class);
-
-        // When
-        final MDA result = poolingLayer.reverse(dLossByDOut);
-
-        // Then
-        assertEquals("Resulting MDA should be the correct size", inputDimensions.length, result.getDimensions().length);
-        for(int i = 0; i < inputDimensions.length; i++) {
-            assertEquals("Dimension " + i + " should be the same", inputDimensions[i], result.getDimensions()[i]);
-        }
-        for(int i = 0; i < inputDimensions[0]; i++) {
-            for(int j = 0; j < inputDimensions[1]; j++) {
-                        assertEquals("All entries in the MDA should be zero", 0, result.get(i, j), 0);
-            }
-        }
     }
 }

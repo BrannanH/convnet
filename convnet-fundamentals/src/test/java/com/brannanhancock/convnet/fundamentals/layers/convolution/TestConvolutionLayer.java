@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -34,7 +35,7 @@ public class TestConvolutionLayer {
         MockitoAnnotations.initMocks(this);
         convolutionService = new ConvolutionService(dimensionVerificationService);
         feature = new MDABuilder(featureDimensions).build();
-        layer = new ConvolutionLayer(feature, inputDimensions, connections, ConvolutionLibrary.PaddingType.NO_PADDING, convolutionService);
+        layer = new ConvolutionLayer(feature, inputDimensions, connections, ConvolutionLibrary.PaddingType.NO_PADDING);
     }
 
     /**
@@ -49,10 +50,10 @@ public class TestConvolutionLayer {
         when(dimensionVerificationService.verifyLeftBiggerThanRight(inputDimensions, featureDimensions)).thenReturn(true);
 
         // When
-        final MDA output = layer.forwardNoTrain(operand);
+        final MDA output = convolutionService.forwardNoTrain(layer, operand);
 
         // Then
-        assertTrue("Output Dimensions should be as expected", Arrays.equals(expectedOutputDimensions, output.getDimensions()));
+        assertArrayEquals("Output Dimensions should be as expected", expectedOutputDimensions, output.getDimensions());
     }
 
 
@@ -68,7 +69,7 @@ public class TestConvolutionLayer {
         when(dimensionVerificationService.verifyLeftBiggerThanRight(inputDimensions, featureDimensions)).thenReturn(false);
 
         // When
-        final MDA output = layer.forwardNoTrain(operand);
+        final MDA output = convolutionService.forwardNoTrain(layer, operand);
 
         // Then - expect error
     }

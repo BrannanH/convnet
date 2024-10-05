@@ -13,6 +13,8 @@ import java.util.Map;
  */
 public class ForwardOutputTuple {
 
+    private final Layer layer;
+
     // The output of the forward pass
     private final MDA output;
 
@@ -27,13 +29,17 @@ public class ForwardOutputTuple {
     private final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDFeature;
 
 
-    public ForwardOutputTuple(final MDA output, final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn,
-                              final Map<List<Integer>, Map<List<Integer>, Double>> dOoutByDFeature) {
+    public ForwardOutputTuple(final Layer layer, final MDA output, final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn,
+                              final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDFeature) {
+        this.layer = layer;
         this.output = output;
         this.dOutByDIn = dOutByDIn;
-        this.dOutByDFeature = dOoutByDFeature;
+        this.dOutByDFeature = dOutByDFeature;
     }
 
+    public Layer getLayer() {
+        return layer;
+    }
 
     /**
      * @return the output

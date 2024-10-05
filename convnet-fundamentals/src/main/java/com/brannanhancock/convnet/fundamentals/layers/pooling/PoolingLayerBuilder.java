@@ -4,7 +4,9 @@ import com.brannanhancock.convnet.fundamentals.layers.LayerBuilder;
 import com.brannanhancock.convnet.fundamentals.layers.pooling.PoolingLibrary.PoolingType;
 import jakarta.inject.Inject;
 
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 /**
  * This class explicitly injects the dependencies of the Pooling Layer it
@@ -23,7 +25,7 @@ final class PoolingLayerBuilder implements LayerBuilder<PoolingLayer> {
 
     private Optional<PoolingType> poolingType = Optional.empty();
 
-    private Optional<int[]> inputDimensions = Optional.empty();
+    private int[] inputDimensions;
 
     @Inject
     PoolingLayerBuilder(final PoolingService poolingLayerService) {
@@ -41,7 +43,7 @@ final class PoolingLayerBuilder implements LayerBuilder<PoolingLayer> {
     }
 
     PoolingLayerBuilder withInputDimensions(final int... inputDimensions) {
-        this.inputDimensions = Optional.of(inputDimensions);
+        this.inputDimensions = inputDimensions;
         return this;
     }
 
@@ -50,11 +52,11 @@ final class PoolingLayerBuilder implements LayerBuilder<PoolingLayer> {
      */
     @Override
     public PoolingLayer build() {
-        if (inputDimensions.isPresent()) {
-            return new PoolingLayer(poolSizes.orElse(inputDimensions.get()), // Default to the input dimensions resulting in no pooling
+        if (Objects.nonNull(inputDimensions)) {
+            return new PoolingLayer(poolSizes.orElseGet(() -> IntStream.generate(() -> 1).limit(inputDimensions.length).toArray()), // Default to the input dimensions resulting in no pooling
                     poolingType.orElse(PoolingType.MAX), // default to max pooling
-                    inputDimensions.get(), // must be present to get into this if
-                    poolingLayerService); // the service dependency of the Pooling Layer
+                    inputDimensions // must be present to get into this if
+                    ); // the service dependency of the Pooling Layer
         } else {
             throw new IllegalStateException("The pooling factors must be set before a pooling layer can be built.");
         }

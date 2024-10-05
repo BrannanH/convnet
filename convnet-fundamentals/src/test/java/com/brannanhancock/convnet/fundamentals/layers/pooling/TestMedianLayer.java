@@ -60,7 +60,7 @@ public class TestMedianLayer {
         when(dimensionsVerificationService.verifyLeftBiggerThanRight(inputDimensions, poolSizes)).thenReturn(true);
 
         // When
-        final ForwardOutputTuple output = layer.forward(inputBuilder.build(), poolSizes, PoolingLibrary.PoolingType.MEDIAN);
+        final ForwardOutputTuple output = layer.forward(new PoolingLayer(poolSizes, PoolingLibrary.PoolingType.MEDIAN, inputDimensions), inputBuilder.build());
         final MDA forward = output.getOutput();
 
         // Then
@@ -87,7 +87,7 @@ public class TestMedianLayer {
         when(dimensionsVerificationService.verifyLeftBiggerThanRight(inputDimensions, poolSizes)).thenReturn(true);
 
         // When
-        final ForwardOutputTuple output = layer.forward(input, poolSizes, PoolingLibrary.PoolingType.MEDIAN);
+        final ForwardOutputTuple output = layer.forward(new PoolingLayer(poolSizes, PoolingLibrary.PoolingType.MEDIAN, inputDimensions), input);
         final MDA forward = output.getOutput();
 
         // Then
@@ -112,7 +112,7 @@ public class TestMedianLayer {
         when(dimensionsVerificationService.verifyLeftBiggerThanRight(inputDimensions, poolSizes)).thenReturn(true);
 
         // When
-        final ForwardOutputTuple output = layer.forward(input, poolSizes, PoolingLibrary.PoolingType.MEDIAN);
+        final ForwardOutputTuple output = layer.forward(new PoolingLayer(poolSizes, PoolingLibrary.PoolingType.MEDIAN, inputDimensions), input);
         final MDA forward = output.getOutput();
 
         // Then
