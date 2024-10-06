@@ -45,7 +45,7 @@ public class PoolingService implements LayerService<PoolingLayer>  {
         final Map<List<Integer>, Set<PoolTuple>> pools = createPools(operand, layer.getPoolSizes());
 
         final MDA forward = computeOutput(outputDimensionsFor(layer), pools, layer.getPoolingType());
-        final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn = computeDOutByDIn(pools, layer.getPoolingType());
+        final MDA dOutByDIn = computeDOutByDIn(layer, pools, layer.getPoolingType());
         return new ForwardOutputTuple(layer, forward, dOutByDIn, null);
     }
 
@@ -58,22 +58,36 @@ public class PoolingService implements LayerService<PoolingLayer>  {
 
     @Override
     public ReversePassOutput reverse(ForwardOutputTuple resultFromForwardPass, MDA dLossByDOut) {
-        // verify the dimensions in the derivative map are consistent
-        dimensionsService.verifyDerivativeMap(resultFromForwardPass.getdOutByDIn());
 
         // create dLossByDIn at the right size
         final MDABuilder dLossByDInBuilder = new MDABuilder(resultFromForwardPass.getLayer().getInputDimensions());
+        recursivePopulateResultBySideEffect(dLossByDInBuilder, dLossByDOut, resultFromForwardPass, 0, new int[resultFromForwardPass.getdOutByDIn().getDimensions().length]);
 
-        /* for each location in dOutByDIn's keyset get dLossByDOut(location).
-         Multiply each double in the Value Map of dOutByDIn by it, and add
-         that to its location in dLossByDIn; */
-        for (final Entry<List<Integer>, Map<List<Integer>, Double>> entry : resultFromForwardPass.getdOutByDIn().entrySet()) {
-            final double coefficient = dLossByDOut.get(entry.getKey());
-            for (final Entry<List<Integer>, Double> subEntry : entry.getValue().entrySet()) {
-                dLossByDInBuilder.withAmountAddedToDataPoint(coefficient * subEntry.getValue(), subEntry.getKey().stream().mapToInt(Integer::intValue).toArray());
-            }
-        }
+//        /* for each location in dOutByDIn's keyset get dLossByDOut(location).
+//         Multiply each double in the Value Map of dOutByDIn by it, and add
+//         that to its location in dLossByDIn; */
+//        for (final Entry<List<Integer>, Map<List<Integer>, Double>> entry : resultFromForwardPass.getdOutByDIn().entrySet()) {
+//            final double coefficient = dLossByDOut.get(entry.getKey());
+//            for (final Entry<List<Integer>, Double> subEntry : entry.getValue().entrySet()) {
+//                dLossByDInBuilder.withAmountAddedToDataPoint(coefficient * subEntry.getValue(), subEntry.getKey().stream().mapToInt(Integer::intValue).toArray());
+//            }
+//        }
         return new ReversePassOutput(resultFromForwardPass.getLayer(), null, dLossByDInBuilder.build());
+    }
+
+    private void recursivePopulateResultBySideEffect(MDABuilder dLossByDInBuilder, MDA dLossByDOut, ForwardOutputTuple resultFromForwardPass, int dimension, int[] dLossByDInCoordinate) {
+        if (dimension == resultFromForwardPass.getdOutByDIn().getDimensions().length) {
+            // coordinates array is fully populated
+            int numCoordinatesInInputSpace = resultFromForwardPass.getLayer().getInputDimensions().length;
+            int[] coordinatesInOutputSpace = Arrays.copyOfRange(dLossByDInCoordinate, 0, dLossByDInCoordinate.length - numCoordinatesInInputSpace);
+            double dLossByDOutCoefficient = dLossByDOut.get(coordinatesInOutputSpace);
+            dLossByDInBuilder.withAmountAddedToDataPoint(dLossByDOutCoefficient * resultFromForwardPass.getdOutByDIn().get(dLossByDInCoordinate), Arrays.copyOfRange(dLossByDInCoordinate, dLossByDInCoordinate.length - numCoordinatesInInputSpace, dLossByDInCoordinate.length));
+            return;
+        }
+        for (int i = 0; i < resultFromForwardPass.getdOutByDIn().getDimensions()[dimension]; i++) {
+            dLossByDInCoordinate[dimension] = i;
+            recursivePopulateResultBySideEffect(dLossByDInBuilder, dLossByDOut, resultFromForwardPass, dimension + 1, dLossByDInCoordinate);
+        }
     }
 
     @Override
@@ -262,18 +276,26 @@ public class PoolingService implements LayerService<PoolingLayer>  {
      * @param poolingType
      * @return
      */
-    private Map<List<Integer>, Map<List<Integer>, Double>> computeDOutByDIn(final Map<List<Integer>, Set<PoolTuple>> pools,
+    private MDA computeDOutByDIn(final PoolingLayer layer, final Map<List<Integer>, Set<PoolTuple>> pools,
             final PoolingType poolingType) {
-        final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn = new HashMap<>();
+//        final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn = new HashMap<>();
+        int[] outputSize = outputDimensionsFor(layer);
+        int[] dOutByDInSize = IntStream.concat(Arrays.stream(outputSize), Arrays.stream(layer.getInputDimensions())).toArray();
+        MDABuilder dOutByDIn = new MDABuilder(dOutByDInSize);
+        int[] coordinates = new int[dOutByDInSize.length];
 
         for (final Entry<List<Integer>, Set<PoolTuple>> entry : pools.entrySet()) {
-            final Map<List<Integer>, Double> mapping = new HashMap<>();
+            for (int i = 0; i < entry.getKey().size(); i++) {
+                coordinates[i] = entry.getKey().get(i);
+            }
             final Set<PoolTuple> results = poolingType.getDerivativeMethod().apply(entry.getValue());
             for (final PoolTuple pool : results) {
-                mapping.put(Arrays.stream(pool.getOrigin()).boxed().toList(), pool.getElement());
+                for (int i = 0; i < pool.getOrigin().length; i++) {
+                    coordinates[entry.getKey().size() + i] = pool.getOrigin()[i];
+                }
+                dOutByDIn.withDataPoint(pool.getElement(), coordinates);
             }
-            dOutByDIn.put(entry.getKey(), mapping);
         }
-        return dOutByDIn;
+        return dOutByDIn.build();
     }
 }

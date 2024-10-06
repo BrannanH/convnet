@@ -11,12 +11,13 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.mockito.Mockito.verify;
 
 /**
  *
@@ -51,10 +52,9 @@ public class TestPoolingService {
         PoolingLayer layer = new PoolingLayer.Builder().withPoolSizes(poolingSizes).withPoolingType(PoolingLibrary.PoolingType.MAX).withInputDimensions(forwardInputDimensions).build();
 
         // When
-        final ReversePassOutput output = poolingService.reverse(new ForwardOutputTuple(layer, dLossByDOut, dOutByDIn, null), dLossByDOut);
+        final ReversePassOutput output = poolingService.reverse(new ForwardOutputTuple(layer, dLossByDOut, new MDABuilder(IntStream.concat(Arrays.stream(outputDimensions), Arrays.stream(forwardInputDimensions)).toArray()).build(), null), dLossByDOut);
 
         // Then
-        verify(dimensionVerificationService).verifyDerivativeMap(dOutByDIn);
         assertArrayEquals(forwardInputDimensions, output.getDLossByDIn().getDimensions());
     }
 
@@ -74,47 +74,12 @@ public class TestPoolingService {
         dLossByDOutBuilder.withDataPoint(1D, 1, 0);
         dLossByDOutBuilder.withDataPoint(1D, 1, 1);
 
-        final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn = new HashMap<>();
-        Map<List<Integer>, Double> subMap = new HashMap<>();
-        List<Integer> originalPosition = List.of(0, 0);
-        subMap.put(originalPosition, 0D);
-        originalPosition = List.of(0, 1);
-        subMap.put(originalPosition, 0D);
-        originalPosition = List.of(1, 0);
-        subMap.put(originalPosition, 0D);
-        originalPosition = List.of(1, 1);
-        subMap.put(originalPosition, 1D);
-        dOutByDIn.put(List.of(0, 0), subMap);
-        subMap = new HashMap<>();
-        originalPosition = List.of(0, 2);
-        subMap.put(originalPosition, 0D);
-        originalPosition = List.of(0, 3);
-        subMap.put(originalPosition, 0D);
-        originalPosition = List.of(1, 2);
-        subMap.put(originalPosition, 0D);
-        originalPosition = List.of(1, 3);
-        subMap.put(originalPosition, 1D);
-        dOutByDIn.put(List.of(0, 1), subMap);
-        subMap = new HashMap<>();
-        originalPosition = List.of(2, 0);
-        subMap.put(originalPosition, 0D);
-        originalPosition = List.of(2, 1);
-        subMap.put(originalPosition, 0D);
-        originalPosition = List.of(3, 0);
-        subMap.put(originalPosition, 0D);
-        originalPosition = List.of(3, 1);
-        subMap.put(originalPosition, 1D);
-        dOutByDIn.put(List.of(1, 0), subMap);
-        subMap = new HashMap<>();
-        originalPosition = List.of(2, 2);
-        subMap.put(originalPosition, 0D);
-        originalPosition = List.of(2, 3);
-        subMap.put(originalPosition, 0D);
-        originalPosition = List.of(3, 2);
-        subMap.put(originalPosition, 0D);
-        originalPosition = List.of(3, 3);
-        subMap.put(originalPosition, 1D);
-        dOutByDIn.put(List.of(1, 1), subMap);
+        MDABuilder dOutByDIn = new MDABuilder(IntStream.concat(Arrays.stream(forwardOutputDimensions), Arrays.stream(forwardInputDimensions)).toArray());
+        final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn2 = new HashMap<>();
+        dOutByDIn.withDataPoint(1, 0,0,1,1);
+        dOutByDIn.withDataPoint(1, 0,1,1,3);
+        dOutByDIn.withDataPoint(1, 1,0,3,1);
+        dOutByDIn.withDataPoint(1, 1,1,3,3);
 
         final MDABuilder expectedOutputBuilder = new MDABuilder(forwardInputDimensions);
         expectedOutputBuilder.withDataPoint(1D, 1, 1);
@@ -125,10 +90,9 @@ public class TestPoolingService {
         PoolingLayer layer = new PoolingLayer.Builder().withPoolSizes(poolingSizes).withPoolingType(PoolingLibrary.PoolingType.MAX).withInputDimensions(forwardInputDimensions).build();
 
         // When
-        final ReversePassOutput dLossByDIn = poolingService.reverse(new ForwardOutputTuple(layer, new MDABuilder(forwardOutputDimensions).build(), dOutByDIn, null), dLossByDOutBuilder.build());
+        final ReversePassOutput dLossByDIn = poolingService.reverse(new ForwardOutputTuple(layer, new MDABuilder(forwardOutputDimensions).build(), dOutByDIn.build(), null), dLossByDOutBuilder.build());
 
         // Then
-        verify(dimensionVerificationService).verifyDerivativeMap(dOutByDIn);
         CompareMDAs.checkExpectation(expectedOutputBuilder.build(), dLossByDIn.getDLossByDIn());
     }
 
@@ -147,14 +111,10 @@ public class TestPoolingService {
         final int[] forwardInputDimensions = {1,2};
         final int[] poolingSizes = {1,2};
 
-        final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn = new HashMap<>();
-        final List<Integer> outputDimension = List.of(0,0);
-        final Map<List<Integer>, Double> subEntry = new HashMap<>();
-        List<Integer> inputDimension = List.of(0,0);
-        subEntry.put(inputDimension, coefficient1);
-        inputDimension = List.of(0,1);
-        subEntry.put(inputDimension, coefficient2);
-        dOutByDIn.put(outputDimension, subEntry);
+        MDABuilder dOutByDInBuilder = new MDABuilder(1,1,1,2);
+        dOutByDInBuilder.withDataPoint(coefficient1, 0,0,0,0);
+        dOutByDInBuilder.withDataPoint(coefficient2, 0,0,0,1);
+
 
         final MDABuilder expectedOutputBuilder = new MDABuilder(1,2);
         expectedOutputBuilder.withDataPoint(derivative*coefficient1, 0,0);
@@ -162,10 +122,9 @@ public class TestPoolingService {
 
         PoolingLayer layer = new PoolingLayer.Builder().withPoolSizes(poolingSizes).withPoolingType(PoolingLibrary.PoolingType.MAX).withInputDimensions(forwardInputDimensions).build();
         // When
-        final ReversePassOutput dLossByDIn = poolingService.reverse(new ForwardOutputTuple(layer, new MDABuilder(1,1).build(),dOutByDIn, null), dLossByDOutBuilder.build());
+        final ReversePassOutput dLossByDIn = poolingService.reverse(new ForwardOutputTuple(layer, new MDABuilder(1,1).build(), dOutByDInBuilder.build(), null), dLossByDOutBuilder.build());
 
         // Then
-        verify(dimensionVerificationService).verifyDerivativeMap(dOutByDIn);
         CompareMDAs.checkExpectation(expectedOutputBuilder.build(), dLossByDIn.getDLossByDIn());
     }
 }

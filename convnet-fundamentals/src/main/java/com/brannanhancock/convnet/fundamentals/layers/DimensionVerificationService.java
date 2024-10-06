@@ -1,12 +1,5 @@
 package com.brannanhancock.convnet.fundamentals.layers;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.stream.Collectors;
-
 /**
  * This service carries out comparisons between dimensions specified at the input to a layer, the feature map
  * and the feature map's active dimensions. These are needed at construction of the neural net, and every layer
@@ -38,45 +31,6 @@ public class DimensionVerificationService {
             if (inputDimensions[i] < featureDimensions[i]) {
                 return false;
             }
-        }
-        return true;
-    }
-
-
-    /**
-     * Verifies that all references in the build up derivatives mapping are dimensionally consistent.
-     * @param testMap
-     * @return
-     */
-    public boolean verifyDerivativeMap(final Map<List<Integer>, Map<List<Integer>, Double>> testMap) {
-        final OptionalInt outerMaxLength = testMap.keySet().stream().mapToInt(List::size).max();
-        if(!outerMaxLength.isPresent()) {
-            throw new IllegalArgumentException("The dimensions for dOutByDIn can not be empty.");
-        }
-
-        Optional<List<Integer>> invalid = testMap.keySet().stream()
-                .filter(l -> l.size() != outerMaxLength.getAsInt())
-                .findAny();
-
-        if (invalid.isPresent()) {
-            throw new IllegalArgumentException("The dimensions specified for dOutByDIn should have consistent length.");
-        }
-
-        final int innerMaxLength = testMap.values().stream().flatMap((final Map<List<Integer>, Double> k) -> k.keySet().stream())
-                .collect(Collectors.maxBy(Comparator.comparingInt(List::size))).get().size();
-
-        invalid = testMap.values().stream().flatMap((final Map<List<Integer>, Double> k) -> k.keySet().stream())
-                .filter(l -> l.size() != innerMaxLength)
-                .findAny();
-
-        if (invalid.isPresent()) {
-            throw new IllegalArgumentException(
-                    "The dimensions specified for dLossByDOut should have consistent length.");
-        }
-
-        if (outerMaxLength.getAsInt() != innerMaxLength) {
-            throw new IllegalArgumentException(
-                    "The number of dimensions in the derivative mappings should be the same.");
         }
         return true;
     }

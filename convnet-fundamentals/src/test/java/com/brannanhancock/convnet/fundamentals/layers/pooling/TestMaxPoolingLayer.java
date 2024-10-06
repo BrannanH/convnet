@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -64,49 +63,25 @@ public class TestMaxPoolingLayer {
 		expectedResult.withDataPoint(14D, 1, 2);
 		expectedResult.withDataPoint(15D, 1, 3);
 
-		final Map<List<Integer>, Map<List<Integer>, Double>> expectedDerivative = new HashMap<>();
-		Map<List<Integer>, Double> temp = new HashMap<>();
-		temp.put(List.of(0, 0), 0D);
-		temp.put(List.of(1, 0), 1D);
-		expectedDerivative.put(List.of(0,0), temp);
-		temp = new HashMap<>();
-		temp.put(List.of(0, 1), 0D);
-		temp.put(List.of(1, 1), 1D);
-		expectedDerivative.put(List.of(0,1), temp);
-		temp = new HashMap<>();
-		temp.put(List.of(0, 2), 0D);
-		temp.put(List.of(1, 2), 1D);
-		expectedDerivative.put(List.of(0,2), temp);
-		temp = new HashMap<>();
-		temp.put(List.of(0, 3), 0D);
-		temp.put(List.of(1, 3), 1D);
-		expectedDerivative.put(List.of(0,3), temp);
-		temp = new HashMap<>();
-		temp.put(List.of(2, 0), 0D);
-		temp.put(List.of(3, 0), 1D);
-		expectedDerivative.put(List.of(1,0), temp);
-		temp = new HashMap<>();
-		temp.put(List.of(2, 1), 0D);
-		temp.put(List.of(3, 1), 1D);
-		expectedDerivative.put(List.of(1,1), temp);
-		temp = new HashMap<>();
-		temp.put(List.of(2, 2), 0D);
-		temp.put(List.of(3, 2), 1D);
-		expectedDerivative.put(List.of(1,2), temp);
-		temp = new HashMap<>();
-		temp.put(List.of(2, 3), 0D);
-		temp.put(List.of(3, 3), 1D);
-		expectedDerivative.put(List.of(1,3), temp);
-		temp = new HashMap<>();
+		MDABuilder expectedDerivativeBuilder = new MDABuilder(2,4,4,4);
+		expectedDerivativeBuilder.withDataPoint(1, 0,0,1,0);
+		expectedDerivativeBuilder.withDataPoint(1, 0,1,1,1);
+		expectedDerivativeBuilder.withDataPoint(1, 0,2,1,2);
+		expectedDerivativeBuilder.withDataPoint(1, 0,3,1,3);
+		expectedDerivativeBuilder.withDataPoint(1, 1,0,3,0);
+		expectedDerivativeBuilder.withDataPoint(1, 1,1,3,1);
+		expectedDerivativeBuilder.withDataPoint(1, 1,2,3,2);
+		expectedDerivativeBuilder.withDataPoint(1, 1,3,3,3);
+
 
 		// When
 		final ForwardOutputTuple output = maxPoolingLayer.forward(new PoolingLayer.Builder().withPoolSizes(poolingSize).withPoolingType(PoolingLibrary.PoolingType.MAX).withInputDimensions(inputDimensions).build(), inputBuilder.build());
 		final MDA result = output.getOutput();
-		final Map<List<Integer>, Map<List<Integer>, Double>> derivative = output.getdOutByDIn();
+		final MDA derivative = output.getdOutByDIn();
 
 		// Then
 		CompareMDAs.checkExpectation(expectedResult.build(), result);
-		checkDerivatives(expectedDerivative, derivative);
+		CompareMDAs.checkExpectation(expectedDerivativeBuilder.build(), derivative);
 	}
 
 	private void checkDerivatives(final Map<List<Integer>, Map<List<Integer>, Double>> expectedDerivative, final Map<List<Integer>, Map<List<Integer>, Double>> derivative) {
@@ -137,40 +112,21 @@ public class TestMaxPoolingLayer {
 		expectedResult.withDataPoint(13D, 1, 0);
 		expectedResult.withDataPoint(15D, 1, 1);
 
-		final Map<List<Integer>, Map<List<Integer>, Double>> expectedDerivative = new HashMap<>();
-		Map<List<Integer>, Double> temp = new HashMap<>();
-		temp.put(List.of(0, 0), 0D);
-		temp.put(List.of(0, 1), 0D);
-		temp.put(List.of(1, 0), 0D);
-		temp.put(List.of(1, 1), 1D);
-		expectedDerivative.put(List.of(0,0), temp);
-		temp = new HashMap<>();
-		temp.put(List.of(0, 2), 0D);
-		temp.put(List.of(0, 3), 0D);
-		temp.put(List.of(1, 2), 0D);
-		temp.put(List.of(1, 3), 1D);
-		expectedDerivative.put(List.of(0,1), temp);
-		temp = new HashMap<>();
-		temp.put(List.of(2, 0), 0D);
-		temp.put(List.of(2, 1), 0D);
-		temp.put(List.of(3, 0), 0D);
-		temp.put(List.of(3, 1), 1D);
-		expectedDerivative.put(List.of(1,0), temp);
-		temp = new HashMap<>();
-		temp.put(List.of(2, 2), 0D);
-		temp.put(List.of(2, 3), 0D);
-		temp.put(List.of(3, 2), 0D);
-		temp.put(List.of(3, 3), 1D);
-		expectedDerivative.put(List.of(1,1), temp);
+		MDABuilder expectedDerivativeBuilder = new MDABuilder(2,2,4,4);
+		expectedDerivativeBuilder.withDataPoint(1, 0,0,1,1);
+		expectedDerivativeBuilder.withDataPoint(1, 0,1,1,3);
+		expectedDerivativeBuilder.withDataPoint(1, 1,0,3,1);
+		expectedDerivativeBuilder.withDataPoint(1, 1,1,3,3);
+
 
 		// When
 		final ForwardOutputTuple output = maxPoolingLayer.forward(new PoolingLayer.Builder().withPoolSizes(poolingSize).withPoolingType(PoolingLibrary.PoolingType.MAX).withInputDimensions(inputDimensions).build(), inputBuilder.build());
 		final MDA result = output.getOutput();
-		final Map<List<Integer>, Map<List<Integer>, Double>> derivative = output.getdOutByDIn();
+		final MDA derivative = output.getdOutByDIn();
 
 		// Then
 		CompareMDAs.checkExpectation(expectedResult.build(), result);
-		checkDerivatives(expectedDerivative, derivative);
+		CompareMDAs.checkExpectation(expectedDerivativeBuilder.build(), derivative);
 	}
 
 	@Test
@@ -195,56 +151,21 @@ public class TestMaxPoolingLayer {
 		expectedResultBuilder.withDataPoint(29D, 1, 0, 0);
 		expectedResultBuilder.withDataPoint(31D, 1, 1, 0);
 
-		final Map<List<Integer>, Map<List<Integer>, Double>> expectedDerivative = new HashMap<>();
-		Map<List<Integer>, Double> temp = new HashMap<>();
-		temp.put(List.of(0, 0, 0), 0D);
-		temp.put(List.of(0, 1, 0), 0D);
-		temp.put(List.of(1, 0, 0), 0D);
-		temp.put(List.of(1, 1, 0), 0D);
-		temp.put(List.of(0, 0, 1), 0D);
-		temp.put(List.of(0, 1, 1), 0D);
-		temp.put(List.of(1, 0, 1), 0D);
-		temp.put(List.of(1, 1, 1), 1D);
-		expectedDerivative.put(List.of(0,0,0), temp);
-		temp = new HashMap<>();
-		temp.put(List.of(0, 2, 0), 0D);
-		temp.put(List.of(0, 3, 0), 0D);
-		temp.put(List.of(1, 2, 0), 0D);
-		temp.put(List.of(1, 3, 0), 0D);
-		temp.put(List.of(0, 2, 1), 0D);
-		temp.put(List.of(0, 3, 1), 0D);
-		temp.put(List.of(1, 2, 1), 0D);
-		temp.put(List.of(1, 3, 1), 1D);
-		expectedDerivative.put(List.of(0,1,0), temp);
-		temp = new HashMap<>();
-		temp.put(List.of(2, 0, 0), 0D);
-		temp.put(List.of(2, 1, 0), 0D);
-		temp.put(List.of(3, 0, 0), 0D);
-		temp.put(List.of(3, 1, 0), 0D);
-		temp.put(List.of(2, 0, 1), 0D);
-		temp.put(List.of(2, 1, 1), 0D);
-		temp.put(List.of(3, 0, 1), 0D);
-		temp.put(List.of(3, 1, 1), 1D);
-		expectedDerivative.put(List.of(1,0,0), temp);
-		temp = new HashMap<>();
-		temp.put(List.of(2, 2, 0), 0D);
-		temp.put(List.of(2, 3, 0), 0D);
-		temp.put(List.of(3, 2, 0), 0D);
-		temp.put(List.of(3, 3, 0), 0D);
-		temp.put(List.of(2, 2, 1), 0D);
-		temp.put(List.of(2, 3, 1), 0D);
-		temp.put(List.of(3, 2, 1), 0D);
-		temp.put(List.of(3, 3, 1), 1D);
-		expectedDerivative.put(List.of(1,1,0), temp);
+		MDABuilder expectedDerivativeBuilder = new MDABuilder(2,2,1,4,4,2);
+		expectedDerivativeBuilder.withDataPoint(1, 0,0,0,1,1,1);
+		expectedDerivativeBuilder.withDataPoint(1, 0,1,0,1,3,1);
+		expectedDerivativeBuilder.withDataPoint(1, 1,0,0,3,1,1);
+		expectedDerivativeBuilder.withDataPoint(1, 1,1,0,3,3,1);
+
 
 		// When
 		final ForwardOutputTuple result = maxPoolingLayer.forward(new PoolingLayer.Builder().withPoolSizes(poolingSize).withPoolingType(PoolingLibrary.PoolingType.MAX).withInputDimensions(inputDimensions).build(), inputBuilder.build());
 		final MDA output = result.getOutput();
-		final Map<List<Integer>, Map<List<Integer>, Double>> derivative = result.getdOutByDIn();
+		final MDA derivative = result.getdOutByDIn();
 
 		// Then
 		CompareMDAs.checkExpectation(expectedResultBuilder.build(), output);
-		checkDerivatives(expectedDerivative, derivative);
+		CompareMDAs.checkExpectation(expectedDerivativeBuilder.build(), derivative);
 	}
 
 
@@ -274,66 +195,27 @@ public class TestMaxPoolingLayer {
         expectedResultBuilder.withDataPoint(30D, 1, 2, 0);
         expectedResultBuilder.withDataPoint(31D, 1, 3, 0);
 
-        final Map<List<Integer>, Map<List<Integer>, Double>> expectedDerivative = new HashMap<>();
-        Map<List<Integer>, Double> temp = new HashMap<>();
-        temp.put(List.of(0, 0, 0), 0D);
-        temp.put(List.of(0, 0, 1), 0D);
-        temp.put(List.of(1, 0, 0), 0D);
-        temp.put(List.of(1, 0, 1), 1D);
-        expectedDerivative.put(List.of(0, 0, 0), temp);
-        temp = new HashMap<>();
-        temp.put(List.of(0, 1, 0), 0D);
-        temp.put(List.of(0, 1, 1), 0D);
-        temp.put(List.of(1, 1, 0), 0D);
-        temp.put(List.of(1, 1, 1), 1D);
-        expectedDerivative.put(List.of(0, 1, 0), temp);
-        temp = new HashMap<>();
-        temp.put(List.of(0, 2, 0), 0D);
-        temp.put(List.of(0, 2, 1), 0D);
-        temp.put(List.of(1, 2, 0), 0D);
-        temp.put(List.of(1, 2, 1), 1D);
-        expectedDerivative.put(List.of(0, 2, 0), temp);
-        temp = new HashMap<>();
-        temp.put(List.of(0, 3, 0), 0D);
-        temp.put(List.of(0, 3, 1), 0D);
-        temp.put(List.of(1, 3, 0), 0D);
-        temp.put(List.of(1, 3, 1), 1D);
-        expectedDerivative.put(List.of(0, 3, 0), temp);
-        temp = new HashMap<>();
-        temp.put(List.of(2, 0, 0), 0D);
-        temp.put(List.of(2, 0, 1), 0D);
-        temp.put(List.of(3, 0, 0), 0D);
-        temp.put(List.of(3, 0, 1), 1D);
-        expectedDerivative.put(List.of(1, 0, 0), temp);
-        temp = new HashMap<>();
-        temp.put(List.of(2, 1, 0), 0D);
-        temp.put(List.of(2, 1, 1), 0D);
-        temp.put(List.of(3, 1, 0), 0D);
-        temp.put(List.of(3, 1, 1), 1D);
-        expectedDerivative.put(List.of(1, 1, 0), temp);
-        temp = new HashMap<>();
-        temp.put(List.of(2, 2, 0), 0D);
-        temp.put(List.of(2, 2, 1), 0D);
-        temp.put(List.of(3, 2, 0), 0D);
-        temp.put(List.of(3, 2, 1), 1D);
-        expectedDerivative.put(List.of(1, 2, 0), temp);
-        temp = new HashMap<>();
-        temp.put(List.of(2, 3, 0), 0D);
-        temp.put(List.of(2, 3, 1), 0D);
-        temp.put(List.of(3, 3, 0), 0D);
-        temp.put(List.of(3, 3, 1), 1D);
-        expectedDerivative.put(List.of(1, 3, 0), temp);
+		MDABuilder expectedDerivativeBuilder = new MDABuilder(2,4,1,4,4,2);
+		expectedDerivativeBuilder.withDataPoint(1, 0,0,0,1,0,1);
+		expectedDerivativeBuilder.withDataPoint(1, 0,1,0,1,1,1);
+		expectedDerivativeBuilder.withDataPoint(1, 0,2,0,1,2,1);
+		expectedDerivativeBuilder.withDataPoint(1, 0,3,0,1,3,1);
+		expectedDerivativeBuilder.withDataPoint(1, 1,0,0,3,0,1);
+		expectedDerivativeBuilder.withDataPoint(1, 1,1,0,3,1,1);
+		expectedDerivativeBuilder.withDataPoint(1, 1,2,0,3,2,1);
+		expectedDerivativeBuilder.withDataPoint(1, 1,3,0,3,3,1);
 
-        // When
+
+		// When
         final ForwardOutputTuple result = maxPoolingLayer.forward(new PoolingLayer.Builder().withPoolSizes(poolingSize)
 				.withPoolingType(PoolingLibrary.PoolingType.MAX)
 				.withInputDimensions(inputDimensions)
 				.build(), inputBuilder.build());
         final MDA output = result.getOutput();
-        final Map<List<Integer>, Map<List<Integer>, Double>> derivative = result.getdOutByDIn();
+        final MDA derivative = result.getdOutByDIn();
 
         // Then
         CompareMDAs.checkExpectation(expectedResultBuilder.build(), output);
-        checkDerivatives(expectedDerivative, derivative);
+        CompareMDAs.checkExpectation(expectedDerivativeBuilder.build(), derivative);
     }
 }

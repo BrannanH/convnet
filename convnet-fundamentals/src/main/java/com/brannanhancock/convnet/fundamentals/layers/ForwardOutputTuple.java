@@ -20,16 +20,16 @@ public class ForwardOutputTuple {
 
     /**
      * The derivative of the output with respect to the input
-     * <a,b> { [<c,d> e], [<f,g> h] }
-     * represents dOut_a,b/dIn_c,d = e, dOut_a,b/dIn_f,g = h
+     * Location a,b,c,d holding value e represents
+     * represents dOut_a,b/dIn_c,d = e
      */
-    private final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn;
+    private final MDA dOutByDIn;
 
     // The derivative of the output with respect to the feature
     private final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDFeature;
 
 
-    public ForwardOutputTuple(final Layer layer, final MDA output, final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn,
+    public ForwardOutputTuple(final Layer layer, final MDA output, final MDA dOutByDIn,
                               final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDFeature) {
         this.layer = layer;
         this.output = output;
@@ -52,7 +52,7 @@ public class ForwardOutputTuple {
     /**
      * @return the dOutByDIn
      */
-    public Map<List<Integer>, Map<List<Integer>, Double>> getdOutByDIn() {
+    public MDA getdOutByDIn() {
         return dOutByDIn;
     }
 

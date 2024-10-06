@@ -1,14 +1,8 @@
 package com.brannanhancock.convnet.fundamentals.layers;
 
 import org.junit.Test;
-import org.testcontainers.shaded.com.google.common.collect.Maps;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -68,113 +62,5 @@ public class TestDimensionVerificationService {
 	    dimensionVerificationService.verifyLeftBiggerThanRight(inputDimensions, poolSizes);
 	    
 	    // Then pass as no exceptions are thrown.
-	}
-	
-	
-	/**
-	 * Verifies that an error is thrown if dLossByDOut contains inconsistent dimensions.
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testInvalidMappingForDLossByDOut() {
-	    // Given
-	    Map<List<Integer>, Map<List<Integer>, Double>> testMap = new HashMap<>();
-	    testMap.put(List.of(0,0), Maps.newHashMap());
-	    testMap.put(List.of(0,0,1), Maps.newHashMap());
-	    
-	    // When
-	    dimensionVerificationService.verifyDerivativeMap(testMap);
-	    
-	    // Then expect exception
-	}
-	
-	
-	/**
-	 * Verifies that an error is thrown if dOutByDIn contains inconsistent dimensions within pools.
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testInvalidMappingForDOutByDInWithinGroup() {
-	    // Given
-	    Map<List<Integer>, Map<List<Integer>, Double>> testMap = new HashMap<>();
-	    Map<List<Integer>, Double> subMap1 = Maps.newHashMap();
-	    subMap1.put(List.of(0, 0), 0D);
-	    subMap1.put(List.of(0, 0, 1), 0D);
-	    testMap.put(List.of(0,0), subMap1);
-	    
-	    // When
-        dimensionVerificationService.verifyDerivativeMap(testMap);
-        
-        // Then expect exception
-	}
-	
-	
-	/**
-	 * Verifies than an error is thrown if dOutByDIn contains inconsistent dimensions across pools.
-	 */
-	@Test
-	public void testInvalidMappingForDOutByDInBetweenGroups() {
-	    // Given
-        Map<List<Integer>, Map<List<Integer>, Double>> testMap = new HashMap<>();
-        Map<List<Integer>, Double> subMap1 = Maps.newHashMap();
-        subMap1.put(List.of(0, 0), 0D);
-        subMap1.put(List.of(0, 1), 0D);
-        testMap.put(List.of(0,0), subMap1);
-        
-        Map<List<Integer>, Double> subMap2 = Maps.newHashMap();
-        subMap2.put(List.of(0, 0, 2), 0D);
-        subMap2.put(List.of(0, 0, 3), 0D);
-        testMap.put(List.of(0,1), subMap1);
-        
-        // When
-        dimensionVerificationService.verifyDerivativeMap(testMap);
-        
-        // Then expect exception
-	}
-	
-	/**
-	 * Verifies that inconsistencies between dimensions in the inner and outer map throws an error.
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testInvalidBetweenInnerAndOuterDimensions() {
-	 // Given
-        Map<List<Integer>, Map<List<Integer>, Double>> testMap = new HashMap<>();
-        Map<List<Integer>, Double> subMap1 = Maps.newHashMap();
-        subMap1.put(List.of(0, 0), 0D);
-        subMap1.put(List.of(0, 1), 0D);
-        testMap.put(List.of(0, 0, 0), subMap1);
-
-        Map<List<Integer>, Double> subMap2 = Maps.newHashMap();
-        subMap2.put(List.of(0, 2), 0D);
-        subMap2.put(List.of(0, 3), 0D);
-        testMap.put(List.of(0, 0, 1), subMap1);
-
-        // When
-        dimensionVerificationService.verifyDerivativeMap(testMap);
-
-        // Then expect exception
-	}
-	
-	
-	/**
-	 * Verifies that no errors are thrown if all validation criteria are met.
-	 */
-	@Test
-	public void testValidReturnsTrue() {
-	    // Given
-	    Map<List<Integer>, Map<List<Integer>, Double>> testMap = new HashMap<>();
-	    Map<List<Integer>, Double> subMap1 = Maps.newHashMap();
-	    subMap1.put(List.of(0, 0), 0D);
-	    subMap1.put(List.of(0, 1), 0D);
-	    testMap.put(List.of(0,0), subMap1);
-
-	    Map<List<Integer>, Double> subMap2 = Maps.newHashMap();
-	    subMap2.put(List.of(0, 2), 0D);
-	    subMap2.put(List.of(0, 3), 0D);
-	    testMap.put(List.of(0,1), subMap1);
-
-	    // When
-	    boolean result = dimensionVerificationService.verifyDerivativeMap(testMap);
-
-	    // Then
-	    assertTrue(result);
 	}
 }
