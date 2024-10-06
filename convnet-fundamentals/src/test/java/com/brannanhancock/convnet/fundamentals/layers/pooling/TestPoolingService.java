@@ -48,7 +48,7 @@ public class TestPoolingService {
         final MDA dLossByDOut = new MDABuilder(outputDimensions).build();
 
         final Map<List<Integer>, Map<List<Integer>, Double>> dOutByDIn = new HashMap<>();
-        PoolingLayer layer = new PoolingLayer(poolingSizes, PoolingLibrary.PoolingType.MAX, forwardInputDimensions);
+        PoolingLayer layer = new PoolingLayer.Builder().withPoolSizes(poolingSizes).withPoolingType(PoolingLibrary.PoolingType.MAX).withInputDimensions(forwardInputDimensions).build();
 
         // When
         final ReversePassOutput output = poolingService.reverse(new ForwardOutputTuple(layer, dLossByDOut, dOutByDIn, null), dLossByDOut);
@@ -122,7 +122,7 @@ public class TestPoolingService {
         expectedOutputBuilder.withDataPoint(1D, 1, 3);
         expectedOutputBuilder.withDataPoint(1D, 3, 3);
 
-        PoolingLayer layer = new PoolingLayer(poolingSizes, PoolingLibrary.PoolingType.MAX, forwardInputDimensions);
+        PoolingLayer layer = new PoolingLayer.Builder().withPoolSizes(poolingSizes).withPoolingType(PoolingLibrary.PoolingType.MAX).withInputDimensions(forwardInputDimensions).build();
 
         // When
         final ReversePassOutput dLossByDIn = poolingService.reverse(new ForwardOutputTuple(layer, new MDABuilder(forwardOutputDimensions).build(), dOutByDIn, null), dLossByDOutBuilder.build());
@@ -160,7 +160,7 @@ public class TestPoolingService {
         expectedOutputBuilder.withDataPoint(derivative*coefficient1, 0,0);
         expectedOutputBuilder.withDataPoint(derivative*coefficient2, 0,1);
 
-        PoolingLayer layer = new PoolingLayer(poolingSizes, PoolingLibrary.PoolingType.MAX, forwardInputDimensions);
+        PoolingLayer layer = new PoolingLayer.Builder().withPoolSizes(poolingSizes).withPoolingType(PoolingLibrary.PoolingType.MAX).withInputDimensions(forwardInputDimensions).build();
         // When
         final ReversePassOutput dLossByDIn = poolingService.reverse(new ForwardOutputTuple(layer, new MDABuilder(1,1).build(),dOutByDIn, null), dLossByDOutBuilder.build());
 

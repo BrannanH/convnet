@@ -14,13 +14,13 @@ public class TestPoolingLayer {
 
     private PoolingService poolingService = new PoolingService(new DimensionVerificationService());
     private @Mock MDA mda;
-    private PoolingLayerBuilder builder;
+    private PoolingLayer.Builder builder;
 
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        builder = new PoolingLayerBuilder(poolingService);
+        builder = new PoolingLayer.Builder();
     }
 
 
